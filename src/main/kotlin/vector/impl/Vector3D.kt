@@ -18,13 +18,10 @@ class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 					this[0] * other[1] - this[1] * other[0])
 
 
-	infix fun x(other: Vector3D): Vector = this cross other
-
 	companion object {
-		fun to3D(vector: Vector): Vector3D = if (vector.dimension != 3)
-			Vector3D(vector.getOrElse(0) { .0 },
-					vector.getOrElse(1) { .0 },
-					vector.getOrElse(2) { .0 })
-		else vector as Vector3D
+		fun to3D(vector: Vector): Vector3D = vector as? Vector3D
+				?: Vector3D(vector.getOrElse(0) { .0 },
+						vector.getOrElse(1) { .0 },
+						vector.getOrElse(2) { .0 })
 	}
 }

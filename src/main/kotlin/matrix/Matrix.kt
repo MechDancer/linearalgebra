@@ -14,6 +14,8 @@ interface Matrix {
 
 	val column: Int
 
+	val isSquare: Boolean
+
 	operator fun get(row: Int, column: Int): Double
 
 	operator fun plus(other: Matrix): Matrix
