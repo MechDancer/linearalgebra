@@ -1,5 +1,8 @@
 import org.junit.Assert
 import org.junit.Test
+import vector.Axis3D
+import vector.impl.Vector2D
+import vector.impl.Vector3D
 import kotlin.math.sqrt
 
 class TestVector {
@@ -21,7 +24,7 @@ class TestVector {
 	fun test3DVector() {
 		val vector3D = Vector3D(1.0, 1.0, 1.0)
 
-		Assert.assertEquals(Vector3D(1.0, -2.0, 1.0), vector3D x Vector3D(3.0, 4.0, 5.0))
-		Assert.assertEquals("3DVector(1.0,1.0,1.0)",vector3D.toString())
+		Assert.assertEquals(Vector3D(1.0, -2.0, 1.0), vector3D cross Vector3D(3.0, 4.0, 5.0))
+		Assert.assertEquals("3DVector(1.0,1.0,1.0)", vector3D.toString())
 	}
 }
