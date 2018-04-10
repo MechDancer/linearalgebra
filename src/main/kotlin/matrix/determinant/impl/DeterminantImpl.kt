@@ -1,11 +1,8 @@
 package matrix.determinant.impl
 
 import matrix.Matrix
-import matrix.builder.Row
-import matrix.builder.matrix
 import matrix.determinant.Determinant
 import matrix.impl.MatrixImpl
-import matrix.toDeterminant
 import matrix.util.impl.MutableMatrixDataUtil
 
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
