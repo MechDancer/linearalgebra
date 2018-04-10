@@ -28,7 +28,14 @@ interface Matrix {
 
 	operator fun times(vector: Vector): Vector
 
+	operator fun invoke(other: Matrix): Matrix
+
+	operator fun invoke(vector: Vector): Vector
+
 	operator fun div(other: Matrix): Matrix
+
+	@Deprecated("没什么卵用")
+	infix fun pow(n: Int): Matrix
 
 
 	fun companion(): Matrix

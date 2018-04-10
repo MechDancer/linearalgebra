@@ -32,6 +32,7 @@ interface Vector {
 
 	companion object {
 
+
 		fun zeroOf(dimension: Int): Vector =
 				if (dimension <= 0) throw IllegalArgumentException("维度参数错误")
 				else
