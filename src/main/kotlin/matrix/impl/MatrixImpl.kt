@@ -24,8 +24,8 @@ class MatrixImpl(override val defineType: DefineType,
 
 	init {
 		if (row == 0 || column == 0) throw IllegalArgumentException("不能构虚无矩阵")
-		if ((rowDefine && data.map { it.size == column }.contains(false)) ||
-				(!rowDefine && data.map { it.size == row }.contains(false)))
+		if ((rowDefine && data.any { it.size != column }) ||
+				(!rowDefine && data.any { it.size != row }))
 			throw IllegalArgumentException("矩阵参数错误")
 	}
 
@@ -64,6 +64,9 @@ class MatrixImpl(override val defineType: DefineType,
 
 	override fun div(other: Matrix): Matrix = this * other.inverse()
 
+	override fun div(k: Double): Matrix = MatrixImpl(defineType, data.map { it.map { it / k } })
+
+	@Deprecated("没卵用")
 	override infix fun pow(n: Int): Matrix {
 		if (!isSquare) throw IllegalStateException("方阵才能乘方")
 		if (n <= 0) throw IllegalArgumentException("至少乘一次方")
@@ -90,7 +93,10 @@ class MatrixImpl(override val defineType: DefineType,
 	}, data)
 
 	override fun inverse(): Matrix {
-		TODO("用伴随和行列式好呢还是初等变换好呢...")
+		if (!isSquare) throw IllegalStateException("不方不能求逆")
+		val d = toDeterminant().value
+		if (d == .0) throw IllegalStateException("行列式为零不能求逆")
+		return companion() / d
 	}
 
 	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)

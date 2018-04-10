@@ -1,5 +1,6 @@
 package matrix
 
+import matrix.impl.MatrixImpl
 import vector.Vector
 
 interface Matrix {
@@ -34,6 +35,9 @@ interface Matrix {
 
 	operator fun div(other: Matrix): Matrix
 
+	operator fun div(k: Double): Matrix
+
+
 	@Deprecated("没什么卵用")
 	infix fun pow(n: Int): Matrix
 
@@ -44,5 +48,20 @@ interface Matrix {
 
 	fun inverse(): Matrix
 
+	companion object {
 
+		fun zeroOf(row: Int, column: Int): Matrix {
+			if (row <= 0 || column <= 0) throw IllegalArgumentException("矩阵参数错误")
+			return List(row) { List(column) { .0 } }.let(::MatrixImpl)
+		}
+
+		fun unitOf(dimension: Int): Matrix {
+			if (dimension <= 0) throw IllegalArgumentException("矩阵参数错误")
+			return List(dimension) { r ->
+				List(dimension) { c ->
+					if (c == r) 1.0 else .0
+				}
+			}.let(::MatrixImpl)
+		}
+	}
 }

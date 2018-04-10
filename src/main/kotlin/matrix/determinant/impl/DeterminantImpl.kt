@@ -55,7 +55,7 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 	}
 
 	override fun equals(other: Any?): Boolean {
-		if (other !is DeterminantImpl) return false
+		if (other !is Determinant) return false
 		return other.data == data && defineType == other.defineType
 	}
 
