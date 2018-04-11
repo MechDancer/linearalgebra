@@ -1,4 +1,6 @@
-package matrix
+package matrix.transformation
+
+import matrix.Matrix
 
 interface ElementaryTransformation {
 
@@ -6,12 +8,14 @@ interface ElementaryTransformation {
 
 	fun rowSwap(row1: Int, row2: Int)
 
-	fun rowAddTo(row1: Int, row2: Int, k: Double)
+	fun rowAddTo(from: Int, to: Int, k: Double)
 
 	fun columnMultiply(column: Int, k: Double)
 
 	fun columnSwap(column1: Int, column2: Int)
 
-	fun columnAddTo(column1: Int, column2: Int, k: Double)
+	fun columnAddTo(from: Int, to: Int, k: Double)
+
+	fun getResult(): Matrix
 
 }

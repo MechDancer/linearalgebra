@@ -1,8 +1,11 @@
 package matrix.impl
 
 import matrix.*
+import matrix.transformation.ElementaryTransformation
+import matrix.transformation.impl.ElementaryTransformationImpl
 import vector.Vector
-import vector.toMatrix
+import vector.toVector
+import kotlin.math.abs
 
 class MatrixImpl(override val defineType: DefineType,
                  override val data: MatrixData) : Matrix, Cloneable {
@@ -51,7 +54,7 @@ class MatrixImpl(override val defineType: DefineType,
 				this[r, it] * other[it, c]
 			}
 		}
-	}.let(::MatrixImpl)
+	}.toMatrix()
 
 	override fun times(vector: Vector): Vector {
 		if (vector.dimension != column) throw IllegalArgumentException("维度错误")
@@ -76,6 +79,10 @@ class MatrixImpl(override val defineType: DefineType,
 		}
 	}
 
+	override fun elementaryTransformation(block: ElementaryTransformation.() -> Unit) =
+			ElementaryTransformationImpl(data).apply(block).getResult()
+
+
 	override fun companion(): Matrix {
 		if (!isSquare) throw IllegalStateException("方阵才有伴随矩阵")
 		return toDeterminant().let {
@@ -84,7 +91,7 @@ class MatrixImpl(override val defineType: DefineType,
 					it.getAlgebraCofactor(r, c)
 				}
 			}
-		}.let { MatrixImpl(DefineType.COLUMN, it) }
+		}.toMatrix(DefineType.COLUMN)
 	}
 
 	override fun transpose(): Matrix = MatrixImpl(when (defineType) {
@@ -103,7 +110,8 @@ class MatrixImpl(override val defineType: DefineType,
 		throw IllegalArgumentException("维度错误") else Unit
 
 	override fun toString(): String = buildString {
-		append(" ".repeat(column / 2))
+		val maxDataLength = data.flatten().map { it.toString().length }.max()!!
+		append(" ".repeat(maxDataLength * column / 2))
 		appendln("Matrix ($row x $column)")
 		data.forEachIndexed { r, e ->
 			when (r) {
@@ -112,7 +120,15 @@ class MatrixImpl(override val defineType: DefineType,
 				else    -> append("│")
 			}
 			e.indices.forEach { c ->
-				append(" ${this@MatrixImpl[r, c]} ")
+				val data = this@MatrixImpl[r, c]
+				var dL = abs(maxDataLength - data.toString().length)
+				val parity = dL % 2 == 0
+				dL /= 2
+				val right: Int = dL
+				val left: Int = if (parity) dL else dL + 1
+				append(" ".repeat(left))
+				append(" $data ")
+				append(" ".repeat(right))
 				if (c == column - 1)
 					when (r) {
 						0       -> append("┐")

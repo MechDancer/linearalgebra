@@ -1,7 +1,7 @@
-package matrix.util.impl
+package matrix.transformation.util.impl
 
 import matrix.MatrixData
-import matrix.util.MatrixDataUtil
+import matrix.transformation.util.MatrixDataUtil
 
 class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 

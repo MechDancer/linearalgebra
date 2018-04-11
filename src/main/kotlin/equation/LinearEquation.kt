@@ -1,12 +1,15 @@
 package equation
 
 import matrix.Matrix
+import vector.Vector
 
 interface LinearEquation {
 
 	val coefficient: Matrix
 
-	val constant: List<Double>
+	val constant: Vector
 
-	fun solve(solver: Solver): List<Double>
+	val isHomogeneous: Boolean
+
+	fun solve(solver: Solver): Vector
 }

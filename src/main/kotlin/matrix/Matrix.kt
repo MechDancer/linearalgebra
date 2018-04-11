@@ -1,6 +1,6 @@
 package matrix
 
-import matrix.impl.MatrixImpl
+import matrix.transformation.ElementaryTransformation
 import vector.Vector
 
 interface Matrix {
@@ -42,6 +42,8 @@ interface Matrix {
 	infix fun pow(n: Int): Matrix
 
 
+	fun elementaryTransformation(block: ElementaryTransformation.() -> Unit): Matrix
+
 	fun companion(): Matrix
 
 	fun transpose(): Matrix
@@ -52,7 +54,7 @@ interface Matrix {
 
 		fun zeroOf(row: Int, column: Int): Matrix {
 			if (row <= 0 || column <= 0) throw IllegalArgumentException("矩阵参数错误")
-			return List(row) { List(column) { .0 } }.let(::MatrixImpl)
+			return List(row) { List(column) { .0 } }.toMatrix()
 		}
 
 		fun unitOf(dimension: Int): Matrix {
@@ -61,7 +63,7 @@ interface Matrix {
 				List(dimension) { c ->
 					if (c == r) 1.0 else .0
 				}
-			}.let(::MatrixImpl)
+			}.toMatrix()
 		}
 	}
 }

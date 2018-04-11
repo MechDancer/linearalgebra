@@ -1,9 +1,14 @@
 package vector
 
-import matrix.DefineType
 import matrix.Matrix
-import matrix.impl.MatrixImpl
+import vector.impl.VectorImpl
 
 
-fun Vector.toMatrix(): Matrix =
-		MatrixImpl(DefineType.COLUMN, listOf(data))
+fun List<Double>.toVector() = VectorImpl(this)
+
+fun Matrix.toVector(): Vector = when {
+	data.size == 1         -> data[0]
+	data.first().size == 1 -> List(data.size) { data[it].first() }
+
+	else                   -> throw IllegalArgumentException("矩阵非单行或单列")
+}.let(::VectorImpl)

@@ -1,6 +1,8 @@
 package vector.impl
 
 import vector.Vector
+import vector.toVector
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 open class VectorImpl(override val data: List<Double>) : Vector, Cloneable {
@@ -11,7 +13,7 @@ open class VectorImpl(override val data: List<Double>) : Vector, Cloneable {
 
 	private fun operate(other: Vector, operation: (v1: Double, v2: Double) -> Double): Vector {
 		checkDimension(other)
-		return data.indices.map { operation(data[it], other.data[it]) }.let(::VectorImpl)
+		return data.indices.map { operation(data[it], other.data[it]) }.toVector()
 	}
 
 
@@ -44,7 +46,34 @@ open class VectorImpl(override val data: List<Double>) : Vector, Cloneable {
 			data.getOrElse(index, defaultValue)
 
 
-	override fun toString(): String = "${dimension}DVector(${data.joinToString(separator = ",")})"
+	override fun toString(): String = buildString {
+		val maxDataLength = data.map { it.toString().length }.max()!!
+		append(" ".repeat(maxDataLength / 2))
+		appendln("${dimension}DVector")
+		data.forEachIndexed { index, d ->
+			when (index) {
+				0             -> append("┌")
+				data.size - 1 -> append("└")
+				else          -> append("│")
+			}
+			var dL = abs(maxDataLength - d.toString().length)
+			val parity = dL % 2 == 0
+			dL /= 2
+			val right: Int = dL
+			val left: Int = if (parity) dL else dL + 1
+			append(" ".repeat(left))
+			append(" $d ")
+			append(" ".repeat(right))
+			when (index) {
+				0             -> append("┐")
+				data.size - 1 -> append("┘")
+				else          -> append("│")
+			}
+			appendln()
+		}
+	}
+
+	fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ",")})"
 
 	override fun equals(other: Any?): Boolean {
 		if (other !is Vector) return false

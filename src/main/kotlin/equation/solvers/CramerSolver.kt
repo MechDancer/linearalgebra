@@ -1,26 +1,38 @@
 package equation.solvers
 
+import equation.LinearEquation
 import equation.Solver
-import matrix.Matrix
 import matrix.determinant.Determinant
 import matrix.determinant.impl.DeterminantImpl
-import matrix.impl.MatrixImpl
 import matrix.toDeterminant
+import matrix.toMatrix
+import vector.Vector
+import vector.impl.VectorImpl
+import vector.toVector
 
 object CramerSolver : Solver {
 
-	override fun solve(coefficient: Matrix, constant: List<Double>): List<Double> {
-		val d = coefficient.toDeterminant()
-		if (coefficient.row != constant.size) throw IllegalArgumentException("线性方程组系数与常数项数不等")
-		if (d.value == .0) throw IllegalArgumentException("线性方程组无解")
+	override fun solve(equation: LinearEquation): Vector {
 
-		val result = mutableListOf<Double>()
-		val dv = d.value
+		if (equation.isHomogeneous)
+			if (equation.coefficient.let { it.row >= it.column })
+				return VectorImpl(List(equation.coefficient.dimension) { .0 })
+			else throw IllegalArgumentException("齐次方程组有无限非零解")
 
-		for (i in 0 until d.column) {
-			result.add(d.replaceColumn(i, constant).value / dv)
-		}
-		return result.toList()
+		if (equation.coefficient.dimension != equation.constant.dimension)
+			throw IllegalArgumentException("克莱姆解无法适用方程个数与未知数个数不同的情况")
+		val d = equation.coefficient.toDeterminant()
+
+		val determinantValue = d.value
+
+		if (determinantValue == .0) throw IllegalArgumentException("克莱姆解无法适用于行列式得零的情况")
+
+
+		return (0 until equation.coefficient.column).fold(mutableListOf<Double>()) { acc, i ->
+			acc.add(d.replaceColumn(i, equation.constant.data).value / determinantValue)
+			acc
+		}.toVector()
+
 	}
 
 	private fun Determinant.replaceColumn(columnIndex: Int, list: List<Double>): Determinant {
@@ -35,6 +47,6 @@ object CramerSolver : Solver {
 			temp[index][columnIndex] = d
 		}
 
-		return DeterminantImpl(MatrixImpl(temp))
+		return DeterminantImpl(temp.toMatrix())
 	}
 }

@@ -2,8 +2,8 @@ package matrix
 
 import matrix.determinant.Determinant
 import matrix.determinant.impl.DeterminantImpl
+import matrix.impl.MatrixImpl
 import vector.Vector
-import vector.impl.VectorImpl
 
 enum class DefineType { ROW, COLUMN }
 
@@ -13,10 +13,8 @@ fun Matrix.toDeterminant(): Determinant =
 		DeterminantImpl(this)
 
 
-fun Matrix.toVector(): Vector = when {
-	data.size == 1         -> data[0]
-	data.first().size == 1 -> List(data.size) { data[it].first() }
+fun Vector.toMatrix(): Matrix =
+		MatrixImpl(DefineType.COLUMN, listOf(data))
 
-	else                   -> throw IllegalArgumentException("矩阵非单行或单列")
-}.let(::VectorImpl)
-
+fun MatrixData.toMatrix(defineType: DefineType = DefineType.ROW): Matrix =
+		MatrixImpl(defineType, this)

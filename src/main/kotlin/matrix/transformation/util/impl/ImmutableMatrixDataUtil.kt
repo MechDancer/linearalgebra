@@ -1,8 +1,8 @@
-package matrix.util.impl
+package matrix.transformation.util.impl
 
 //
 //import matrix.MatrixData
-//import matrix.util.MatrixDataUtil
+//import matrix.transformation.util.MatrixDataUtil
 //
 //@Deprecated("还是用可变的比较稳妥", ReplaceWith(" MutableMatrixDataUtil"))
 //object ImmutableMatrixDataUtil {

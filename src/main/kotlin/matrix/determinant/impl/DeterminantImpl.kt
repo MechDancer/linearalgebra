@@ -2,8 +2,9 @@ package matrix.determinant.impl
 
 import matrix.Matrix
 import matrix.determinant.Determinant
-import matrix.impl.MatrixImpl
-import matrix.util.impl.MutableMatrixDataUtil
+import matrix.toDeterminant
+import matrix.toMatrix
+import matrix.transformation.util.impl.MutableMatrixDataUtil
 
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 	init {
@@ -35,7 +36,7 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 		return MutableMatrixDataUtil(data).apply {
 			removeRow(row)
 			removeColumn(column)
-		}.getData().let(::MatrixImpl).let(::DeterminantImpl)
+		}.getData().toMatrix().toDeterminant()
 	}
 
 	override fun getAlgebraCofactor(row: Int, column: Int): Double =

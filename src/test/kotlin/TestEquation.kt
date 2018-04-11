@@ -4,6 +4,7 @@ import matrix.builder.Row
 import matrix.builder.matrix
 import org.junit.Assert
 import org.junit.Test
+import vector.toVector
 
 class TestEquation {
 	@Test
@@ -11,8 +12,8 @@ class TestEquation {
 
 		/*
 		2x+3y-5z=3
-		x-2y+z=1
-		3x+y+3z=1
+		x-2y+z=0
+		3x+y+3z=7
 		 */
 		val equation = linearEquation {
 			coefficient = matrix {
@@ -21,9 +22,10 @@ class TestEquation {
 				Row[3.0, 1.0, 3.0]
 			}
 
-			constant = listOf(3.0, .0, 7.0)
+			constant = listOf(3.0, .0, 7.0).toVector()
 
-		}
-		Assert.assertEquals(listOf(10.0 / 7.0, 1.0, 4.0 / 7.0), equation.solve(CramerSolver))
+		}.apply { println(constant) }
+		Assert.assertEquals(listOf(10.0 / 7.0, 1.0, 4.0 / 7.0).toVector(), equation.solve(CramerSolver))
 	}
+
 }

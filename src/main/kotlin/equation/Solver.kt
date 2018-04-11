@@ -1,8 +1,8 @@
 package equation
 
-import matrix.Matrix
+import vector.Vector
 
 @FunctionalInterface
 interface Solver {
-	fun solve(coefficient: Matrix, constant: List<Double>): List<Double>
+	fun solve(equation: LinearEquation): Vector
 }

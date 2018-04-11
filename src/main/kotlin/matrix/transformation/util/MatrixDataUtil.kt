@@ -1,4 +1,4 @@
-package matrix.util
+package matrix.transformation.util
 
 interface MatrixDataUtil {
 

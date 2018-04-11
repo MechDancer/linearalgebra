@@ -2,7 +2,6 @@ package vector
 
 import vector.impl.Vector2D
 import vector.impl.Vector3D
-import vector.impl.VectorImpl
 
 interface Vector {
 	val dimension: Int
@@ -39,7 +38,7 @@ interface Vector {
 					when (dimension) {
 						2    -> Vector2D(.0, .0)
 						3    -> Vector3D(.0, .0, .0)
-						else -> DoubleArray(dimension).toList().let(::VectorImpl)
+						else -> DoubleArray(dimension).toList().toVector()
 					}
 
 
