@@ -17,7 +17,6 @@ class TestVector {
 		Assert.assertEquals(Vector2D(3.0, 3.0), vector2D + Vector2D(2.0, 2.0))
 		Assert.assertEquals(Vector2D(2.0, 2.0), vector2D * 2.0)
 		Assert.assertEquals(Vector2D(-1.0, -1.0), -vector2D)
-		Assert.assertEquals("2DVector(1.0,1.0)", vector2D.toString())
 	}
 
 	@Test
@@ -25,6 +24,5 @@ class TestVector {
 		val vector3D = Vector3D(1.0, 1.0, 1.0)
 
 		Assert.assertEquals(Vector3D(1.0, -2.0, 1.0), vector3D cross Vector3D(3.0, 4.0, 5.0))
-		Assert.assertEquals("3DVector(1.0,1.0,1.0)", vector3D.toString())
 	}
 }
