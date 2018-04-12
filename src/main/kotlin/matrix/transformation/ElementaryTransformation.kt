@@ -1,8 +1,11 @@
 package matrix.transformation
 
 import matrix.Matrix
+import matrix.transformation.util.MatrixDataUtil
 
 interface ElementaryTransformation {
+
+	val dataUtil: MatrixDataUtil
 
 	fun rowMultiply(row: Int, k: Double)
 

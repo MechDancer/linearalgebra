@@ -1,11 +1,12 @@
 package vector.impl
 
+import matrix.MatrixElement
 import vector.Vector
 import vector.toVector
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-open class VectorImpl(override val data: List<Double>) : Vector, Cloneable {
+open class VectorImpl(override val data: MatrixElement) : Vector, Cloneable {
 
 	override val dimension: Int
 		get() = data.size

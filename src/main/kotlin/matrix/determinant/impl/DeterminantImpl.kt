@@ -2,16 +2,16 @@ package matrix.determinant.impl
 
 import matrix.Matrix
 import matrix.determinant.Determinant
-import matrix.toDeterminant
 import matrix.toMatrix
-import matrix.transformation.util.impl.MutableMatrixDataUtil
+import matrix.transformation.util.impl.operateMatrixDataMutable
 
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
+
 	init {
 		if (!isSquare) throw IllegalStateException("行列式必须是方的")
 	}
 
-	override val value: Double by lazy {
+	private val value: Double by lazy {
 		when (dimension) {
 			1    -> this[0, 0]
 
@@ -30,17 +30,24 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 		}
 	}
 
+	override fun calculate(): Double = value
+
 	override fun getCofactor(row: Int, column: Int): Determinant {
 		if (row !in 0 until this.row) IllegalArgumentException("行数错误")
 		if (column !in 0 until this.column) IllegalArgumentException("列数错误")
-		return MutableMatrixDataUtil(data).apply {
+//		return MutableMatrixDataUtil(data).apply {
+//			removeRow(row)
+//			removeColumn(column)
+//		}.getData().toMatrix().toDeterminant()
+//
+	return 	operateMatrixDataMutable(data){
 			removeRow(row)
 			removeColumn(column)
-		}.getData().toMatrix().toDeterminant()
+		}.toMatrix().toDeterminant()
 	}
 
 	override fun getAlgebraCofactor(row: Int, column: Int): Double =
-			(if ((row + column) % 2 == 0) 1 else -1) * getCofactor(row, column).value
+			(if ((row + column) % 2 == 0) 1 else -1) * getCofactor(row, column).calculate()
 
 	override fun toString(): String = buildString {
 		append(" ".repeat(dimension / 2))
@@ -57,12 +64,9 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 
 	override fun equals(other: Any?): Boolean {
 		if (other !is Determinant) return false
-		return other.data == data && defineType == other.defineType
+		return other.data == data
 	}
 
-	override fun hashCode(): Int {
-		var result = defineType.hashCode()
-		result = 31 * result + data.hashCode()
-		return result
-	}
+	override fun hashCode(): Int = data.hashCode() + javaClass.hashCode()
+
 }

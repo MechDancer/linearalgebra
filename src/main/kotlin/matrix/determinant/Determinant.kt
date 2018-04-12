@@ -1,11 +1,8 @@
 package matrix.determinant
 
-import matrix.DefineType
 import matrix.MatrixData
 
 interface Determinant {
-
-	val value: Double
 
 	val data: MatrixData
 
@@ -15,7 +12,7 @@ interface Determinant {
 
 	val dimension: Int
 
-	val defineType: DefineType
+	fun calculate(): Double
 
 	fun getCofactor(row: Int, column: Int): Determinant
 

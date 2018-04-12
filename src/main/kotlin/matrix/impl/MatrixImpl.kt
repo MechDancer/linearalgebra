@@ -1,54 +1,86 @@
 package matrix.impl
 
-import matrix.*
+import matrix.Matrix
+import matrix.MatrixData
+import matrix.determinant.Determinant
+import matrix.determinant.impl.DeterminantImpl
+import matrix.toMatrix
 import matrix.transformation.ElementaryTransformation
 import matrix.transformation.impl.ElementaryTransformationImpl
 import vector.Vector
 import vector.toVector
 import kotlin.math.abs
 
-class MatrixImpl(override val defineType: DefineType,
-                 override val data: MatrixData) : Matrix, Cloneable {
+class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
-	constructor(data: MatrixData) : this(DefineType.ROW, data)
 
-	private val rowDefine = defineType == DefineType.ROW
+	override val row: Int = data.size
 
-	override val row: Int = if (rowDefine) data.size else data.first().size
-
-	override val column: Int = if (!rowDefine) data.size else data.first().size
+	override val column: Int = data.first().size
 
 	override val isSquare: Boolean = row == column
 
 	override val dimension: Int = if (!isSquare) -1 else row
 
-	override fun get(row: Int, column: Int): Double =
-			if (rowDefine) data[row][column] else data[column][row]
+	private val transposeLazy: Matrix by lazy {
+		List(column) { r ->
+			List(row) { c ->
+				this[c, r]
+			}
+		}.toMatrix()
+	}
+
+	private val companionLazy: Matrix by lazy {
+		if (!isSquare) throw IllegalStateException("方阵才有伴随矩阵")
+		toDeterminant().let {
+			List(row) { r ->
+				List(column) { c ->
+					it.getAlgebraCofactor(r, c)
+				}
+			}
+		}.toMatrix().transpose()
+	}
+
+	private val inverseLazy: Matrix by lazy {
+		if (!isSquare) throw IllegalStateException("不方不能求逆")
+		val d = det()
+		if (d == .0) throw IllegalStateException("行列式为零不能通过此种方法求逆")
+		companion() / d
+	}
+
+	private val determinantLazy: Determinant by lazy { DeterminantImpl(this) }
+
+	private val detLazy: Double by lazy {
+		if (!isSquare) throw IllegalStateException("非方阵没有行列式")
+		toDeterminant().calculate()
+	}
 
 	init {
 		if (row == 0 || column == 0) throw IllegalArgumentException("不能构虚无矩阵")
-		if ((rowDefine && data.any { it.size != column }) ||
-				(!rowDefine && data.any { it.size != row }))
+		if (data.any { it.size != column })
 			throw IllegalArgumentException("矩阵参数错误")
 	}
 
+	override fun get(row: Int, column: Int): Double =
+			data[row][column]
+
+
 	override fun plus(other: Matrix): Matrix {
 		checkDimension(other)
-		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] + other[r, c] } }.let {
-			MatrixImpl(defineType, it)
-		}
+		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] + other[r, c] } }
+				.toMatrix()
 	}
 
 	override fun minus(other: Matrix): Matrix {
 		checkDimension(other)
-		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] - other[r, c] } }.let {
-			MatrixImpl(defineType, it)
-		}
+		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] - other[r, c] } }
+				.toMatrix()
 	}
 
-	override fun times(k: Double): Matrix = MatrixImpl(defineType, data.map { it.map { it * k } })
+	override fun times(k: Double): Matrix = data.map { it.map { it * k } }.toMatrix()
 
 	override fun times(other: Matrix): Matrix = List(row) { r ->
+		if (column != other.row) throw IllegalArgumentException("该乘法未定义")
 		List(other.column) { c ->
 			(0 until column).sumByDouble {
 				this[r, it] * other[it, c]
@@ -67,9 +99,8 @@ class MatrixImpl(override val defineType: DefineType,
 
 	override fun div(other: Matrix): Matrix = this * other.inverse()
 
-	override fun div(k: Double): Matrix = MatrixImpl(defineType, data.map { it.map { it / k } })
+	override fun div(k: Double): Matrix = data.map { it.map { it / k } }.toMatrix()
 
-	@Deprecated("没卵用")
 	override infix fun pow(n: Int): Matrix {
 		if (!isSquare) throw IllegalStateException("方阵才能乘方")
 		if (n <= 0) throw IllegalArgumentException("至少乘一次方")
@@ -79,32 +110,19 @@ class MatrixImpl(override val defineType: DefineType,
 		}
 	}
 
+	override fun toDeterminant(): Determinant = determinantLazy
+
+	override fun det(): Double = detLazy
+
 	override fun elementaryTransformation(block: ElementaryTransformation.() -> Unit) =
 			ElementaryTransformationImpl(data).apply(block).getResult()
 
 
-	override fun companion(): Matrix {
-		if (!isSquare) throw IllegalStateException("方阵才有伴随矩阵")
-		return toDeterminant().let {
-			List(row) { r ->
-				List(column) { c ->
-					it.getAlgebraCofactor(r, c)
-				}
-			}
-		}.toMatrix(DefineType.COLUMN)
-	}
+	override fun companion(): Matrix = companionLazy
 
-	override fun transpose(): Matrix = MatrixImpl(when (defineType) {
-		DefineType.COLUMN -> DefineType.ROW
-		DefineType.ROW    -> DefineType.COLUMN
-	}, data)
+	override fun transpose(): Matrix = transposeLazy
 
-	override fun inverse(): Matrix {
-		if (!isSquare) throw IllegalStateException("不方不能求逆")
-		val d = toDeterminant().value
-		if (d == .0) throw IllegalStateException("行列式为零不能求逆")
-		return companion() / d
-	}
+	override fun inverse(): Matrix = inverseLazy
 
 	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)
 		throw IllegalArgumentException("维度错误") else Unit
@@ -142,12 +160,9 @@ class MatrixImpl(override val defineType: DefineType,
 
 	override fun equals(other: Any?): Boolean {
 		if (other !is Matrix) return false
-		return other.data == data && defineType == other.defineType
+		return other.data == data
 	}
 
-	override fun hashCode(): Int {
-		var result = defineType.hashCode()
-		result = 31 * result + data.hashCode()
-		return result
-	}
+	override fun hashCode(): Int = data.hashCode() + javaClass.hashCode()
+
 }

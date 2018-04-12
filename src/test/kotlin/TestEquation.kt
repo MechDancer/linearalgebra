@@ -4,7 +4,7 @@ import matrix.builder.Row
 import matrix.builder.matrix
 import org.junit.Assert
 import org.junit.Test
-import vector.toVector
+import vector.vectorOf
 
 class TestEquation {
 	@Test
@@ -22,10 +22,10 @@ class TestEquation {
 				Row[3.0, 1.0, 3.0]
 			}
 
-			constant = listOf(3.0, .0, 7.0).toVector()
+			constant = vectorOf(3.0, .0, 7.0)
 
-		}.apply { println(constant) }
-		Assert.assertEquals(listOf(10.0 / 7.0, 1.0, 4.0 / 7.0).toVector(), equation.solve(CramerSolver))
+		}
+		Assert.assertEquals(vectorOf(10.0 / 7.0, 1.0, 4.0 / 7.0), equation.solve(CramerSolver))
 	}
 
 }

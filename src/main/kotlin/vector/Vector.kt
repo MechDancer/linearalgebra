@@ -1,12 +1,13 @@
 package vector
 
+import matrix.MatrixElement
 import vector.impl.Vector2D
 import vector.impl.Vector3D
 
 interface Vector {
 	val dimension: Int
 
-	val data: List<Double>
+	val data: MatrixElement
 
 	operator fun get(index: Int): Double
 

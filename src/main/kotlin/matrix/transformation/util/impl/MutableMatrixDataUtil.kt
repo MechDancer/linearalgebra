@@ -1,6 +1,7 @@
 package matrix.transformation.util.impl
 
 import matrix.MatrixData
+import matrix.MatrixElement
 import matrix.transformation.util.MatrixDataUtil
 
 class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
@@ -19,13 +20,13 @@ class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 		}
 	}
 
-	override fun replaceRow(row: Int, elements: List<Double>): MatrixDataUtil = apply {
+	override fun replaceRow(row: Int, elements: MatrixElement): MatrixDataUtil = apply {
 		if (elements.size != mutableData.first().size) throw IllegalArgumentException("元素项数不同")
 		checkRowRange(row)
 		mutableData[row] = elements.toMutableList()
 	}
 
-	override fun replaceColumn(column: Int, elements: List<Double>): MatrixDataUtil = apply {
+	override fun replaceColumn(column: Int, elements: MatrixElement): MatrixDataUtil = apply {
 		if (elements.size != mutableData.size) throw IllegalArgumentException("元素项数不同")
 		checkColumnRange(column)
 		elements.forEachIndexed { i, e ->
@@ -33,12 +34,12 @@ class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 		}
 	}
 
-	override fun splitRow(row: Int): List<Double> {
+	override fun splitRow(row: Int): MatrixElement {
 		checkRowRange(row)
 		return mutableData[row]
 	}
 
-	override fun splitColumn(column: Int): List<Double> {
+	override fun splitColumn(column: Int): MatrixElement {
 		checkColumnRange(column)
 		return List(mutableData.size) {
 			mutableData[it][column]
@@ -56,3 +57,6 @@ class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 
 
 }
+
+fun operateMatrixDataMutable(data: MatrixData, block: MutableMatrixDataUtil.() -> Unit) =
+		MutableMatrixDataUtil(data).apply(block).getData()

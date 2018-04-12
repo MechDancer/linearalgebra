@@ -8,39 +8,39 @@ import matrix.transformation.util.impl.MutableMatrixDataUtil
 
 class ElementaryTransformationImpl(data: MatrixData) : ElementaryTransformation {
 
-	private val util = MutableMatrixDataUtil(data)
+	override val dataUtil = MutableMatrixDataUtil(data)
 
-	override fun getResult(): Matrix = util.getData().toMatrix()
+	override fun getResult(): Matrix = dataUtil.getData().toMatrix()
 
 	override fun rowMultiply(row: Int, k: Double) {
-		val temp = util.splitRow(row).map { it * k }
-		util.replaceRow(row, temp)
+		val temp = dataUtil.splitRow(row).map { it * k }
+		dataUtil.replaceRow(row, temp)
 	}
 
 	override fun rowSwap(row1: Int, row2: Int) {
-		val temp = util.splitRow(row1)
-		util.replaceRow(row1, util.splitRow(row2))
-		util.replaceRow(row2, temp)
+		val temp = dataUtil.splitRow(row1)
+		dataUtil.replaceRow(row1, dataUtil.splitRow(row2))
+		dataUtil.replaceRow(row2, temp)
 	}
 
 	override fun rowAddTo(from: Int, to: Int, k: Double) {
-		val temp = util.splitRow(from).map { it * k }
-		util.replaceRow(to, util.splitRow(to).mapIndexed { index, d -> d + temp[index] })
+		val temp = dataUtil.splitRow(from).map { it * k }
+		dataUtil.replaceRow(to, dataUtil.splitRow(to).mapIndexed { index, d -> d + temp[index] })
 	}
 
 	override fun columnMultiply(column: Int, k: Double) {
-		val temp = util.splitColumn(column).map { it * k }
-		util.replaceColumn(column, temp)
+		val temp = dataUtil.splitColumn(column).map { it * k }
+		dataUtil.replaceColumn(column, temp)
 	}
 
 	override fun columnSwap(column1: Int, column2: Int) {
-		val temp = util.splitRow(column1)
-		util.replaceRow(column1, util.splitRow(column2))
-		util.replaceRow(column2, temp)
+		val temp = dataUtil.splitRow(column1)
+		dataUtil.replaceRow(column1, dataUtil.splitRow(column2))
+		dataUtil.replaceRow(column2, temp)
 	}
 
 	override fun columnAddTo(from: Int, to: Int, k: Double) {
-		val temp = util.splitColumn(from).map { it * k }
-		util.replaceRow(to, util.splitColumn(to).mapIndexed { index, d -> d + temp[index] })
+		val temp = dataUtil.splitColumn(from).map { it * k }
+		dataUtil.replaceRow(to, dataUtil.splitColumn(to).mapIndexed { index, d -> d + temp[index] })
 	}
 }

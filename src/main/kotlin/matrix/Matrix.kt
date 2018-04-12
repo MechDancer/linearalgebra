@@ -1,5 +1,6 @@
 package matrix
 
+import matrix.determinant.Determinant
 import matrix.transformation.ElementaryTransformation
 import vector.Vector
 
@@ -7,9 +8,7 @@ interface Matrix {
 
 	val dimension: Int
 
-	val defineType: DefineType
-
-	val data: List<List<Double>>
+	val data: MatrixData
 
 	val row: Int
 
@@ -38,9 +37,11 @@ interface Matrix {
 	operator fun div(k: Double): Matrix
 
 
-	@Deprecated("没什么卵用")
 	infix fun pow(n: Int): Matrix
 
+	fun toDeterminant(): Determinant
+
+	fun det(): Double
 
 	fun elementaryTransformation(block: ElementaryTransformation.() -> Unit): Matrix
 

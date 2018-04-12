@@ -1,20 +1,16 @@
 package matrix
 
-import matrix.determinant.Determinant
-import matrix.determinant.impl.DeterminantImpl
+import matrix.builder.Row
+import matrix.builder.matrix
 import matrix.impl.MatrixImpl
 import vector.Vector
 
-enum class DefineType { ROW, COLUMN }
-
 typealias MatrixData = List<List<Double>>
 
-fun Matrix.toDeterminant(): Determinant =
-		DeterminantImpl(this)
-
+typealias MatrixElement = List<Double>
 
 fun Vector.toMatrix(): Matrix =
-		MatrixImpl(DefineType.COLUMN, listOf(data))
+		MatrixImpl(listOf(data))
 
-fun MatrixData.toMatrix(defineType: DefineType = DefineType.ROW): Matrix =
-		MatrixImpl(defineType, this)
+fun MatrixData.toMatrix(): Matrix =
+		MatrixImpl(this)

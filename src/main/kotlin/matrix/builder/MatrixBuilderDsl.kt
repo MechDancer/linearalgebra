@@ -1,21 +1,20 @@
 package matrix.builder
 
-import matrix.DefineType
 import matrix.Matrix
+import matrix.MatrixElement
 import matrix.impl.MatrixImpl
 
-class MatrixBuilderDsl internal constructor(private val defineType: DefineType) {
+class MatrixBuilderDsl internal constructor() {
 
-	private val cache = mutableListOf<List<Double>>()
+	private val cache = mutableListOf<MatrixElement>()
 
 
 	operator fun Row.get(vararg double: Double) {
 		cache.add(double.toList())
 	}
 
-	internal fun build(): Matrix = MatrixImpl(defineType, cache)
+	internal fun build(): Matrix = MatrixImpl(cache)
 }
 
-fun matrix(defineType: DefineType = DefineType.ROW,
-           block: MatrixBuilderDsl.() -> Unit) =
-		MatrixBuilderDsl(defineType).apply(block).build()
+fun matrix(block: MatrixBuilderDsl.() -> Unit) =
+		MatrixBuilderDsl().apply(block).build()
