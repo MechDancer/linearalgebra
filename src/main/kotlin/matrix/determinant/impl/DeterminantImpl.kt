@@ -35,12 +35,7 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 	override fun getCofactor(row: Int, column: Int): Determinant {
 		if (row !in 0 until this.row) IllegalArgumentException("行数错误")
 		if (column !in 0 until this.column) IllegalArgumentException("列数错误")
-//		return MutableMatrixDataUtil(data).apply {
-//			removeRow(row)
-//			removeColumn(column)
-//		}.getData().toMatrix().toDeterminant()
-//
-	return 	operateMatrixDataMutable(data){
+		return operateMatrixDataMutable(data) {
 			removeRow(row)
 			removeColumn(column)
 		}.toMatrix().toDeterminant()

@@ -37,5 +37,3 @@ class TestMatrix {
 		Assert.assertEquals(expect, m.inverse())
 	}
 }
-
-
