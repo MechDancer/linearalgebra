@@ -7,7 +7,7 @@
 gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+!/gradle/wrapper/gradle-wrapper.jar
 
 # Cache of project
 .gradletasknamecache
@@ -86,4 +86,5 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
+src/main/resources/
+src/test/resources/
