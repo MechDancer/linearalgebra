@@ -16,6 +16,9 @@ interface Matrix {
 
 	val isSquare: Boolean
 
+	val rank: Int
+
+
 	operator fun get(row: Int, column: Int): Double
 
 	operator fun plus(other: Matrix): Matrix
@@ -50,6 +53,8 @@ interface Matrix {
 	fun transpose(): Matrix
 
 	fun inverse(): Matrix
+
+	fun rowEchelon(): Matrix
 
 	companion object {
 

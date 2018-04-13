@@ -22,6 +22,10 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	override val dimension: Int = if (!isSquare) -1 else row
 
+	override val rank: Int by lazy {
+		rowEchelon().data.count { it.all { it != .0 } }
+	}
+
 	private val transposeLazy: Matrix by lazy {
 		List(column) { r ->
 			List(row) { c ->
@@ -31,7 +35,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	}
 
 	private val companionLazy: Matrix by lazy {
-		if (!isSquare) throw IllegalStateException("方阵才有伴随矩阵")
+		if (!isSquare) throw IllegalStateException("伴随矩阵未定义")
 		toDeterminant().let {
 			List(row) { r ->
 				List(column) { c ->
@@ -42,7 +46,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	}
 
 	private val inverseLazy: Matrix by lazy {
-		if (!isSquare) throw IllegalStateException("不方不能求逆")
+		if (!isSquare) throw IllegalStateException("逆矩阵未定义")
 		val d = det()
 		if (d == .0) throw IllegalStateException("行列式为零不能通过此种方法求逆")
 		companion() / d
@@ -51,9 +55,11 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	private val determinantLazy: Determinant by lazy { DeterminantImpl(this) }
 
 	private val detLazy: Double by lazy {
-		if (!isSquare) throw IllegalStateException("非方阵没有行列式")
+		if (!isSquare) throw IllegalStateException("行列式未定义")
 		toDeterminant().calculate()
 	}
+
+	private val rowEchelonLazy: Matrix by lazy { TODO("还没写化简") }
 
 	init {
 		if (row == 0 || column == 0) throw IllegalArgumentException("不能构虚无矩阵")
@@ -102,7 +108,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	override fun div(k: Double): Matrix = data.map { it.map { it / k } }.toMatrix()
 
 	override infix fun pow(n: Int): Matrix {
-		if (!isSquare) throw IllegalStateException("方阵才能乘方")
+		if (!isSquare) throw IllegalStateException("乘方未定义")
 		if (n <= 0) throw IllegalArgumentException("至少乘一次方")
 
 		return (1 until n).fold(this as Matrix) { acc, _ ->
@@ -124,6 +130,8 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	override fun inverse(): Matrix = inverseLazy
 
+	override fun rowEchelon(): Matrix = rowEchelonLazy
+
 	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)
 		throw IllegalArgumentException("维度错误") else Unit
 
@@ -140,13 +148,11 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 			e.indices.forEach { c ->
 				val data = this@MatrixImpl[r, c]
 				var dL = abs(maxDataLength - data.toString().length)
-				val parity = dL % 2 == 0
 				dL /= 2
-				val right: Int = dL
-				val left: Int = if (parity) dL else dL + 1
+				val left: Int = if (dL % 2 == 0) dL else dL + 1
 				append(" ".repeat(left))
 				append(" $data ")
-				append(" ".repeat(right))
+				append(" ".repeat(dL))
 				if (c == column - 1)
 					when (r) {
 						0       -> append("┐")

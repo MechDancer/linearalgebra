@@ -4,6 +4,7 @@ import matrix.Matrix
 import matrix.determinant.Determinant
 import matrix.toMatrix
 import matrix.transformation.util.impl.operateMatrixDataMutable
+import kotlin.math.abs
 
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 
@@ -45,12 +46,19 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 			(if ((row + column) % 2 == 0) 1 else -1) * getCofactor(row, column).calculate()
 
 	override fun toString(): String = buildString {
-		append(" ".repeat(dimension / 2))
+		val maxDataLength = data.flatten().map { it.toString().length }.max()!!
+		append(" ".repeat(maxDataLength * column / 2))
 		appendln("Determinant ($dimension)")
 		data.forEachIndexed { r, e ->
 			append("│")
 			e.indices.forEach { c ->
-				append(" ${this@DeterminantImpl[r, c]} ")
+				val data = this@DeterminantImpl[r, c]
+				var dL = abs(maxDataLength - data.toString().length)
+				dL /= 2
+				val left: Int = if (dL % 2 == 0) dL else dL + 1
+				append(" ".repeat(left))
+				append(" $data ")
+				append(" ".repeat(dL))
 				if (c == column - 1) append("│")
 			}
 			appendln()
