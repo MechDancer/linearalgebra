@@ -54,9 +54,9 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 			e.indices.forEach { c ->
 				val data = this@DeterminantImpl[r, c]
 				var dL = abs(maxDataLength - data.toString().length)
+				val parity = dL % 2 == 0
 				dL /= 2
-				val left: Int = if (dL % 2 == 0) dL else dL + 1
-				append(" ".repeat(left))
+				append(" ".repeat(if (parity) dL else dL + 1))
 				append(" $data ")
 				append(" ".repeat(dL))
 				if (c == column - 1) append("│")
