@@ -2,11 +2,14 @@ package matrix.impl
 
 import matrix.Matrix
 import matrix.MatrixData
+import matrix.MatrixElement
 import matrix.determinant.Determinant
 import matrix.determinant.impl.DeterminantImpl
 import matrix.toMatrix
 import matrix.transformation.ElementaryTransformation
 import matrix.transformation.impl.ElementaryTransformationImpl
+import matrix.transformation.util.impl.ImmutableMatrixDataUtil
+import matrix.transformation.util.impl.operateMatrixDataMutable
 import vector.Vector
 import vector.toVector
 import kotlin.math.abs
@@ -45,11 +48,20 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 		}.toMatrix().transpose()
 	}
 
-	private val inverseLazy: Matrix by lazy {
+	private val inverseByCompanionLazy: Matrix by lazy {
 		if (!isSquare) throw IllegalStateException("逆矩阵未定义")
 		val d = det()
 		if (d == .0) throw IllegalStateException("行列式为零不能通过此种方法求逆")
 		companion() / d
+	}
+
+	private val inverseByRowEchelonLazy: Matrix by lazy {
+		if (!isSquare) throw IllegalStateException("逆矩阵未定义")
+		operateMatrixDataMutable(withUnit().rowEchelon().data) {
+			(0 until dimension).forEach {
+				removeColumn(it)
+			}
+		}.toMatrix()
 	}
 
 	private val determinantLazy: Determinant by lazy { DeterminantImpl(this) }
@@ -59,7 +71,87 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 		toDeterminant().calculate()
 	}
 
-	private val rowEchelonLazy: Matrix by lazy { TODO("还没写化简") }
+	private val rowEchelonLazy: Matrix by lazy {
+
+		fun MutableList<MutableList<Double>>.simplify() {
+
+			fun rowSwap(from: Int, to: Int) {
+				val temp = this[from]
+				this[from] = this[to]
+				this[to] = temp
+			}
+
+			fun rowMultiply(r1: Int, n: Double) {
+				//避免出现 -0.0 这样丑恶的数字
+				this[r1].forEachIndexed { i, e -> this[r1][i] = if (e == .0) .0 else e * n }
+			}
+
+			fun rowAddTo(from: Int, to: Int, n: Double) {
+				this[from].forEachIndexed { i, e -> this[to][i] = this[to][i] + e * n }
+			}
+
+
+			val position = mutableListOf<Int>()
+			var index = 0
+
+			var i = 0
+			var k: Int
+
+			for (j in this[0].indices) {
+				k = i
+
+				//找到第一个非零列的首个非零元素，将其所在行交换到当前首行
+				while (k < this.size && this[k][j] == 0.0) {
+					k++
+				}
+				if (k != this.size)
+					rowSwap(k, i)
+				else {
+					i++
+					continue
+				}
+
+
+				//储存主元位置，将主元化为1
+				position.add(index++, j)
+				rowMultiply(i, 1 / this[i][j])
+
+				//如果到最后一行则退出
+				if (i == size - 1)
+					break
+
+				//将主元所在列下方元素化为0
+				for (d in i + 1 until size)
+					if (this[d][j] != 0.0)
+						rowAddTo(i, d, -this[d][j])
+
+
+				i++
+			}
+
+			//从下到上化为最简阶梯形
+			for (e in i downTo 1)
+				for (s in e - 1 downTo 0)
+					rowAddTo(e, s, -this[s][position[e]])
+
+
+		}
+
+		data.map { it.toMutableList() }
+				.toMutableList().also { it.simplify() }.toMatrix()
+	}
+
+	private val withUnitLazy: Matrix by lazy {
+		operateMatrixDataMutable(data) {
+			if (!isSquare) throw IllegalStateException("此维度单位矩阵未定义")
+			val unit = Matrix.unitOf(dimension)
+			val unitColumns =
+					(0 until unit.dimension).fold(mutableListOf<MatrixElement>()) { acc, e ->
+						acc.apply { add(ImmutableMatrixDataUtil.splitColumn(unit.data, e)) }
+					}
+			unitColumns.forEach { addColumn(it) }
+		}.toMatrix()
+	}
 
 	init {
 		if (row == 0 || column == 0) throw IllegalArgumentException("不能构虚无矩阵")
@@ -103,7 +195,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	override fun invoke(vector: Vector): Vector = times(vector)
 
-	override fun div(other: Matrix): Matrix = this * other.inverse()
+	override fun div(other: Matrix): Matrix = this * other.inverseByCompanion()
 
 	override fun div(k: Double): Matrix = data.map { it.map { it / k } }.toMatrix()
 
@@ -115,6 +207,8 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 			acc * this
 		}
 	}
+
+	override fun round(n: Int): Matrix = TODO("放弃")
 
 	override fun toDeterminant(): Determinant = determinantLazy
 
@@ -128,9 +222,13 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	override fun transpose(): Matrix = transposeLazy
 
-	override fun inverse(): Matrix = inverseLazy
-
 	override fun rowEchelon(): Matrix = rowEchelonLazy
+
+	override fun withUnit(): Matrix = withUnitLazy
+
+	override fun inverseByCompanion(): Matrix = inverseByCompanionLazy
+
+	override fun inverseByRowEchelon(): Matrix = inverseByRowEchelonLazy
 
 	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)
 		throw IllegalArgumentException("维度错误") else Unit

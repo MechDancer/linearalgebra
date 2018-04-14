@@ -10,6 +10,16 @@ class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 			data.map { it.toMutableList() }.toMutableList()
 
 
+	fun addRow(data: MatrixElement) = apply {
+		mutableData.add(data.toMutableList())
+	}
+
+	fun addColumn(data: MatrixElement) = apply {
+		mutableData.forEachIndexed { c, row ->
+			row.add(data[c])
+		}
+	}
+
 	override fun removeRow(row: Int): MatrixDataUtil = apply {
 		mutableData.removeAt(row)
 	}
