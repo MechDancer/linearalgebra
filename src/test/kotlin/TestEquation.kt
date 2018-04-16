@@ -1,5 +1,5 @@
 import equation.builder.linearEquation
-import equation.solvers.CramerSolver
+import equation.solvers.CommonSolver
 import matrix.builder.Row
 import matrix.builder.matrix
 import org.junit.Assert
@@ -25,7 +25,7 @@ class TestEquation {
 			constant = vectorOf(3.0, .0, 7.0)
 
 		}
-		Assert.assertEquals(vectorOf(10.0 / 7.0, 1.0, 4.0 / 7.0), equation.solve(CramerSolver))
+		Assert.assertEquals(vectorOf(10.0 / 7.0, 1.0, 4.0 / 7.0), equation.solve(CommonSolver))
 	}
 
 }

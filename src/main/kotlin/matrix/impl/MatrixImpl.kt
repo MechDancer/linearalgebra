@@ -51,7 +51,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	private val inverseByCompanionLazy: Matrix by lazy {
 		if (!isSquare) throw IllegalStateException("逆矩阵未定义")
 		val d = det()
-		if (d == .0) throw IllegalStateException("行列式为零不能通过此种方法求逆")
+		if (d == .0) throw IllegalStateException("逆矩阵未定义")
 		companion() / d
 	}
 

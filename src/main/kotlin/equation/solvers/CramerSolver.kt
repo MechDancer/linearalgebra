@@ -4,8 +4,8 @@ import equation.LinearEquation
 import equation.Solver
 import matrix.MatrixElement
 import matrix.determinant.Determinant
-import matrix.determinant.impl.DeterminantImpl
 import matrix.toMatrix
+import matrix.transformation.util.impl.operateMatrixDataMutable
 import vector.Vector
 import vector.impl.VectorImpl
 import vector.toVector
@@ -34,18 +34,9 @@ object CramerSolver : Solver {
 
 	}
 
-	private fun Determinant.replaceColumn(columnIndex: Int, list: MatrixElement): Determinant {
-		if (list.size != row) throw IllegalArgumentException("新的一列必须和原来的一列行数相等")
+	private fun Determinant.replaceColumn(columnIndex: Int, list: MatrixElement): Determinant =
+			operateMatrixDataMutable(data) {
+				replaceColumn(columnIndex, list)
+			}.toMatrix().toDeterminant()
 
-		if (columnIndex !in 0..column) throw IllegalArgumentException("列数错误")
-
-
-		val temp = data.map(MatrixElement::toMutableList)
-
-		list.forEachIndexed { index, d ->
-			temp[index][columnIndex] = d
-		}
-
-		return DeterminantImpl(temp.toMatrix())
-	}
 }
