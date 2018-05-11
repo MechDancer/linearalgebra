@@ -50,7 +50,7 @@ open class VectorImpl(override val data: MatrixElement) : Vector, Cloneable {
 	override fun toString(): String = buildString {
 		val maxDataLength = data.map { it.toString().length }.max()!!
 		append(" ".repeat(maxDataLength / 2))
-		appendln("${dimension}DVector")
+		appendln("${dimension}D Vector")
 		data.forEachIndexed { index, d ->
 			when (index) {
 				0             -> append("┌")
@@ -74,7 +74,7 @@ open class VectorImpl(override val data: MatrixElement) : Vector, Cloneable {
 		}
 	}
 
-	fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ",")})"
+	override fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ",")})"
 
 	override fun equals(other: Any?): Boolean {
 		if (other !is Vector) return false

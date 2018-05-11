@@ -29,6 +29,7 @@ interface Vector {
 
 	fun getOrElse(index: Int, defaultValue: (Int) -> Double): Double
 
+	fun toSimpleString(): String
 
 	companion object {
 
