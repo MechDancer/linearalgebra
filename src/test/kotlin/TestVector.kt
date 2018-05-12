@@ -1,8 +1,8 @@
 import org.junit.Assert
 import org.junit.Test
-import vector.Axis3D
-import vector.impl.Vector2D
-import vector.impl.Vector3D
+import cn.berberman.algebra.vector.Axis3D
+import cn.berberman.algebra.vector.impl.Vector2D
+import cn.berberman.algebra.vector.impl.Vector3D
 import kotlin.math.sqrt
 
 class TestVector {

@@ -1,4 +1,4 @@
-import fraction.toFraction
+import cn.berberman.algebra.fraction.toFraction
 import org.junit.Assert
 import org.junit.Test
 

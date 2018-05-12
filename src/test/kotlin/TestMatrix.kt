@@ -1,5 +1,5 @@
-import matrix.builder.Row
-import matrix.builder.matrix
+import cn.berberman.algebra.matrix.builder.Row
+import cn.berberman.algebra.matrix.builder.matrix
 import org.junit.Assert
 import org.junit.Test
 

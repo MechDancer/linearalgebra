@@ -1,10 +1,10 @@
-import equation.builder.linearEquation
-import equation.solvers.CommonSolver
-import matrix.builder.Row
-import matrix.builder.matrix
+import cn.berberman.algebra.equation.builder.linearEquation
+import cn.berberman.algebra.equation.solvers.CommonSolver
+import cn.berberman.algebra.matrix.builder.Row
+import cn.berberman.algebra.matrix.builder.matrix
 import org.junit.Assert
 import org.junit.Test
-import vector.vectorOf
+import cn.berberman.algebra.vector.vectorOf
 
 class TestEquation {
 	@Test
