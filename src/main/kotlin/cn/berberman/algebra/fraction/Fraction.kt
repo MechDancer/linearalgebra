@@ -12,6 +12,10 @@ class Fraction(
 
 	val numerator: Int
 
+	operator fun component1() = numerator
+
+	operator fun component2() = denominator
+
 	init {
 		if (denominator == 0) throw IllegalStateException("分母不能为零")
 		else {
@@ -40,35 +44,32 @@ class Fraction(
 		val dFactor = commonFactor(denominator, other.denominator)
 		val a = other.denominator / dFactor
 		val b = denominator / dFactor
-		val sum = Fraction(numerator * a + other.numerator * b,
+		return Fraction(numerator * a + other.numerator * b,
 				denominator * other.denominator / dFactor)
-		return simplify(sum)
 	}
 
-	operator fun plus(other: Int): Fraction {
-		return Fraction(numerator + other * denominator, denominator)
-	}
+	operator fun plus(other: Int): Fraction = Fraction(numerator + other * denominator, denominator)
+
 
 	operator fun minus(other: Fraction): Fraction = this + (other * -1)
 
-	operator fun minus(other: Int): Fraction {
-		return Fraction(numerator - other * denominator, denominator)
-	}
+	operator fun minus(other: Int): Fraction = Fraction(numerator - other * denominator, denominator)
+
 
 	operator fun times(other: Fraction): Fraction =
-			simplify(Fraction(numerator * other.numerator,
-					denominator * other.denominator))
+			Fraction(numerator * other.numerator,
+					denominator * other.denominator)
 
-	operator fun times(k: Int): Fraction = simplify(Fraction(numerator * k, denominator))
+	operator fun times(k: Int): Fraction = Fraction(numerator * k, denominator)
 
 	operator fun div(other: Fraction): Fraction =
-			simplify(Fraction(numerator * other.denominator
-					, denominator * other.numerator))
+			Fraction(numerator * other.denominator
+					, denominator * other.numerator)
 
 
 	operator fun div(other: Int): Fraction =
 			if (other == 0) throw IllegalStateException("除数不能为零")
-			else simplify(Fraction(numerator, denominator * other))
+			else Fraction(numerator, denominator * other)
 
 
 	fun reciprocal(): Fraction =

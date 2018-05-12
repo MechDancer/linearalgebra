@@ -6,6 +6,12 @@ import cn.berberman.algebra.vector.Vector
 class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 	override val dimension: Int = 3
 
+	operator fun component1() = this[Axis3D.X]
+
+	operator fun component2() = this[Axis3D.Y]
+
+	operator fun component3() = this[Axis3D.Z]
+
 	operator fun get(axis3D: Axis3D) = when (axis3D) {
 		Axis3D.X -> this[0]
 		Axis3D.Y -> this[1]
