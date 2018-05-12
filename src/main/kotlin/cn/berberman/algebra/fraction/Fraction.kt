@@ -119,9 +119,11 @@ class Fraction(
 			append(" ".repeat(right))
 			if (i != 1) {
 				appendln()
-				append(" ".repeat(left + 1))
-				append("─".repeat(maxDataLength - 1))
-				append(" ".repeat(right + 1))
+				append(" ".repeat(left))
+				append(" ")
+				append("─".repeat(maxDataLength ))
+				append(" ")
+				append(" ".repeat(right))
 				appendln()
 			}
 		}
