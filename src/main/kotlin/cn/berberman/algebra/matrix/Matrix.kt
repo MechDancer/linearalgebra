@@ -18,7 +18,6 @@ interface Matrix {
 
 	val rank: Int
 
-
 	operator fun get(row: Int, column: Int): Double
 
 	operator fun plus(other: Matrix): Matrix
@@ -38,7 +37,6 @@ interface Matrix {
 	operator fun div(other: Matrix): Matrix
 
 	operator fun div(k: Double): Matrix
-
 
 	infix fun pow(n: Int): Matrix
 
@@ -62,12 +60,10 @@ interface Matrix {
 
 	fun inverseByRowEchelon(): Matrix
 
-
 	companion object {
-
 		fun zeroOf(row: Int, column: Int): Matrix {
 			if (row <= 0 || column <= 0) throw IllegalArgumentException("矩阵参数错误")
-			return List(row) { List(column) { .0 } }.toMatrix()
+			return List(row) { _ -> List(column) { .0 } }.toMatrix()
 		}
 
 		fun unitOf(dimension: Int): Matrix {

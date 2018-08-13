@@ -33,7 +33,6 @@ interface Vector {
 	fun toSimpleString(): String
 
 	companion object {
-
 		operator fun invoke(data: MatrixElement): Vector =
 				if (data.isEmpty()) throw IllegalArgumentException("维度参数错误")
 				else when (data.size) {
@@ -51,9 +50,6 @@ interface Vector {
 						else -> DoubleArray(dimension).toList().toVector()
 					}
 
-
 		fun normalize(vector: Vector): Vector = vector / vector.norm()
-
 	}
-
 }

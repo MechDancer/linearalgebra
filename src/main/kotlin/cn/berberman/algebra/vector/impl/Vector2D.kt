@@ -21,5 +21,4 @@ class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 				?: Vector2D(vector.getOrElse(0) { .0 }
 						, vector.getOrElse(1) { .0 })
 	}
-
 }

@@ -7,7 +7,6 @@ class MatrixBuilderDsl internal constructor() {
 
 	private val cache = mutableListOf<MutableList<Double>>()
 
-
 	operator fun Row.get(vararg double: Double) {
 		cache.add(double.toList().toMutableList())
 	}

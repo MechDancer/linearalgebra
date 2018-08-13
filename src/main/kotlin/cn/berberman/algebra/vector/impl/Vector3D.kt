@@ -23,7 +23,6 @@ class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 					this[2] * other[0] - this[0] * other[2],
 					this[0] * other[1] - this[1] * other[0])
 
-
 	companion object {
 		fun to3D(vector: Vector): Vector3D = vector as? Vector3D
 				?: Vector3D(vector.getOrElse(0) { .0 },

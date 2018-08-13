@@ -4,7 +4,6 @@ import cn.berberman.algebra.matrix.Matrix
 import cn.berberman.algebra.matrix.MatrixElement
 import cn.berberman.algebra.vector.impl.VectorImpl
 
-
 fun MatrixElement.toVector(): Vector = VectorImpl(this)
 
 fun Matrix.toVector(): Vector = when {

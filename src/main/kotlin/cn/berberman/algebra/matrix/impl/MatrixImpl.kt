@@ -16,7 +16,6 @@ import kotlin.math.abs
 
 class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
-
 	override val row: Int = data.size
 
 	override val column: Int = data.first().size
@@ -26,7 +25,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	override val dimension: Int = if (!isSquare) -1 else row
 
 	override val rank: Int by lazy {
-		rowEchelon().data.count { it.all { it != .0 } }
+		rowEchelon().data.count { it.all { inner -> inner != .0 } }
 	}
 
 	private val transposeLazy: Matrix by lazy {
@@ -39,11 +38,9 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	private val companionLazy: Matrix by lazy {
 		if (!isSquare) throw IllegalStateException("伴随矩阵未定义")
-		toDeterminant().let {
-			List(row) { r ->
-				List(column) { c ->
-					it.getAlgebraCofactor(r, c)
-				}
+		List(row) { r ->
+			List(column) { c ->
+				toDeterminant().getAlgebraCofactor(r, c)
 			}
 		}.toMatrix().transpose()
 	}
@@ -90,7 +87,6 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 				this[from].forEachIndexed { i, e -> this[to][i] = this[to][i] + e * n }
 			}
 
-
 			val position = mutableListOf<Int>()
 			var index = 0
 
@@ -110,7 +106,6 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 					i++
 					continue
 				}
-
 
 				//储存主元位置，将主元化为1
 				position.add(index++, j)
@@ -133,7 +128,6 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 			for (e in i downTo 1)
 				for (s in e - 1 downTo 0)
 					rowAddTo(e, s, -this[s][position[e]])
-
 
 		}
 
@@ -162,7 +156,6 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	override fun get(row: Int, column: Int): Double =
 			data[row][column]
 
-
 	override fun plus(other: Matrix): Matrix {
 		checkDimension(other)
 		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] + other[r, c] } }
@@ -175,7 +168,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 				.toMatrix()
 	}
 
-	override fun times(k: Double): Matrix = data.map { it.map { it * k } }.toMatrix()
+	override fun times(k: Double): Matrix = data.map { it.map { x -> x * k } }.toMatrix()
 
 	override fun times(other: Matrix): Matrix = List(row) { r ->
 		if (column != other.row) throw IllegalArgumentException("该乘法未定义")
@@ -197,7 +190,7 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	override fun div(other: Matrix): Matrix = this * other.inverseByCompanion()
 
-	override fun div(k: Double): Matrix = data.map { it.map { it / k } }.toMatrix()
+	override fun div(k: Double): Matrix = data.map { it.map { x -> x / k } }.toMatrix()
 
 	override infix fun pow(n: Int): Matrix {
 		if (!isSquare) throw IllegalStateException("乘方未定义")
@@ -216,7 +209,6 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 
 	override fun elementaryTransformation(block: ElementaryTransformation.() -> Unit) =
 			ElementaryTransformationImpl(data).apply(block).getResult()
-
 
 	override fun companion(): Matrix = companionLazy
 
@@ -268,5 +260,4 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 	}
 
 	override fun hashCode(): Int = data.hashCode() + javaClass.hashCode()
-
 }

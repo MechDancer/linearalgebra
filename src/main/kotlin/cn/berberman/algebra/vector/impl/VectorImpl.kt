@@ -11,7 +11,6 @@ open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneabl
 	override val dimension: Int
 		get() = data.size
 
-
 	init {
 		if (data.isEmpty()) throw IllegalArgumentException("不能构虚无向量")
 	}
@@ -20,7 +19,6 @@ open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneabl
 		checkDimension(other)
 		return data.indices.map { operation(data[it], other.data[it]) }.toVector()
 	}
-
 
 	private fun checkDimension(other: Vector) =
 			if (this.dimension != other.dimension) throw IllegalArgumentException("维度不同,无法操作")
@@ -50,7 +48,6 @@ open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneabl
 	override fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
 			data.getOrElse(index, defaultValue)
 
-
 	override fun toString(): String = buildString {
 		val maxDataLength = data.map { it.toString().length }.max()!!
 		append(" ".repeat(maxDataLength / 2))
@@ -79,13 +76,6 @@ open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneabl
 	}
 
 	override fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ",")})"
-
-	override fun equals(other: Any?): Boolean {
-		if (other !is Vector) return false
-		return other.data == data
-	}
-
-	override fun hashCode(): Int {
-		return data.hashCode()
-	}
+	override fun equals(other: Any?) = other is Vector && other.data == data
+	override fun hashCode() = data.hashCode()
 }

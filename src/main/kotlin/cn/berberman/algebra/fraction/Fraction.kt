@@ -2,9 +2,9 @@ package cn.berberman.algebra.fraction
 
 import kotlin.math.abs
 
-class Fraction(
-		numerator: Int,
-		denominator: Int) : Number(), Comparable<Fraction> {
+class Fraction(numerator: Int,
+               denominator: Int)
+	: Number(), Comparable<Fraction> {
 
 	val isNegative = numerator < 0
 
@@ -39,7 +39,6 @@ class Fraction(
 		return Fraction(n, d)
 	}
 
-
 	operator fun plus(other: Fraction): Fraction {
 		val dFactor = commonFactor(denominator, other.denominator)
 		val a = other.denominator / dFactor
@@ -50,11 +49,9 @@ class Fraction(
 
 	operator fun plus(other: Int): Fraction = Fraction(numerator + other * denominator, denominator)
 
-
 	operator fun minus(other: Fraction): Fraction = this + (other * -1)
 
 	operator fun minus(other: Int): Fraction = Fraction(numerator - other * denominator, denominator)
-
 
 	operator fun times(other: Fraction): Fraction =
 			Fraction(numerator * other.numerator,
@@ -66,21 +63,17 @@ class Fraction(
 			Fraction(numerator * other.denominator
 					, denominator * other.numerator)
 
-
 	operator fun div(other: Int): Fraction =
 			if (other == 0) throw IllegalStateException("除数不能为零")
 			else Fraction(numerator, denominator * other)
-
 
 	fun reciprocal(): Fraction =
 			if (numerator == 0) throw IllegalStateException("求倒数分子不能为零")
 			else Fraction(denominator, numerator)
 
-
 	override fun toInt(): Int = numerator / denominator
 
 	override fun toDouble(): Double = numerator.toDouble() / denominator.toDouble()
-
 
 	override fun toByte(): Byte = toDouble().toByte()
 
@@ -121,7 +114,7 @@ class Fraction(
 				appendln()
 				append(" ".repeat(left))
 				append(" ")
-				append("─".repeat(maxDataLength ))
+				append("─".repeat(maxDataLength))
 				append(" ")
 				append(" ".repeat(right))
 				appendln()
@@ -142,7 +135,6 @@ class Fraction(
 	}
 
 	companion object {
-
 		fun commonFactor(x: Int, y: Int): Int {
 			var a = abs(x)
 			var b = abs(y)
@@ -154,6 +146,5 @@ class Fraction(
 			}
 			return b
 		}
-
 	}
 }

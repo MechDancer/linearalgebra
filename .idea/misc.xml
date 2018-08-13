@@ -8,6 +8,9 @@
     <currentScheme>IDE</currentScheme>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
   <component name="MarkdownProjectSettings">
     <PreviewSettings splitEditorLayout="SPLIT" splitEditorPreview="PREVIEW" useGrayscaleRendering="false" zoomFactor="1.25" maxImageWidth="0" showGitHubPageIfSynced="false" allowBrowsingInPreview="false" synchronizePreviewPosition="true" highlightPreviewType="LINE" highlightFadeOut="5" highlightOnTyping="true" synchronizeSourcePosition="true" verticallyAlignSourceAndPreviewSyncPosition="true" showSearchHighlightsInPreview="true" showSelectionInPreview="true">
       <PanelProvider>
@@ -75,7 +78,7 @@
       <textMaps />
     </LinkMapSettings>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="10" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

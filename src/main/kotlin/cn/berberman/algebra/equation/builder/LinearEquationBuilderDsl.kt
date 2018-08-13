@@ -6,7 +6,6 @@ import cn.berberman.algebra.matrix.Matrix
 import cn.berberman.algebra.vector.Vector
 
 class LinearEquationBuilderDsl internal constructor() {
-
 	lateinit var coefficient: Matrix
 
 	lateinit var constant: Vector
