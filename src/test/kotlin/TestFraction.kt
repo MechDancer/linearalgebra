@@ -1,6 +1,6 @@
-import cn.berberman.algebra.fraction.toFraction
 import org.junit.Assert
 import org.junit.Test
+import org.mechdancer.algebra.fraction.toFraction
 
 class TestFraction {
 	@Test

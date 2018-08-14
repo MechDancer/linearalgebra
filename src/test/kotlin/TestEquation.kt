@@ -1,10 +1,10 @@
-import cn.berberman.algebra.equation.builder.linearEquation
-import cn.berberman.algebra.equation.solvers.CommonSolver
-import cn.berberman.algebra.matrix.builder.Row
-import cn.berberman.algebra.matrix.builder.matrix
 import org.junit.Assert
 import org.junit.Test
-import cn.berberman.algebra.vector.vectorOf
+import org.mechdancer.algebra.equation.builder.linearEquation
+import org.mechdancer.algebra.equation.solvers.CommonSolver
+import org.mechdancer.algebra.matrix.builder.Row
+import org.mechdancer.algebra.matrix.builder.matrix
+import org.mechdancer.algebra.vector.vectorOf
 
 class TestEquation {
 	@Test

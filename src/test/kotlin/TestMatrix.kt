@@ -1,7 +1,7 @@
-import cn.berberman.algebra.matrix.builder.Row
-import cn.berberman.algebra.matrix.builder.matrix
 import org.junit.Assert
 import org.junit.Test
+import org.mechdancer.algebra.matrix.builder.Row
+import org.mechdancer.algebra.matrix.builder.matrix
 
 class TestMatrix {
 

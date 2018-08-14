@@ -3,6 +3,7 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -11,7 +12,7 @@ buildscript {
     }
 }
 
-group 'cn.berberman'
+group 'org.mechdancer'
 version '0.1.0-SNAPSHOT'
 
 apply plugin: 'kotlin'
@@ -35,7 +36,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-ublish {
+publish {
     userOrg = 'mechdancer'
     groupId = 'org.mechdancer'
     artifactId = 'linearalgebra'
