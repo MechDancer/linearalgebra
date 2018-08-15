@@ -1,0 +1,23 @@
+language: kotlin
+
+jdk:
+  - oraclejdk8
+
+sudo: true
+
+before_install:
+  - chmod a+x gradlew
+
+script:
+  - "./gradlew assemble"
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+notifications:
+   webhooks: https://oapi.dingtalk.com/robot/send?access_token=4b59c5ece57fc88af8fda28cc07573c4caf525aa69afc0cc888ccf3ce6dbe41b
