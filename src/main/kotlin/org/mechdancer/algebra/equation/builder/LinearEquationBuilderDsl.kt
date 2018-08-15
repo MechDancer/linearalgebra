@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.equation.builder
 
+import org.mechdancer.algebra.equation.LinearEquation
 import org.mechdancer.algebra.equation.impl.LinearEquationImpl
 import org.mechdancer.algebra.matrix.Matrix
 import org.mechdancer.algebra.vector.Vector
@@ -12,5 +13,5 @@ class LinearEquationBuilderDsl internal constructor() {
 	internal fun build() = LinearEquationImpl(coefficient, constant)
 }
 
-fun linearEquation(block: LinearEquationBuilderDsl.() -> Unit): org.mechdancer.algebra.equation.LinearEquation =
+fun linearEquation(block: LinearEquationBuilderDsl.() -> Unit): LinearEquation =
 		LinearEquationBuilderDsl().apply(block).build()

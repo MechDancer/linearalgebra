@@ -11,5 +11,5 @@ interface LinearEquation {
 
 	val isHomogeneous: Boolean
 
-	fun solve(solver: org.mechdancer.algebra.equation.Solver): Vector
+	fun solve(solver: Solver): Vector
 }

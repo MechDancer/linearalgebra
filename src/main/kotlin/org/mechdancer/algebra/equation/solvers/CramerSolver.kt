@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.equation.solvers
 
+import org.mechdancer.algebra.equation.LinearEquation
 import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.matrix.determinant.Determinant
 import org.mechdancer.algebra.matrix.toMatrix
@@ -10,7 +11,7 @@ import org.mechdancer.algebra.vector.toVector
 
 object CramerSolver : org.mechdancer.algebra.equation.Solver {
 
-	override fun solve(equation: org.mechdancer.algebra.equation.LinearEquation): Vector {
+	override fun solve(equation: LinearEquation): Vector {
 
 		if (equation.isHomogeneous)
 			if (equation.coefficient.let { it.row >= it.column })
