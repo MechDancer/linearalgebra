@@ -1,6 +1,7 @@
 package org.mechdancer.algebra.equation.solvers
 
 import org.mechdancer.algebra.equation.LinearEquation
+import org.mechdancer.algebra.equation.Solver
 import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.matrix.determinant.Determinant
 import org.mechdancer.algebra.matrix.toMatrix
@@ -9,7 +10,7 @@ import org.mechdancer.algebra.vector.Vector
 import org.mechdancer.algebra.vector.impl.VectorImpl
 import org.mechdancer.algebra.vector.toVector
 
-object CramerSolver : org.mechdancer.algebra.equation.Solver {
+object CramerSolver : Solver {
 
 	override fun solve(equation: LinearEquation): Vector {
 

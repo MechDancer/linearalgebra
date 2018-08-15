@@ -1,5 +1,7 @@
 package org.mechdancer.algebra.equation.solvers
 
+import org.mechdancer.algebra.equation.LinearEquation
+import org.mechdancer.algebra.equation.Solver
 import org.mechdancer.algebra.matrix.toMatrix
 import org.mechdancer.algebra.matrix.transformation.util.impl.ImmutableMatrixDataUtil
 import org.mechdancer.algebra.matrix.transformation.util.impl.operateMatrixDataMutable
@@ -7,8 +9,8 @@ import org.mechdancer.algebra.vector.Vector
 import org.mechdancer.algebra.vector.impl.VectorImpl
 import org.mechdancer.algebra.vector.toVector
 
-object CommonSolver : org.mechdancer.algebra.equation.Solver {
-	override fun solve(equation: org.mechdancer.algebra.equation.LinearEquation): Vector {
+object CommonSolver : Solver {
+	override fun solve(equation: LinearEquation): Vector {
 		if (equation.isHomogeneous)
 			if (equation.coefficient.let { it.row >= it.column })
 				return VectorImpl(List(equation.coefficient.dimension) { .0 })

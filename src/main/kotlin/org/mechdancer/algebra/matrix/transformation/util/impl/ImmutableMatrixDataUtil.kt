@@ -58,14 +58,14 @@ object ImmutableMatrixDataUtil {
 	}
 
 	fun splitRow(data: MatrixData, row: Int): MatrixElement {
-//		checkRowRange(row)
+		data.checkRowRange(row)
 		return List(data.column) { c ->
 			data[row][c]
 		}
 	}
 
 	fun splitColumn(data: MatrixData, column: Int): MatrixElement {
-//		checkColumnRange(column)
+		data.checkColumnRange(column)
 		return List(data.row) { r ->
 			data[r][column]
 		}
@@ -81,5 +81,3 @@ object ImmutableMatrixDataUtil {
 
 }
 
-@Deprecated("还是用可变的比较稳妥", ReplaceWith("operateMatrixDataMutable"))
-fun operateMatrixDataImmutable(block: ImmutableMatrixDataUtil.() -> Unit) = ImmutableMatrixDataUtil.let(block)
