@@ -3,7 +3,7 @@ package org.mechdancer.algebra.matrix
 import org.mechdancer.algebra.matrix.impl.MatrixImpl
 import org.mechdancer.algebra.vector.Vector
 
-typealias MatrixData = List<List<Double>>
+typealias MatrixData = List<MatrixElement>
 
 typealias MatrixElement = List<Double>
 
