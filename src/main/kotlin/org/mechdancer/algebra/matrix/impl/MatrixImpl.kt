@@ -14,7 +14,7 @@ import org.mechdancer.algebra.vector.Vector
 import org.mechdancer.algebra.vector.toVector
 import kotlin.math.abs
 
-class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
+class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 
 	override val row: Int = data.size
 
@@ -201,29 +201,31 @@ class MatrixImpl(override val data: MatrixData) : Matrix, Cloneable {
 		}
 	}
 
-	override fun round(n: Int): Matrix = TODO("放弃")
-
-	override fun toDeterminant(): Determinant = determinantLazy
+	override fun toDeterminant(): Determinant = (determinantLazy as Matrix).toDeterminant()
 
 	override fun det(): Double = detLazy
 
 	override fun elementaryTransformation(block: ElementaryTransformation.() -> Unit) =
 			ElementaryTransformationImpl(data).apply(block).getResult()
 
-	override fun companion(): Matrix = companionLazy
+	override fun companion(): Matrix = companionLazy.clone()
 
-	override fun transpose(): Matrix = transposeLazy
+	override fun transpose(): Matrix = transposeLazy.clone()
 
-	override fun rowEchelon(): Matrix = rowEchelonLazy
+	override fun rowEchelon(): Matrix = rowEchelonLazy.clone()
 
-	override fun withUnit(): Matrix = withUnitLazy
+	override fun withUnit(): Matrix = withUnitLazy.clone()
 
-	override fun inverseByCompanion(): Matrix = inverseByCompanionLazy
+	override fun inverseByCompanion(): Matrix = inverseByCompanionLazy.clone()
 
-	override fun inverseByRowEchelon(): Matrix = inverseByRowEchelonLazy
+	override fun inverseByRowEchelon(): Matrix = inverseByRowEchelonLazy.clone()
 
 	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)
 		throw IllegalArgumentException("维度错误") else Unit
+
+	override fun clone(): Matrix =
+			MatrixImpl(data)
+
 
 	override fun toString(): String = buildString {
 		val maxDataLength = data.flatten().map { it.toString().length }.max()!!

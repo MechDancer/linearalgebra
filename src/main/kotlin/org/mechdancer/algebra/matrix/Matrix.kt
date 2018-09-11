@@ -40,8 +40,6 @@ interface Matrix {
 
 	infix fun pow(n: Int): Matrix
 
-	infix fun round(n: Int): Matrix
-
 	fun toDeterminant(): Determinant
 
 	fun det(): Double
@@ -59,6 +57,8 @@ interface Matrix {
 	fun inverseByCompanion(): Matrix
 
 	fun inverseByRowEchelon(): Matrix
+
+	fun clone(): Matrix
 
 	companion object {
 		fun zeroOf(row: Int, column: Int): Matrix {

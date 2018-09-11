@@ -28,7 +28,9 @@ interface Vector {
 
 	fun norm(): Double
 
-	fun getOrElse(index: Int, defaultValue: (Int) -> Double): Double
+	fun normalize(): Vector
+
+	fun includedAngle(other: Vector): Double
 
 	fun toSimpleString(): String
 

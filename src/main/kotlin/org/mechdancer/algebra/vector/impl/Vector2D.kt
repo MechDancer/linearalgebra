@@ -18,7 +18,9 @@ class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 
 	companion object {
 		fun to2D(vector: Vector) = vector as? Vector2D
-				?: Vector2D(vector.getOrElse(0) { .0 }
-						, vector.getOrElse(1) { .0 })
+				?: (vector as VectorImpl).run {
+					Vector2D(vector.getOrElse(0) { .0 }
+							, vector.getOrElse(1) { .0 })
+				}
 	}
 }

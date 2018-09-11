@@ -4,9 +4,10 @@ import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.vector.Vector
 import org.mechdancer.algebra.vector.toVector
 import kotlin.math.abs
+import kotlin.math.acos
 import kotlin.math.sqrt
 
-open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneable {
+open class VectorImpl internal constructor(final override val data: MatrixElement) : Vector, Cloneable {
 
 	override val dimension: Int
 		get() = data.size
@@ -45,7 +46,11 @@ open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneabl
 
 	override fun norm(): Double = sqrt(data.sumByDouble { it * it })
 
-	override fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
+	override fun normalize(): Vector = this / norm()
+
+	override fun includedAngle(other: Vector) = acos(dot(other) / norm() * other.norm())
+
+	fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
 			data.getOrElse(index, defaultValue)
 
 	override fun toString(): String = buildString {
@@ -74,7 +79,6 @@ open class VectorImpl(final override val data: MatrixElement) : Vector, Cloneabl
 			appendln()
 		}
 	}
-
 	override fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ",")})"
 	override fun equals(other: Any?) = other is Vector && other.data == data
 	override fun hashCode() = data.hashCode()

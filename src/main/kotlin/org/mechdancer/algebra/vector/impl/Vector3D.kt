@@ -25,8 +25,10 @@ class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 
 	companion object {
 		fun to3D(vector: Vector): Vector3D = vector as? Vector3D
-				?: Vector3D(vector.getOrElse(0) { .0 },
-						vector.getOrElse(1) { .0 },
-						vector.getOrElse(2) { .0 })
+				?: (vector as VectorImpl).run {
+					Vector3D(vector.getOrElse(0) { .0 },
+							vector.getOrElse(1) { .0 },
+							vector.getOrElse(2) { .0 })
+				}
 	}
 }
