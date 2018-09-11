@@ -191,7 +191,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 		}
 	}
 
-	override fun toDeterminant(): Determinant = (determinantLazy as Matrix).toDeterminant()
+	override fun toDeterminant(): Determinant = DeterminantImpl(determinantLazy as Matrix)
 
 	override fun det(): Double = detLazy
 
