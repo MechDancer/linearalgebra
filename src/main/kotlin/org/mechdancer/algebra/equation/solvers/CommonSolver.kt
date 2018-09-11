@@ -14,7 +14,9 @@ object CommonSolver : Solver {
 		if (equation.isHomogeneous)
 			if (equation.coefficient.let { it.row >= it.column })
 				return VectorImpl(List(equation.coefficient.dimension) { .0 })
-			else throw IllegalArgumentException("齐次方程组有无限非零解")
+			else throw IllegalArgumentException("linear equation is homogeneous," +
+					" which has innumerable untrivial solutions")
+
 		val augmented = operateMatrixDataMutable(equation.coefficient.data) {
 			addColumn(equation.constant.data)
 		}.toMatrix()

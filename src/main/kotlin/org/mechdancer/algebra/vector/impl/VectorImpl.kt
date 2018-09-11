@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.vector.impl
 
+import org.mechdancer.algebra.dimensionStateError
 import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.vector.Vector
 import org.mechdancer.algebra.vector.toVector
@@ -13,7 +14,7 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 		get() = data.size
 
 	init {
-		if (data.isEmpty()) throw IllegalArgumentException("不能构虚无向量")
+		if (data.isEmpty()) throw IllegalArgumentException("vector data error")
 	}
 
 	private fun operate(other: Vector, operation: (v1: Double, v2: Double) -> Double): Vector {
@@ -22,7 +23,7 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 	}
 
 	private fun checkDimension(other: Vector) =
-			if (this.dimension != other.dimension) throw IllegalArgumentException("维度不同,无法操作")
+			if (this.dimension != other.dimension) dimensionStateError()
 			else Unit
 
 	override operator fun get(index: Int): Double = data[index]

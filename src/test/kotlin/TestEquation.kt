@@ -32,7 +32,7 @@ class TestEquation {
 			Assert.assertEquals(vectorOf(10.0 / 7.0, 1.0, 4.0 / 7.0),
 					equation.solve(CommonSolver))
 		} catch (e: AssertionError) {
-			println("果然不对")
+			println("qwq")
 		}
 	}
 

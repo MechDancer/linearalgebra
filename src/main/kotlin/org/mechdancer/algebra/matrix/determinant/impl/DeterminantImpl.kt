@@ -9,7 +9,7 @@ import kotlin.math.abs
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 
 	init {
-		if (!isSquare) throw IllegalStateException("行列式必须是方的")
+		if (!isSquare) throw IllegalStateException("determinant is undefined")
 	}
 
 	private val value: Double by lazy {

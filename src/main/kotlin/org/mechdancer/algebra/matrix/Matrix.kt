@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.matrix
 
+import org.mechdancer.algebra.dimensionArgumentError
 import org.mechdancer.algebra.matrix.determinant.Determinant
 import org.mechdancer.algebra.matrix.transformation.ElementaryTransformation
 import org.mechdancer.algebra.vector.Vector
@@ -62,12 +63,12 @@ interface Matrix {
 
 	companion object {
 		fun zeroOf(row: Int, column: Int): Matrix {
-			if (row <= 0 || column <= 0) throw IllegalArgumentException("矩阵参数错误")
+			if (row <= 0 || column <= 0) throw IllegalArgumentException("matrix data error")
 			return List(row) { _ -> List(column) { .0 } }.toMatrix()
 		}
 
 		fun unitOf(dimension: Int): Matrix {
-			if (dimension <= 0) throw IllegalArgumentException("矩阵参数错误")
+			if (dimension <= 0) dimensionArgumentError()
 			return List(dimension) { r ->
 				List(dimension) { c ->
 					if (c == r) 1.0 else .0

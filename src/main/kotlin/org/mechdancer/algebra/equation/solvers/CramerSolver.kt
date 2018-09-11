@@ -17,15 +17,13 @@ object CramerSolver : Solver {
 		if (equation.isHomogeneous)
 			if (equation.coefficient.let { it.row >= it.column })
 				return VectorImpl(List(equation.coefficient.dimension) { .0 })
-			else throw IllegalArgumentException("齐次方程组有无限非零解")
+			else throw IllegalArgumentException("linear equation is homogeneous," +
+					" which has innumerable untrivial solutions")
 
 		if (equation.coefficient.dimension != equation.constant.dimension)
-			throw IllegalArgumentException("克莱姆解无法适用方程个数与未知数个数不同的情况")
+			throw IllegalArgumentException("coefficient dose not equals to constant")
 		val d = equation.coefficient.toDeterminant()
-
-
-		if (d.calculate() == .0) throw IllegalArgumentException("克莱姆解无法适用于行列式得零的情况")
-
+		if (d.calculate() == .0) throw IllegalArgumentException("matrix is singular")
 
 		return (0 until equation.coefficient.column).fold(mutableListOf<Double>()) { acc, i ->
 			acc.add(d.replaceColumn(i, equation.constant.data).calculate() / d.calculate())

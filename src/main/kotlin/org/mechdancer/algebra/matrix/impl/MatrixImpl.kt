@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.matrix.impl
 
+import org.mechdancer.algebra.dimensionArgumentError
 import org.mechdancer.algebra.matrix.Matrix
 import org.mechdancer.algebra.matrix.MatrixData
 import org.mechdancer.algebra.matrix.MatrixElement
@@ -37,7 +38,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	}
 
 	private val companionLazy: Matrix by lazy {
-		if (!isSquare) throw IllegalStateException("伴随矩阵未定义")
+		if (!isSquare) throw IllegalStateException("companion is undefined")
 		List(row) { r ->
 			List(column) { c ->
 				toDeterminant().getAlgebraCofactor(r, c)
@@ -46,14 +47,14 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	}
 
 	private val inverseByCompanionLazy: Matrix by lazy {
-		if (!isSquare) throw IllegalStateException("逆矩阵未定义")
+		if (!isSquare) throw IllegalStateException("inverse is undefined")
 		val d = det()
-		if (d == .0) throw IllegalStateException("逆矩阵未定义")
+		if (d == .0) throw IllegalStateException("matrix is singular")
 		companion() / d
 	}
 
 	private val inverseByRowEchelonLazy: Matrix by lazy {
-		if (!isSquare) throw IllegalStateException("逆矩阵未定义")
+		if (!isSquare) throw IllegalStateException("inverse is undefined")
 		operateMatrixDataMutable(withUnit().rowEchelon().data) {
 			(0 until dimension).forEach {
 				removeColumn(it)
@@ -63,10 +64,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 
 	private val determinantLazy: Determinant by lazy { DeterminantImpl(this) }
 
-	private val detLazy: Double by lazy {
-		if (!isSquare) throw IllegalStateException("行列式未定义")
-		toDeterminant().calculate()
-	}
+	private val detLazy: Double by lazy { toDeterminant().calculate() }
 
 	private val rowEchelonLazy: Matrix by lazy {
 
@@ -79,7 +77,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 			}
 
 			fun rowMultiply(r1: Int, n: Double) {
-				//避免出现 -0.0 这样丑恶的数字
+				//to avoid -0.0
 				this[r1].forEachIndexed { i, e -> this[r1][i] = if (e == .0) .0 else e * n }
 			}
 
@@ -106,29 +104,22 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 					i++
 					continue
 				}
-
 				//储存主元位置，将主元化为1
 				position.add(index++, j)
 				rowMultiply(i, 1 / this[i][j])
-
 				//如果到最后一行则退出
 				if (i == size - 1)
 					break
-
 				//将主元所在列下方元素化为0
 				for (d in i + 1 until size)
 					if (this[d][j] != 0.0)
 						rowAddTo(i, d, -this[d][j])
-
-
 				i++
 			}
-
 			//从下到上化为最简阶梯形
 			for (e in i downTo 1)
 				for (s in e - 1 downTo 0)
 					rowAddTo(e, s, -this[s][position[e]])
-
 		}
 
 		data.map { it.toMutableList() }
@@ -137,7 +128,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 
 	private val withUnitLazy: Matrix by lazy {
 		operateMatrixDataMutable(data) {
-			if (!isSquare) throw IllegalStateException("此维度单位矩阵未定义")
+			if (!isSquare) throw IllegalStateException("unit is undefined")
 			val unit = Matrix.unitOf(dimension)
 			val unitColumns =
 					(0 until unit.dimension).fold(mutableListOf<MatrixElement>()) { acc, e ->
@@ -148,9 +139,8 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	}
 
 	init {
-		if (row == 0 || column == 0) throw IllegalArgumentException("不能构虚无矩阵")
-		if (data.any { it.size != column })
-			throw IllegalArgumentException("矩阵参数错误")
+		if (row == 0 || column == 0 || data.any { it.size != column })
+			throw IllegalArgumentException("matrix data error")
 	}
 
 	override fun get(row: Int, column: Int): Double =
@@ -171,7 +161,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	override fun times(k: Double): Matrix = data.map { it.map { x -> x * k } }.toMatrix()
 
 	override fun times(other: Matrix): Matrix = List(row) { r ->
-		if (column != other.row) throw IllegalArgumentException("该乘法未定义")
+		if (column != other.row) throw IllegalArgumentException("multiplication is undefined")
 		List(other.column) { c ->
 			(0 until column).sumByDouble {
 				this[r, it] * other[it, c]
@@ -193,8 +183,8 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	override fun div(k: Double): Matrix = data.map { it.map { x -> x / k } }.toMatrix()
 
 	override infix fun pow(n: Int): Matrix {
-		if (!isSquare) throw IllegalStateException("乘方未定义")
-		if (n <= 0) throw IllegalArgumentException("至少乘一次方")
+		if (!isSquare) throw IllegalStateException("power is undefined")
+		if (n <= 0) throw IllegalArgumentException("power must bigger than 1")
 
 		return (1 until n).fold(this as Matrix) { acc, _ ->
 			acc * this
@@ -221,7 +211,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	override fun inverseByRowEchelon(): Matrix = inverseByRowEchelonLazy.clone()
 
 	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)
-		throw IllegalArgumentException("维度错误") else Unit
+		dimensionArgumentError() else Unit
 
 	override fun clone(): Matrix =
 			MatrixImpl(data)

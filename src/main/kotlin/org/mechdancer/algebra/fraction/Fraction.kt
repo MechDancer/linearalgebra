@@ -17,7 +17,7 @@ class Fraction(numerator: Int,
 	operator fun component2() = denominator
 
 	init {
-		if (denominator == 0) throw IllegalStateException("分母不能为零")
+		if (denominator == 0) throw IllegalStateException("denominator can't be 0")
 		else {
 			val factor = commonFactor(numerator, denominator)
 			val n = numerator / factor
@@ -64,11 +64,11 @@ class Fraction(numerator: Int,
 					, denominator * other.numerator)
 
 	operator fun div(other: Int): Fraction =
-			if (other == 0) throw IllegalStateException("除数不能为零")
+			if (other == 0) throw IllegalStateException("divisor can't be 0")
 			else Fraction(numerator, denominator * other)
 
 	fun reciprocal(): Fraction =
-			if (numerator == 0) throw IllegalStateException("求倒数分子不能为零")
+			if (numerator == 0) throw IllegalStateException("numerator can't be 0 when reciprocal")
 			else Fraction(denominator, numerator)
 
 	override fun toInt(): Int = numerator / denominator
@@ -91,7 +91,7 @@ class Fraction(numerator: Int,
 			it > o  -> 1
 			it < o  -> -1
 			it == o -> 0
-			else    -> throw IllegalStateException("喵喵喵")
+			else    -> throw IllegalStateException("that's impossible")
 		}
 	}
 

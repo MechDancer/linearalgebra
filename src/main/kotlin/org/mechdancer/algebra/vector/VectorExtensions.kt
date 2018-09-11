@@ -10,7 +10,7 @@ fun Matrix.toVector(): Vector = when {
 	data.size == 1         -> data[0]
 	data.first().size == 1 -> List(data.size) { data[it].first() }
 
-	else                   -> throw IllegalArgumentException("矩阵非单行或单列")
+	else                   -> throw IllegalArgumentException("matrix isn't single row or column exclusively")
 }.toVector()
 
 fun vectorOf(vararg double: Double): Vector = VectorImpl(double.toList())

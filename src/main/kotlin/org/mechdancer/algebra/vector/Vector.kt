@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.vector
 
+import org.mechdancer.algebra.dimensionArgumentError
 import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.vector.impl.Vector2D
 import org.mechdancer.algebra.vector.impl.Vector3D
@@ -36,7 +37,7 @@ interface Vector {
 
 	companion object {
 		operator fun invoke(data: MatrixElement): Vector =
-				if (data.isEmpty()) throw IllegalArgumentException("维度参数错误")
+				if (data.isEmpty()) dimensionArgumentError()
 				else when (data.size) {
 					2    -> Vector2D(data[0], data[1])
 					3    -> Vector3D(data[0], data[1], data[2])
@@ -44,14 +45,12 @@ interface Vector {
 				}
 
 		fun zeroOf(dimension: Int): Vector =
-				if (dimension <= 0) throw IllegalArgumentException("维度参数错误")
+				if (dimension <= 0) dimensionArgumentError()
 				else
 					when (dimension) {
 						2    -> Vector2D(.0, .0)
 						3    -> Vector3D(.0, .0, .0)
 						else -> DoubleArray(dimension).toList().toVector()
 					}
-
-		fun normalize(vector: Vector): Vector = vector / vector.norm()
 	}
 }

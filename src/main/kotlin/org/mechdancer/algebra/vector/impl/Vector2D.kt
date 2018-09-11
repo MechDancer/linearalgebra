@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.vector.impl
 
+import org.mechdancer.algebra.dimensionArgumentError
 import org.mechdancer.algebra.vector.Axis3D
 import org.mechdancer.algebra.vector.Vector
 
@@ -13,7 +14,7 @@ class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 	operator fun get(axis3D: Axis3D) = when (axis3D) {
 		Axis3D.X -> this[0]
 		Axis3D.Y -> this[1]
-		else     -> throw IllegalArgumentException("维度参数错误")
+		else     -> dimensionArgumentError()
 	}
 
 	companion object {
