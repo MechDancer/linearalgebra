@@ -5,7 +5,6 @@ import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.vector.Vector
 import org.mechdancer.algebra.vector.toVector
 import kotlin.math.abs
-import kotlin.math.acos
 import kotlin.math.sqrt
 
 open class VectorImpl internal constructor(final override val data: MatrixElement) : Vector, Cloneable {
@@ -23,16 +22,14 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 	}
 
 	private fun checkDimension(other: Vector) =
-		if (this.dimension != other.dimension) dimensionStateError()
-		else Unit
+			if (this.dimension != other.dimension) dimensionStateError()
+			else Unit
 
 	override operator fun get(index: Int): Double = data[index]
 
 	override operator fun plus(other: Vector): Vector = operate(other) { v1, v2 -> v1 + v2 }
 
 	override operator fun minus(other: Vector): Vector = operate(other) { v1, v2 -> v1 - v2 }
-
-	override operator fun div(k: Double): Vector = VectorImpl(data.map { it / k })
 
 	override operator fun times(k: Double): Vector = VectorImpl(data.map { it * k })
 
@@ -41,16 +38,10 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 		return (0 until dimension).sumByDouble { data[it] * other[it] }
 	}
 
-	override operator fun unaryMinus(): Vector = VectorImpl(data.map { -it })
-
 	override fun norm(): Double = sqrt(data.sumByDouble { it * it })
 
-	override fun normalize(): Vector = this / norm()
-
-	override fun includedAngle(other: Vector) = acos(dot(other) / norm() / other.norm())
-
 	fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
-		data.getOrElse(index, defaultValue)
+			data.getOrElse(index, defaultValue)
 
 	override fun toString(): String = buildString {
 		val maxDataLength = data.map { it.toString().length }.max()!!
