@@ -1,9 +1,11 @@
 package org.mechdancer.algebra.matrix.determinant.impl
 
+import org.mechdancer.algebra.columnNumberError
 import org.mechdancer.algebra.matrix.Matrix
 import org.mechdancer.algebra.matrix.determinant.Determinant
 import org.mechdancer.algebra.matrix.toMatrix
 import org.mechdancer.algebra.matrix.transformation.util.impl.operateMatrixDataMutable
+import org.mechdancer.algebra.rowNumberError
 import kotlin.math.abs
 
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
@@ -34,8 +36,8 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 	override fun calculate(): Double = value
 
 	override fun getCofactor(row: Int, column: Int): Determinant {
-		if (row !in 0 until this.row) IllegalArgumentException("行数错误")
-		if (column !in 0 until this.column) IllegalArgumentException("列数错误")
+		if (row !in 0 until this.row) rowNumberError()
+		if (column !in 0 until this.column) columnNumberError()
 		return operateMatrixDataMutable(data) {
 			removeRow(row)
 			removeColumn(column)

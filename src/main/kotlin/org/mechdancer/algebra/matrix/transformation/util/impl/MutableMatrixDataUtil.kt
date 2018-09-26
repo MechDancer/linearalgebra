@@ -1,8 +1,10 @@
 package org.mechdancer.algebra.matrix.transformation.util.impl
 
+import org.mechdancer.algebra.columnNumberError
 import org.mechdancer.algebra.matrix.MatrixData
 import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.matrix.transformation.util.MatrixDataUtil
+import org.mechdancer.algebra.rowNumberError
 
 class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 
@@ -59,11 +61,11 @@ class MutableMatrixDataUtil(data: MatrixData) : MatrixDataUtil {
 	fun getData(): MatrixData = mutableData.toList()
 
 	private fun checkRowRange(row: Int) = if (row !in 0 until mutableData.size)
-		throw IllegalArgumentException("行数错误!") else Unit
+		rowNumberError() else Unit
 
 
 	private fun checkColumnRange(column: Int) = if (column !in 0 until mutableData.first().size)
-		throw IllegalArgumentException("列数错误!") else Unit
+		columnNumberError() else Unit
 
 
 }
