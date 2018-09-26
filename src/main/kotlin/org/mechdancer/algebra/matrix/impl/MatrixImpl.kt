@@ -123,7 +123,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 		}
 
 		data.map { it.toMutableList() }
-				.toMutableList().also { it.simplify() }.toMatrix()
+			.toMutableList().also { it.simplify() }.toMatrix()
 	}
 
 	private val withUnitLazy: Matrix by lazy {
@@ -131,9 +131,9 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 			if (!isSquare) throw IllegalStateException("unit is undefined")
 			val unit = Matrix.unitOf(dimension)
 			val unitColumns =
-					(0 until unit.dimension).fold(mutableListOf<MatrixElement>()) { acc, e ->
-						acc.apply { add(ImmutableMatrixDataUtil.splitColumn(unit.data, e)) }
-					}
+				(0 until unit.dimension).fold(mutableListOf<MatrixElement>()) { acc, e ->
+					acc.apply { add(ImmutableMatrixDataUtil.splitColumn(unit.data, e)) }
+				}
 			unitColumns.forEach { addColumn(it) }
 		}.toMatrix()
 	}
@@ -144,18 +144,18 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	}
 
 	override fun get(row: Int, column: Int): Double =
-			data[row][column]
+		data[row][column]
 
 	override fun plus(other: Matrix): Matrix {
 		checkDimension(other)
 		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] + other[r, c] } }
-				.toMatrix()
+			.toMatrix()
 	}
 
 	override fun minus(other: Matrix): Matrix {
 		checkDimension(other)
 		return data.indices.map { r -> data[r].indices.map { c -> this[r, c] - other[r, c] } }
-				.toMatrix()
+			.toMatrix()
 	}
 
 	override fun times(k: Double): Matrix = data.map { it.map { x -> x * k } }.toMatrix()
@@ -186,9 +186,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 		if (!isSquare) throw IllegalStateException("power is undefined")
 		if (n <= 0) throw IllegalArgumentException("power must bigger than 1")
 
-		return (1 until n).fold(this as Matrix) { acc, _ ->
-			acc * this
-		}
+		return (1 until n).fold(this as Matrix) { acc, _ -> acc * this }
 	}
 
 	override fun toDeterminant(): Determinant = DeterminantImpl(determinantLazy as Matrix)
@@ -196,7 +194,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 	override fun det(): Double = detLazy
 
 	override fun elementaryTransformation(block: ElementaryTransformation.() -> Unit) =
-			ElementaryTransformationImpl(data).apply(block).getResult()
+		ElementaryTransformationImpl(data).apply(block).getResult()
 
 	override fun companion(): Matrix = companionLazy.clone()
 
@@ -214,8 +212,7 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 		dimensionArgumentError() else Unit
 
 	override fun clone(): Matrix =
-			MatrixImpl(data)
-
+		MatrixImpl(data)
 
 	override fun toString(): String = buildString {
 		val maxDataLength = data.flatten().map { it.toString().length }.max()!!

@@ -5,18 +5,24 @@ import org.mechdancer.algebra.matrix.determinant.Determinant
 import org.mechdancer.algebra.matrix.transformation.ElementaryTransformation
 import org.mechdancer.algebra.vector.Vector
 
+/** 矩阵 */
 interface Matrix {
-
+	/** 维数（方阵才有维数） */
 	val dimension: Int
 
+	/** 数据 */
 	val data: MatrixData
 
+	/** 行数 */
 	val row: Int
 
+	/** 列数 */
 	val column: Int
 
+	/** 是否方阵 */
 	val isSquare: Boolean
 
+	/** @return 秩 */
 	val rank: Int
 
 	operator fun get(row: Int, column: Int): Double

@@ -8,11 +8,7 @@ typealias MatrixData = List<MatrixElement>
 typealias MatrixElement = List<Double>
 
 fun Vector.toMatrix(): Matrix =
-		List(dimension) { r ->
-			List(1) {
-				data[r]
-			}
-		}.toMatrix()
+	List(dimension) { r -> List(1) { data[r] } }.toMatrix()
 
 fun MatrixData.toMatrix(): Matrix =
-		MatrixImpl(this)
+	MatrixImpl(this)
