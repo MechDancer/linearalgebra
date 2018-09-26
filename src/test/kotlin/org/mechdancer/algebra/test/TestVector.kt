@@ -1,3 +1,5 @@
+package org.mechdancer.algebra.test
+
 import org.junit.Assert
 import org.junit.Test
 import org.mechdancer.algebra.vector.Axis3D

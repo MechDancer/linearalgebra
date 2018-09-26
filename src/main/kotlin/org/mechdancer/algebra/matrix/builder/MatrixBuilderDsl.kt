@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.matrix.builder
 
+import org.mechdancer.algebra.dimensionStateError
 import org.mechdancer.algebra.matrix.Matrix
 import org.mechdancer.algebra.matrix.impl.MatrixImpl
 
@@ -12,7 +13,7 @@ class MatrixBuilderDsl internal constructor() {
 	}
 
 	operator fun Column.get(vararg double: Double) {
-		if (double.size != cache.last().size) throw IllegalArgumentException("行数错误")
+		if (double.size != cache.last().size) dimensionStateError()
 		double.forEachIndexed { index, d ->
 			cache.last()[index] = d
 		}
@@ -23,3 +24,6 @@ class MatrixBuilderDsl internal constructor() {
 
 fun matrix(block: MatrixBuilderDsl.() -> Unit) =
 		MatrixBuilderDsl().apply(block).build()
+
+object Column
+object Row
