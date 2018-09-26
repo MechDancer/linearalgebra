@@ -4,6 +4,7 @@ import org.mechdancer.algebra.dimensionArgumentError
 import org.mechdancer.algebra.vector.Axis3D
 import org.mechdancer.algebra.vector.Vector
 
+/** 二维向量 */
 class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 	override val dimension: Int = 2
 
@@ -18,10 +19,11 @@ class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 	}
 
 	companion object {
-		fun to2D(vector: Vector) = vector as? Vector2D
+		/** 转到[Vector2D]的实例 */
+		fun to2D(vector: Vector) =
+			vector as? Vector2D
 				?: (vector as VectorImpl).run {
-					Vector2D(vector.getOrElse(0) { .0 }
-							, vector.getOrElse(1) { .0 })
+					Vector2D(getOrElse(0) { .0 }, getOrElse(1) { .0 })
 				}
 	}
 }

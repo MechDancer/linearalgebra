@@ -3,6 +3,7 @@ package org.mechdancer.algebra.vector.impl
 import org.mechdancer.algebra.vector.Axis3D
 import org.mechdancer.algebra.vector.Vector
 
+/** 三维向量 */
 class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 	override val dimension: Int = 3
 
@@ -18,17 +19,22 @@ class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 		Axis3D.Z -> this[2]
 	}
 
+	/** 叉乘（向量积） */
 	infix fun cross(other: Vector3D): Vector3D =
-			Vector3D(this[1] * other[2] - this[2] * other[1],
-					this[2] * other[0] - this[0] * other[2],
-					this[0] * other[1] - this[1] * other[0])
+		Vector3D(
+			this[1] * other[2] - this[2] * other[1],
+			this[2] * other[0] - this[0] * other[2],
+			this[0] * other[1] - this[1] * other[0])
 
 	companion object {
-		fun to3D(vector: Vector): Vector3D = vector as? Vector3D
+		/** 转到[Vector3D]的实例 */
+		fun to3D(vector: Vector): Vector3D =
+			vector as? Vector3D
 				?: (vector as VectorImpl).run {
-					Vector3D(vector.getOrElse(0) { .0 },
-							vector.getOrElse(1) { .0 },
-							vector.getOrElse(2) { .0 })
+					Vector3D(
+						vector.getOrElse(0) { .0 },
+						vector.getOrElse(1) { .0 },
+						vector.getOrElse(2) { .0 })
 				}
 	}
 }

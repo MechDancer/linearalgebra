@@ -23,8 +23,8 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 	}
 
 	private fun checkDimension(other: Vector) =
-			if (this.dimension != other.dimension) dimensionStateError()
-			else Unit
+		if (this.dimension != other.dimension) dimensionStateError()
+		else Unit
 
 	override operator fun get(index: Int): Double = data[index]
 
@@ -43,16 +43,14 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 
 	override operator fun unaryMinus(): Vector = VectorImpl(data.map { -it })
 
-	override infix fun to(other: Vector): Vector = other - this
-
 	override fun norm(): Double = sqrt(data.sumByDouble { it * it })
 
 	override fun normalize(): Vector = this / norm()
 
-	override fun includedAngle(other: Vector) = acos(dot(other) / norm() * other.norm())
+	override fun includedAngle(other: Vector) = acos(dot(other) / norm() / other.norm())
 
 	fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
-			data.getOrElse(index, defaultValue)
+		data.getOrElse(index, defaultValue)
 
 	override fun toString(): String = buildString {
 		val maxDataLength = data.map { it.toString().length }.max()!!
@@ -80,7 +78,8 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 			appendln()
 		}
 	}
-	override fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ",")})"
+
+	override fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ", ")})"
 	override fun equals(other: Any?) = other is Vector && other.data == data
 	override fun hashCode() = data.hashCode()
 }
