@@ -161,7 +161,7 @@ interface Matrix {
 	fun transpose(): Matrix
 
 	/**
-	 * Simply to echelon matrix
+	 * Simplify to echelon matrix
 	 *
 	 * @return result
 	 */
