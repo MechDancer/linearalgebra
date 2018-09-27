@@ -1,23 +1,14 @@
 package org.mechdancer.algebra.vector.impl
 
-import org.mechdancer.algebra.vector.Axis3D
 import org.mechdancer.algebra.vector.Vector
 
 /** 三维向量 */
 class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 	override val dimension: Int = 3
 
-	operator fun component1() = this[Axis3D.X]
-
-	operator fun component2() = this[Axis3D.Y]
-
-	operator fun component3() = this[Axis3D.Z]
-
-	operator fun get(axis3D: Axis3D) = when (axis3D) {
-		Axis3D.X -> this[0]
-		Axis3D.Y -> this[1]
-		Axis3D.Z -> this[2]
-	}
+	/** 复制并进行指定的修改 */
+	fun copy(x: Double? = null, y: Double? = null, z: Double? = null) =
+		Vector3D(x ?: this[0], y ?: this[1], z ?: this[2])
 
 	/** 叉乘（向量积） */
 	infix fun cross(other: Vector3D): Vector3D =
@@ -28,7 +19,7 @@ class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 
 	companion object {
 		/** 转到[Vector3D]的实例 */
-		fun to3D(vector: Vector): Vector3D =
+		operator fun invoke(vector: Vector) =
 			vector as? Vector3D
 				?: (vector as VectorImpl).run {
 					Vector3D(

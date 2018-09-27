@@ -7,7 +7,9 @@ import org.mechdancer.algebra.vector.toVector
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-open class VectorImpl internal constructor(final override val data: MatrixElement) : Vector, Cloneable {
+open class VectorImpl
+internal constructor(final override val data: MatrixElement)
+	: Vector, Cloneable {
 
 	override val dimension: Int
 		get() = data.size

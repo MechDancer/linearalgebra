@@ -61,3 +61,27 @@ infix fun Vector.euclid(other: Vector) = Relation.Euclid.between(this, other)
 
 /** @return 与[other]间的曼哈顿距离 */
 infix fun Vector.manhattan(other: Vector) = Relation.Manhattan.between(this, other)
+
+/** 复制向量，并进行指定的修改 */
+fun Vector.copy(vararg change: Pair<Int, Double>): Vector {
+	val map = change.associate { it }
+	return List(dimension) { map[it] ?: this[it] }.toVector()
+}
+
+/** 从向量选取指定的维度组成新的向量 */
+fun Vector.select(vararg index: Int): Vector =
+	data.filterIndexed { i, _ -> i in index }.toVector()
+
+/** 从向量选取指定的维度组成新的向量 */
+fun Vector.select(range: IntRange): Vector =
+	data.drop(range.first).take(range.last - range.first + 1).toVector()
+
+operator fun Vector.component1() = this[0]
+operator fun Vector.component2() = this[1]
+operator fun Vector.component3() = this[2]
+operator fun Vector.component4() = this[3]
+operator fun Vector.component5() = this[4]
+
+val Vector.x get() = this[0]
+val Vector.y get() = this[1]
+val Vector.z get() = this[2]
