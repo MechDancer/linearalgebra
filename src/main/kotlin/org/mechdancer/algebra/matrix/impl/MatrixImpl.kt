@@ -204,12 +204,16 @@ class MatrixImpl internal constructor(override val data: MatrixData) : Matrix {
 
 	override fun withUnit(): Matrix = withUnitLazy.clone()
 
-	override fun inverseByCompanion(): Matrix = inverseByCompanionLazy.clone()
+	override fun inverseByCompanion(): Matrix =
+		inverseByCompanionLazy.clone()
 
-	override fun inverseByRowEchelon(): Matrix = inverseByRowEchelonLazy.clone()
+	override fun inverseByRowEchelon(): Matrix =
+		inverseByRowEchelonLazy.clone()
 
-	private fun checkDimension(other: Matrix) = if (this.dimension != other.dimension)
-		dimensionArgumentError() else Unit
+	private fun checkDimension(other: Matrix) =
+		if (this.dimension != other.dimension)
+			throw dimensionArgumentError
+		else Unit
 
 	override fun clone(): Matrix =
 		MatrixImpl(data)

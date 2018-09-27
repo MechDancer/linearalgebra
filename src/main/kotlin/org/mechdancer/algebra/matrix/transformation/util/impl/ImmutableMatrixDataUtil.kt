@@ -48,7 +48,8 @@ object ImmutableMatrixDataUtil {
 	}
 
 	fun MatrixData.replaceColumn(column: Int, elements: List<Double>): MatrixData {
-		if (elements.size != this.row) throw IllegalArgumentException("the number elements are not equal")
+		if (elements.size != this.row)
+			throw IllegalArgumentException("the number elements are not equal")
 		checkColumnRange(column)
 		return List(this.row) { r ->
 			List(this.column) { c ->
@@ -72,13 +73,11 @@ object ImmutableMatrixDataUtil {
 		}
 	}
 
-
 	private fun MatrixData.checkRowRange(row: Int) = if (row !in 0 until this.row)
 		throw IllegalArgumentException("row number error") else Unit
 
 
 	private fun MatrixData.checkColumnRange(column: Int) = if (column !in 0 until this.column)
 		throw IllegalArgumentException("column number error") else Unit
-
 }
 

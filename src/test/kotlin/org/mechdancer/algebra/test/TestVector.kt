@@ -5,6 +5,7 @@ import org.junit.Test
 import org.mechdancer.algebra.vector.Axis3D
 import org.mechdancer.algebra.vector.impl.Vector2D
 import org.mechdancer.algebra.vector.impl.Vector3D
+import org.mechdancer.algebra.vector.unaryMinus
 import kotlin.math.sqrt
 
 class TestVector {

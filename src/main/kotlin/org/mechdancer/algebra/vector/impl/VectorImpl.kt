@@ -22,8 +22,9 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 	}
 
 	private fun checkDimension(other: Vector) =
-			if (this.dimension != other.dimension) dimensionStateError()
-			else Unit
+		if (this.dimension != other.dimension)
+			throw dimensionStateError
+		else Unit
 
 	override operator fun get(index: Int): Double = data[index]
 
@@ -41,7 +42,7 @@ open class VectorImpl internal constructor(final override val data: MatrixElemen
 	override fun norm(): Double = sqrt(data.sumByDouble { it * it })
 
 	fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
-			data.getOrElse(index, defaultValue)
+		data.getOrElse(index, defaultValue)
 
 	override fun toString(): String = buildString {
 		val maxDataLength = data.map { it.toString().length }.max()!!

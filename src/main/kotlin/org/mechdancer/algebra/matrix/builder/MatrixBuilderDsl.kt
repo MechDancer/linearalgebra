@@ -4,6 +4,9 @@ import org.mechdancer.algebra.dimensionStateError
 import org.mechdancer.algebra.matrix.Matrix
 import org.mechdancer.algebra.matrix.impl.MatrixImpl
 
+object Row
+object Column
+
 class MatrixBuilderDsl internal constructor() {
 
 	private val cache = mutableListOf<MutableList<Double>>()
@@ -13,7 +16,8 @@ class MatrixBuilderDsl internal constructor() {
 	}
 
 	operator fun Column.get(vararg double: Double) {
-		if (double.size != cache.last().size) dimensionStateError()
+		if (double.size != cache.last().size)
+			throw dimensionStateError
 		double.forEachIndexed { index, d ->
 			cache.last()[index] = d
 		}
@@ -23,7 +27,5 @@ class MatrixBuilderDsl internal constructor() {
 }
 
 fun matrix(block: MatrixBuilderDsl.() -> Unit) =
-		MatrixBuilderDsl().apply(block).build()
+	MatrixBuilderDsl().apply(block).build()
 
-object Column
-object Row

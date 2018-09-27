@@ -206,7 +206,7 @@ interface Matrix {
 		 */
 		fun zeroOf(row: Int, column: Int): Matrix {
 			if (row <= 0 || column <= 0) throw IllegalArgumentException("matrix data error")
-			return List(row) { _ -> List(column) { .0 } }.toMatrix()
+			return List(row) { List(column) { .0 } }.toMatrix()
 		}
 
 		/**
@@ -216,7 +216,7 @@ interface Matrix {
 		 * @return result
 		 */
 		fun unitOf(dimension: Int): Matrix {
-			if (dimension <= 0) dimensionArgumentError()
+			if (dimension <= 0) throw dimensionArgumentError
 			return List(dimension) { r ->
 				List(dimension) { c ->
 					if (c == r) 1.0 else .0

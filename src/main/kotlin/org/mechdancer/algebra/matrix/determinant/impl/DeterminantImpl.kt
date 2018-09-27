@@ -1,11 +1,11 @@
 package org.mechdancer.algebra.matrix.determinant.impl
 
-import org.mechdancer.algebra.columnNumberError
+import org.mechdancer.algebra.columnIndexError
 import org.mechdancer.algebra.matrix.Matrix
 import org.mechdancer.algebra.matrix.determinant.Determinant
 import org.mechdancer.algebra.matrix.toMatrix
 import org.mechdancer.algebra.matrix.transformation.util.impl.operateMatrixDataMutable
-import org.mechdancer.algebra.rowNumberError
+import org.mechdancer.algebra.rowIndexError
 import kotlin.math.abs
 
 class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
@@ -21,11 +21,11 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 			2    -> this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0]
 
 			3    -> (this[0, 0] * this[1, 1] * this[2, 2]
-					+ this[1, 0] * this[2, 1] * this[0, 2]
-					+ this[2, 0] * this[0, 1] * this[1, 2]
-					- this[0, 2] * this[1, 1] * this[2, 0]
-					- this[1, 2] * this[2, 1] * this[0, 0]
-					- this[2, 2] * this[0, 1] * this[1, 0])
+				+ this[1, 0] * this[2, 1] * this[0, 2]
+				+ this[2, 0] * this[0, 1] * this[1, 2]
+				- this[0, 2] * this[1, 1] * this[2, 0]
+				- this[1, 2] * this[2, 1] * this[0, 0]
+				- this[2, 2] * this[0, 1] * this[1, 0])
 
 			else -> (0 until column).sumByDouble { c ->
 				this[0, c] * getAlgebraCofactor(0, c)
@@ -36,8 +36,8 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 	override fun calculate(): Double = value
 
 	override fun getCofactor(row: Int, column: Int): Determinant {
-		if (row !in 0 until this.row) rowNumberError()
-		if (column !in 0 until this.column) columnNumberError()
+		if (row !in 0 until this.row) throw rowIndexError
+		if (column !in 0 until this.column) throw columnIndexError
 		return operateMatrixDataMutable(data) {
 			removeRow(row)
 			removeColumn(column)
@@ -45,7 +45,7 @@ class DeterminantImpl(matrix: Matrix) : Determinant, Matrix by matrix {
 	}
 
 	override fun getAlgebraCofactor(row: Int, column: Int): Double =
-			(if ((row + column) % 2 == 0) 1 else -1) * getCofactor(row, column).calculate()
+		(if ((row + column) % 2 == 0) 1 else -1) * getCofactor(row, column).calculate()
 
 	override fun toString(): String = buildString {
 		val maxDataLength = data.flatten().map { it.toString().length }.max()!!

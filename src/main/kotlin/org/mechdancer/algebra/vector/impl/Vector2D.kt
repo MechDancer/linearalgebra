@@ -15,7 +15,7 @@ class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 	operator fun get(axis3D: Axis3D) = when (axis3D) {
 		Axis3D.X -> this[0]
 		Axis3D.Y -> this[1]
-		else     -> dimensionArgumentError()
+		else     -> throw dimensionArgumentError
 	}
 
 	companion object {

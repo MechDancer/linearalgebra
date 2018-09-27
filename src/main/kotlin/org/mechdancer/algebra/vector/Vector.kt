@@ -40,21 +40,21 @@ interface Vector {
 	companion object {
 		/** 假构造器 */
 		operator fun invoke(data: MatrixElement): Vector =
-				if (data.isEmpty()) dimensionArgumentError()
-				else when (data.size) {
-					2    -> Vector2D(data[0], data[1])
-					3    -> Vector3D(data[0], data[1], data[2])
-					else -> VectorImpl(data)
-				}
+			if (data.isEmpty()) throw dimensionArgumentError
+			else when (data.size) {
+				2    -> Vector2D(data[0], data[1])
+				3    -> Vector3D(data[0], data[1], data[2])
+				else -> VectorImpl(data)
+			}
 
 		/** @return [dimension]维的零向量 */
 		fun zeroOf(dimension: Int): Vector =
-				if (dimension <= 0) dimensionArgumentError()
-				else
-					when (dimension) {
-						2    -> Vector2D(.0, .0)
-						3    -> Vector3D(.0, .0, .0)
-						else -> DoubleArray(dimension).toList().toVector()
-					}
+			if (dimension <= 0) throw dimensionArgumentError
+			else
+				when (dimension) {
+					2    -> Vector2D(.0, .0)
+					3    -> Vector3D(.0, .0, .0)
+					else -> DoubleArray(dimension).toList().toVector()
+				}
 	}
 }

@@ -1,13 +1,13 @@
 package org.mechdancer.algebra
 
-internal fun dimensionArgumentError(): Nothing =
-		throw IllegalArgumentException("dimension error")
+internal val dimensionArgumentError =
+	IllegalArgumentException("dimension error")
 
-internal fun dimensionStateError(): Nothing =
-		throw IllegalStateException("dimension error")
+internal val dimensionStateError =
+	IllegalStateException("dimension error")
 
-internal fun rowNumberError(): Nothing =
-		throw IllegalArgumentException("wrong row number")
+internal val rowIndexError =
+	IndexOutOfBoundsException("wrong row index")
 
-internal fun columnNumberError(): Nothing =
-		throw IllegalArgumentException("wrong column number")
+internal val columnIndexError =
+	IndexOutOfBoundsException("wrong column index")
