@@ -24,7 +24,7 @@ typealias MatrixElement = List<Double>
  * @return result
  */
 fun Vector.toMatrix(): Matrix =
-		List(dimension) { r -> List(1) { data[r] } }.toMatrix()
+	List(dimension) { r -> List(1) { toList()[r] } }.toMatrix()
 
 /**
  * Use MatrixData to build a matrix

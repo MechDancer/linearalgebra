@@ -12,9 +12,9 @@ import org.mechdancer.algebra.vector.vectorOf
 class TestEquation {
 
 	/*
-	2x+3y-5z=3
-	x-2y+z=0
-	3x+y+3z=7
+	 * 2x+3y-5z=3
+	 * x-2y+z=0
+	 * 3x+y+3z=7
 	 */
 
 	private val equation = linearEquation {
@@ -32,7 +32,7 @@ class TestEquation {
 	fun testCommonSolve() {
 		try {
 			Assert.assertEquals(vectorOf(10.0 / 7.0, 1.0, 4.0 / 7.0),
-					equation.solve(CommonSolver))
+				CommonSolver.solve(equation))
 		} catch (e: AssertionError) {
 			println("qwq")
 		}
@@ -41,7 +41,6 @@ class TestEquation {
 	@Test
 	fun testCramerSolve() {
 		Assert.assertEquals(vectorOf(10.0 / 7.0, 1.0, 4.0 / 7.0),
-				equation.solve(CramerSolver))
+			CramerSolver.solve(equation))
 	}
-
 }

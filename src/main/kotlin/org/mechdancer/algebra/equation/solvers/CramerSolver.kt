@@ -26,7 +26,7 @@ object CramerSolver : Solver {
 		if (d.calculate() == .0) throw IllegalArgumentException("matrix is singular")
 
 		return (0 until equation.coefficient.column).fold(mutableListOf<Double>()) { acc, i ->
-			acc.add(d.replaceColumn(i, equation.constant.data).calculate() / d.calculate())
+			acc.add(d.replaceColumn(i, equation.constant.toList()).calculate() / d.calculate())
 			acc
 		}.toVector()
 

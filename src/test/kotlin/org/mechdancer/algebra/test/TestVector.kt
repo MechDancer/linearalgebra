@@ -16,7 +16,7 @@ class TestVector {
 
 		Assert.assertEquals(2, vector2D.dimension)
 		Assert.assertEquals(1.0, vector2D.x, .0)
-		Assert.assertEquals(sqrt(2.0), vector2D.norm(), .0)
+		Assert.assertEquals(sqrt(2.0), vector2D.norm, .0)
 		Assert.assertEquals(Vector2D(3.0, 3.0), vector2D + Vector2D(2.0, 2.0))
 		Assert.assertEquals(Vector2D(2.0, 2.0), vector2D * 2.0)
 		Assert.assertEquals(Vector2D(-1.0, -1.0), -vector2D)

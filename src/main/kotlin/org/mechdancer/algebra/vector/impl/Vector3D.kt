@@ -23,9 +23,9 @@ class Vector3D(x: Double, y: Double, z: Double) : VectorImpl(listOf(x, y, z)) {
 			vector as? Vector3D
 				?: (vector as VectorImpl).run {
 					Vector3D(
-						vector.getOrElse(0) { .0 },
-						vector.getOrElse(1) { .0 },
-						vector.getOrElse(2) { .0 })
+						vector.getOrElse(0, .0),
+						vector.getOrElse(1, .0),
+						vector.getOrElse(2, .0))
 				}
 	}
 }

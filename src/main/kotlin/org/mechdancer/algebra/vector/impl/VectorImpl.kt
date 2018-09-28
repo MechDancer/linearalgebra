@@ -1,79 +1,51 @@
 package org.mechdancer.algebra.vector.impl
 
 import org.mechdancer.algebra.dimensionStateError
-import org.mechdancer.algebra.matrix.MatrixElement
 import org.mechdancer.algebra.vector.Vector
-import org.mechdancer.algebra.vector.toVector
-import kotlin.math.abs
 import kotlin.math.sqrt
 
-open class VectorImpl
-internal constructor(final override val data: MatrixElement)
-	: Vector, Cloneable {
+open class VectorImpl internal constructor(data: List<Double>)
+	: Vector by VectorImplCore(data) {
 
-	override val dimension: Int
-		get() = data.size
+	private class VectorImplCore(val data: List<Double>)
+		: Vector, List<Double> by data {
+		override val dimension = size
 
-	init {
-		if (data.isEmpty()) throw IllegalArgumentException("vector data error")
-	}
+		//检查other是否与this维数相同
+		private fun checkDimension(other: Vector) =
+			takeUnless { dimension != other.dimension } ?: throw dimensionStateError
 
-	private fun operate(other: Vector, operation: (v1: Double, v2: Double) -> Double): Vector {
-		checkDimension(other)
-		return data.indices.map { operation(data[it], other.data[it]) }.toVector()
-	}
-
-	private fun checkDimension(other: Vector) =
-		if (this.dimension != other.dimension)
-			throw dimensionStateError
-		else Unit
-
-	override operator fun get(index: Int): Double = data[index]
-
-	override operator fun plus(other: Vector): Vector = operate(other) { v1, v2 -> v1 + v2 }
-
-	override operator fun minus(other: Vector): Vector = operate(other) { v1, v2 -> v1 - v2 }
-
-	override operator fun times(k: Double): Vector = VectorImpl(data.map { it * k })
-
-	override infix fun dot(other: Vector): Double {
-		checkDimension(other)
-		return (0 until dimension).sumByDouble { data[it] * other[it] }
-	}
-
-	override fun norm(): Double = sqrt(data.sumByDouble { it * it })
-
-	fun getOrElse(index: Int, defaultValue: (Int) -> Double) =
-		data.getOrElse(index, defaultValue)
-
-	override fun toString(): String = buildString {
-		val maxDataLength = data.map { it.toString().length }.max()!!
-		append(" ".repeat(maxDataLength / 2))
-		appendln("${dimension}D Vector")
-		data.forEachIndexed { index, d ->
-			when (index) {
-				0             -> append("┌")
-				data.size - 1 -> append("└")
-				else          -> append("│")
-			}
-			var dL = abs(maxDataLength - d.toString().length)
-			val parity = dL % 2 == 0
-			dL /= 2
-			val right: Int = dL
-			val left: Int = if (parity) dL else dL + 1
-			append(" ".repeat(left))
-			append(" $d ")
-			append(" ".repeat(right))
-			when (index) {
-				0             -> append("┐")
-				data.size - 1 -> append("┘")
-				else          -> append("│")
-			}
-			appendln()
+		//逐项执行某项操作
+		private fun operate(other: Vector, operation: (v1: Double, v2: Double) -> Double): Vector {
+			checkDimension(other)
+			return VectorImpl(zip(other.toList(), operation))
 		}
+
+		override operator fun plus(other: Vector): Vector = operate(other) { v1, v2 -> v1 + v2 }
+
+		override operator fun minus(other: Vector): Vector = operate(other) { v1, v2 -> v1 - v2 }
+
+		override operator fun times(k: Double): Vector = VectorImpl(map { it * k })
+
+		override infix fun dot(other: Vector): Double {
+			checkDimension(other)
+			return zip(other.toList()) { a, b -> a * b }.sum()
+		}
+
+		override val norm by lazy { sqrt(sumByDouble { it * it }) }
+
+		override fun toList() = data
+
+		override fun toSimpleString() = "${dimension}DVector(${joinToString(separator = ", ")})"
 	}
 
-	override fun toSimpleString() = "${dimension}DVector(${data.joinToString(separator = ", ")})"
-	override fun equals(other: Any?) = other is Vector && other.data == data
-	override fun hashCode() = data.hashCode()
+	fun getOrElse(index: Int, default: Double) =
+		if (index in 0 until dimension) this[index] else default
+
+	override fun equals(other: Any?) =
+		other is Vector && other.toList() == toList()
+
+	override fun hashCode() = toList().hashCode()
 }
+
+
