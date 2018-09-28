@@ -7,17 +7,20 @@ import org.mechdancer.algebra.vector.Vector
 
 /**
  * Matrix
+ * 矩阵
  */
 interface Matrix {
 
 	/**
 	 * The dimension of this matrix
 	 * (Only square matrix has)
+	 *
+	 * 方阵的维数
+	 * 试图获取非方阵的维数会产生异常
 	 */
 	val dimension: Int
 
 	/**
-	 * Matrix data
 	 * See [MatrixData]
 	 */
 	val data: MatrixData

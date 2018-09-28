@@ -18,7 +18,7 @@ object CommonSolver : Solver {
 					" which has innumerable untrivial solutions")
 
 		val augmented = operateMatrixDataMutable(equation.coefficient.data) {
-			addColumn(equation.constant.data)
+			addColumn(equation.constant.toList())
 		}.toMatrix()
 		val s = augmented.rowEchelon()
 		return ImmutableMatrixDataUtil.splitColumn(s.data, s.column - 1).toVector()

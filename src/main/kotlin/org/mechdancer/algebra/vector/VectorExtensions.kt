@@ -39,18 +39,18 @@ operator fun Vector.div(k: Double) = this * (1 / k)
 operator fun Vector.unaryMinus() = this * -1.0
 
 /** @return 单位向量 */
-fun Vector.normalize() = this / norm()
+fun Vector.normalize() = this / norm
 
 /** 计算两个向量之间的某种关系 */
 enum class Relation(val between: (Vector, Vector) -> Double) {
 	/** 用弧度表示的夹角 */
-	IncludedAngle({ one, other -> acos(one dot other / one.norm() / other.norm()) }),
+	IncludedAngle({ one, other -> acos(one dot other / one.norm / other.norm) }),
 
 	/** 欧式距离 */
-	Euclid({ one, other -> (one - other).norm() }),
+	Euclid({ one, other -> (one - other).norm }),
 
 	/** 曼哈顿距离 */
-	Manhattan({ one, other -> (one - other).data.sum() }),
+	Manhattan({ one, other -> (one - other).toList().sum() }),
 }
 
 /** @return 与[other]间用弧度表示的夹角 */
@@ -70,17 +70,33 @@ fun Vector.copy(vararg change: Pair<Int, Double>): Vector {
 
 /** 从向量选取指定的维度组成新的向量 */
 fun Vector.select(vararg index: Int): Vector =
-	data.filterIndexed { i, _ -> i in index }.toVector()
+	toList().filterIndexed { i, _ -> i in index }.toVector()
 
 /** 从向量选取指定的维度组成新的向量 */
 fun Vector.select(range: IntRange): Vector =
-	data.drop(range.first).take(range.last - range.first + 1).toVector()
+	toList().drop(range.first).take(range.last - range.first + 1).toVector()
+
+/** 判断是否零向量 */
+fun Vector.isZero() = norm == 0.0
+
+/** 判断是否非零向量 */
+fun Vector.isNotZero() = norm != 0.0
+
+/** 判断是否单位向量 */
+fun Vector.isNormalized() = norm == 1.0
+
+/** 判断是否非单位向量 */
+fun Vector.isNotNormalized() = norm != 1.0
+
+//解绑定
 
 operator fun Vector.component1() = this[0]
 operator fun Vector.component2() = this[1]
 operator fun Vector.component3() = this[2]
 operator fun Vector.component4() = this[3]
 operator fun Vector.component5() = this[4]
+
+// 其中各维度的名字
 
 val Vector.x get() = this[0]
 val Vector.y get() = this[1]

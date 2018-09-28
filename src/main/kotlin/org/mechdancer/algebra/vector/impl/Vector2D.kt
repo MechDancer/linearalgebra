@@ -15,7 +15,7 @@ class Vector2D(x: Double, y: Double) : VectorImpl(listOf(x, y)) {
 		operator fun invoke(vector: Vector) =
 			vector as? Vector2D
 				?: (vector as VectorImpl).run {
-					Vector2D(getOrElse(0) { .0 }, getOrElse(1) { .0 })
+					Vector2D(getOrElse(0, .0), getOrElse(1, .0))
 				}
 	}
 }
