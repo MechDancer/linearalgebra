@@ -2,6 +2,7 @@ package org.mechdancer.algebra.vector.impl
 
 import org.mechdancer.algebra.dimensionStateError
 import org.mechdancer.algebra.vector.Vector
+import kotlin.math.max
 import kotlin.math.sqrt
 
 open class VectorImpl internal constructor(data: List<Double>)
@@ -46,6 +47,35 @@ open class VectorImpl internal constructor(data: List<Double>)
 		other is Vector && other.toList() == toList()
 
 	override fun hashCode() = toList().hashCode()
+
+	override fun toString(): String {
+		val header = "${dimension}D Vector"
+		val string = toList().asSequence().map { it.toString() }
+		val maxDataLength = max((string.map { it.length }.max() ?: 0) + 2, header.length - 2)
+		val pre = { index: Int ->
+			when (index) {
+				0                  -> '┌'
+				toList().lastIndex -> '└'
+				else               -> '│'
+			}
+		}
+		val fix = { index: Int ->
+			when (index) {
+				0                  -> '┐'
+				toList().lastIndex -> '┘'
+				else               -> '│'
+			}
+		}
+		val blank = { length: Int -> " ".repeat(length) }
+		val transform = { i: Int, str: String ->
+			val right = (maxDataLength - str.length) / 2
+			val left = maxDataLength - str.length - right
+			"${pre(i)}${blank(left)}$str${blank(right)}${fix(i)}"
+		}
+		return buildString {
+			append(blank((maxDataLength + 3 - header.length) / 2))
+			appendln(header)
+			append(string.mapIndexed(transform).joinToString("\n"))
+		}
+	}
 }
-
-
