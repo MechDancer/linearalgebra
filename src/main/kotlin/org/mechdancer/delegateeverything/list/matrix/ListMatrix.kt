@@ -23,7 +23,7 @@ class ListMatrix(
 		override val row = size / column
 		override fun get(r: Int, c: Int) = this[r * column + c]
 
-		override fun row(r: Int) = drop(r * column).take(column).toListVector()
+		override fun row(r: Int) = subList(r * column, (r + 1) * column).toListVector()
 		override fun column(c: Int) = filterIndexed { i, _ -> i % c == 0 }.toListVector()
 
 		override val rows get() = (0 until row).map(::row)
@@ -31,9 +31,11 @@ class ListMatrix(
 
 		override fun equals(other: Any?) =
 			when (other) {
-				is ListMatrix ->
+				is ListMatrix  ->
 					column == other.column && data == other.data
-				is Matrix     ->
+				is ArrayMatrix ->
+					column == other.column && data == other.array.toList()
+				is Matrix      ->
 					row == other.row &&
 						column == other.column &&
 						(0 until row).all { r ->
@@ -41,7 +43,7 @@ class ListMatrix(
 								other[r, c] == this[r, c]
 							}
 						}
-				else          -> false
+				else           -> false
 			}
 
 		override fun hashCode() = data.hashCode()
