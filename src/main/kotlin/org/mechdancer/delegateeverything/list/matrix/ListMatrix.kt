@@ -23,11 +23,19 @@ class ListMatrix(
 		override val row = size / column
 		override fun get(r: Int, c: Int) = this[r * column + c]
 
-		override fun row(r: Int) = subList(r * column, (r + 1) * column).toListVector()
-		override fun column(c: Int) = filterIndexed { i, _ -> i % c == 0 }.toListVector()
+		override fun row(r: Int) = rows[r]
+		override fun column(c: Int) = columns[c]
 
-		override val rows get() = (0 until row).map(::row)
-		override val columns get() = (0 until column).map(::column)
+		override val rows by lazy {
+			(0 until row).map { r ->
+				subList(r * column, (r + 1) * column).toListVector()
+			}
+		}
+		override val columns by lazy {
+			(0 until column).map { c ->
+				filterIndexed { i, _ -> i % column == c }.toListVector()
+			}
+		}
 
 		override fun equals(other: Any?) =
 			when (other) {
@@ -48,6 +56,6 @@ class ListMatrix(
 
 		override fun hashCode() = data.hashCode()
 
-		override fun toString(): String = "$row * $column Matrix by List"
+		override fun toString() = matrixView()
 	}
 }

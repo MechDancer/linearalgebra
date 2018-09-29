@@ -27,7 +27,7 @@ class ArrayMatrix(colume: Int, val array: DoubleArray)
 		}
 
 		override fun row(r: Int) = array.copyOfRange(r * column, (r + 1) * column).toList().toListVector()
-		override fun column(c: Int) = array.filterIndexed { i, _ -> i % c == 0 }.toListVector()
+		override fun column(c: Int) = array.filterIndexed { i, _ -> i % column == c }.toListVector()
 
 		override val rows get() = (0 until row).map(::row)
 		override val columns get() = (0 until column).map(::column)
@@ -93,8 +93,6 @@ class ArrayMatrix(colume: Int, val array: DoubleArray)
 
 		override fun hashCode() = array.hashCode()
 
-		override fun toString(): String {
-			TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-		}
+		override fun toString() = matrixView()
 	}
 }
