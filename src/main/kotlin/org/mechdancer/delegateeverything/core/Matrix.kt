@@ -42,4 +42,8 @@ interface Matrix {
 	 * 获取第[c]列的向量
 	 */
 	fun column(c: Int): Vector
+
+	override fun equals(other: Any?): Boolean
+	override fun hashCode(): Int
+	override fun toString(): String
 }

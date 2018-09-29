@@ -4,8 +4,8 @@ import org.mechdancer.delegateeverything.core.Vector
 import org.mechdancer.delegateeverything.list.vector.Relation.*
 import kotlin.math.acos
 
-operator fun Vector.times(k: Double) = toList().map { it * k }.let(::ListVector)
-operator fun Vector.div(k: Double) = times(1 / k)
+operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
+operator fun Vector.div(k: Number) = times(1 / k.toDouble())
 
 private fun differentDimException(a: Vector, b: Vector) =
 	IllegalArgumentException("operate two vector of different dimension (${a.dimension} and ${b.dimension})")
@@ -47,9 +47,9 @@ infix fun Vector.euclid(other: Vector) = Euclid.between(this, other)
 infix fun Vector.manhattan(other: Vector) = Manhattan.between(this, other)
 
 /** 复制向量，并进行指定的修改 */
-fun Vector.copy(vararg change: Pair<Int, Double>): Vector {
+fun Vector.copy(vararg change: Pair<Int, Number>): Vector {
 	val map = change.associate { it }
-	return List(dimension) { map[it] ?: get(it) }.let(::ListVector)
+	return List(dimension) { map[it]?.toDouble() ?: get(it) }.let(::ListVector)
 }
 
 /** 从向量选取指定的维度组成新的向量 */
