@@ -21,20 +21,7 @@ fun Matrix.matrixView(): String {
 	val header = "$row x $column Matrix"
 	//每列宽度
 	val widths = columns.map { it.toList().map { num -> format.format(num).length }.max() ?: 0 }
-	val pre = { r: Int ->
-		when (r) {
-			0       -> '┌'
-			row - 1 -> '└'
-			else    -> '│'
-		}
-	}
-	val fix = { r: Int ->
-		when (r) {
-			0       -> '┐'
-			row - 1 -> '┘'
-			else    -> '│'
-		}
-	}
+
 	val blank = { length: Int -> " ".repeat(length) }
 	val one = { c: Int, str: String ->
 		val right = (widths[c] - str.length) / 2
@@ -42,12 +29,29 @@ fun Matrix.matrixView(): String {
 		"${blank(left + 1)}$str${blank(right)}"
 	}
 	val line = { r: Int ->
-		val str = (0 until column).joinToString("") { c -> one(c, format.format(get(r, c))) }
-		"${pre(r)}$str ${fix(r)}"
+		(0 until column).joinToString("") { c -> one(c, format.format(get(r, c))) }
 	}
 	return buildString {
 		append(blank((widths.sum() + widths.size + 4 - header.length) / 2))
 		appendln(header)
-		append((0 until row).joinToString(separator = "\n", transform = line))
+		if (row < 2)
+			append("[${line(0)} ]")
+		else {
+			val pre = { r: Int ->
+				when (r) {
+					0       -> '┌'
+					row - 1 -> '└'
+					else    -> '│'
+				}
+			}
+			val fix = { r: Int ->
+				when (r) {
+					0       -> '┐'
+					row - 1 -> '┘'
+					else    -> '│'
+				}
+			}
+			append((0 until row).joinToString("\n") { r -> "${pre(r)}${line(r)} ${fix(r)}" })
+		}
 	}
 }

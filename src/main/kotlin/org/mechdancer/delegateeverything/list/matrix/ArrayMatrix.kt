@@ -10,10 +10,10 @@ import org.mechdancer.delegateeverything.list.vector.toListVector
  * 基于数组实现的矩阵
  * 值可变，线程不安全
  */
-class ArrayMatrix(colume: Int, val array: DoubleArray)
-	: ValueMutableMatrix by ArrayMatrixCore(colume, array) {
+class ArrayMatrix(column: Int, val array: DoubleArray)
+	: ValueMutableMatrix by ArrayMatrixCore(column, array) {
 	init {
-		assert(array.size % colume == 0)
+		assert(array.size % column == 0)
 	}
 
 	private class ArrayMatrixCore(override val column: Int, val array: DoubleArray)
@@ -95,4 +95,10 @@ class ArrayMatrix(colume: Int, val array: DoubleArray)
 
 		override fun toString() = matrixView()
 	}
+}
+
+fun main(args: Array<String>) {
+	val matrix = ArrayMatrix(2, doubleArrayOf(1.0, 2.0, 3.0, 4.0))
+	matrix.array[1] = 10.0
+	println(matrix.matrixView())
 }
