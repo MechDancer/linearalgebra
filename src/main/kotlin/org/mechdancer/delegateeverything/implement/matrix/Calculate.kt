@@ -50,3 +50,9 @@ fun Matrix.isNotSquare() = row != column
 
 fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
 fun Matrix.toRowEchelon() = toArrayMatrix().rowEchelon()
+
+fun Matrix.getCofactor(r: Int, c: Int) =
+	tomutableListMatrix().apply {
+		removeRow(r)
+		removeColumn(c)
+	}

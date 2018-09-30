@@ -53,5 +53,5 @@ interface ValueMutableMatrix : Matrix, Cloneable {
 	 */
 	fun exchangeColumn(c0: Int, c1: Int)
 
-	override fun clone(): ValueMutableMatrix
+	public override fun clone(): ValueMutableMatrix
 }

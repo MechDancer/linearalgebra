@@ -1,6 +1,7 @@
 package org.mechdancer.delegateeverything.implement.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
+import org.mechdancer.delegateeverything.core.MutableMatrix
 import org.mechdancer.delegateeverything.core.ValueMutableMatrix
 
 //对矩阵各项操作
@@ -61,4 +62,13 @@ fun ValueMutableMatrix.rowEchelon() =
 			//固定行数加一
 			++fixed
 		}
+	}
+
+/**
+ * 获取余子式
+ */
+fun MutableMatrix.getCofactor(r: Int, c: Int) =
+	apply {
+		removeRow(r)
+		removeColumn(c)
 	}

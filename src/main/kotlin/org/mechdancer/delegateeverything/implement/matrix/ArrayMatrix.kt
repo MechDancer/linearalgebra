@@ -120,5 +120,5 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 
 	override fun toString() = matrixView()
 
-	public override fun clone() = ArrayMatrix(column, array)
+	override fun clone() = ArrayMatrix(column, array)
 }
