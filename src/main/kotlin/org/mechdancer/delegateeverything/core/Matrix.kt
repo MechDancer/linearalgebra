@@ -53,6 +53,12 @@ interface Matrix {
 	 */
 	val rank: Int
 
+	/**
+	 * Calculate the det of this matrix
+	 * 获取矩阵对应行列式的值
+	 */
+	val det: Double
+
 	override fun equals(other: Any?): Boolean
 	override fun hashCode(): Int
 	override fun toString(): String

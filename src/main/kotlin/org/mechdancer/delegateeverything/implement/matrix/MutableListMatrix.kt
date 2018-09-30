@@ -3,7 +3,6 @@ package org.mechdancer.delegateeverything.implement.matrix
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.MutableMatrix
 import org.mechdancer.delegateeverything.core.matrixView
-import org.mechdancer.delegateeverything.implement.vector.isNotZero
 import org.mechdancer.delegateeverything.implement.vector.toListVector
 
 /**
@@ -132,12 +131,9 @@ class MutableListMatrix(column: Int, val list: MutableList<Double>)
 		--column
 	}
 
-	override val rank
-		get() =
-			ArrayMatrix(column, list.toDoubleArray())
-				.rowEchelon()
-				.rows
-				.sumBy { if (it.isNotZero()) 1 else 0 }
+	override val rank get() = clone().getRankDestructive()
+
+	override val det get() = det(this)
 
 	override fun equals(other: Any?) =
 		when (other) {

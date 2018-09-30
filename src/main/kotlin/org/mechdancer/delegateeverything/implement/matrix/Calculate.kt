@@ -48,6 +48,8 @@ operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })
 fun Matrix.isSquare() = row == column
 fun Matrix.isNotSquare() = row != column
 
+val Matrix.dim get() = if (isSquare()) row else -1
+
 fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
 fun Matrix.toRowEchelon() = toArrayMatrix().rowEchelon()
 
@@ -55,4 +57,13 @@ fun Matrix.getCofactor(r: Int, c: Int) =
 	tomutableListMatrix().apply {
 		removeRow(r)
 		removeColumn(c)
+	}
+
+fun det(m: Matrix): Double =
+	when (m.dim) {
+		1    -> m[0, 0]
+		2    -> m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]
+		else -> (0 until m.column).sumByDouble { c ->
+			m[0, c] * (if (c % 2 == 0) 1 else -1) * m.getCofactor(0, c).det
+		}
 	}

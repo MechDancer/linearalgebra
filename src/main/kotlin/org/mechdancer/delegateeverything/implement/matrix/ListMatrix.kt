@@ -2,7 +2,6 @@ package org.mechdancer.delegateeverything.implement.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.matrixView
-import org.mechdancer.delegateeverything.implement.vector.isNotZero
 import org.mechdancer.delegateeverything.implement.vector.toListVector
 
 /**
@@ -33,12 +32,9 @@ class ListMatrix(
 		}
 	}
 
-	override val rank by lazy {
-		ArrayMatrix(column, list.toDoubleArray())
-			.rowEchelon()
-			.rows
-			.sumBy { if (it.isNotZero()) 1 else 0 }
-	}
+	override val rank by lazy { toArrayMatrix().getRankDestructive() }
+
+	override val det by lazy { det(this) }
 
 	override fun equals(other: Any?) =
 		when (other) {
