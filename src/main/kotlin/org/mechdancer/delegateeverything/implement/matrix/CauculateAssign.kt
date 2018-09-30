@@ -34,9 +34,32 @@ operator fun ValueMutableMatrix.plusAssign(other: Matrix) = zip(other) { a, b ->
 operator fun ValueMutableMatrix.minusAssign(other: Matrix) = zip(other) { a, b -> a - b }
 
 /**
- * 通过行初等变换变为行阶梯型阵
+ * 原地转置
+ * 只适用于方阵
  */
-fun ValueMutableMatrix.rowEchelon() =
+fun ValueMutableMatrix.transposeAssign() {
+	assert(row == column)
+	for (r in 0 until row)
+		for (c in 0 until r) {
+			val temp = get(r, c)
+			set(r, c, get(c, r))
+			set(c, r, temp)
+		}
+}
+
+/**
+ * 原地获取余子式
+ */
+fun MutableMatrix.getCofactorAssign(r: Int, c: Int) =
+	apply {
+		removeRow(r)
+		removeColumn(c)
+	}
+
+/**
+ * 原地通过行初等变换变为行阶梯型阵
+ */
+fun ValueMutableMatrix.rowEchelonAssign() =
 	apply {
 		//固定行数
 		var fixed = 0
@@ -62,13 +85,4 @@ fun ValueMutableMatrix.rowEchelon() =
 			//固定行数加一
 			++fixed
 		}
-	}
-
-/**
- * 获取余子式
- */
-fun MutableMatrix.getCofactor(r: Int, c: Int) =
-	apply {
-		removeRow(r)
-		removeColumn(c)
 	}

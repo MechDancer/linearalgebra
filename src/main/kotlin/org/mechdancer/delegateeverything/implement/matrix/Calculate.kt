@@ -51,19 +51,25 @@ fun Matrix.isNotSquare() = row != column
 val Matrix.dim get() = if (isSquare()) row else -1
 
 fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
-fun Matrix.toRowEchelon() = toArrayMatrix().rowEchelon()
+fun Matrix.rowEchelon() = toArrayMatrix().rowEchelonAssign()
 
 fun Matrix.getCofactor(r: Int, c: Int) =
-	tomutableListMatrix().apply {
-		removeRow(r)
-		removeColumn(c)
-	}
+	tomutableListMatrix().getCofactorAssign(r, c)
+
+private fun Matrix.getAlgebraCofactor(r: Int, c: Int): Double =
+	(if ((r + c) % 2 == 0) 1 else -1) * getCofactor(r, c).det
+
+fun Matrix.companion() =
+	takeIf { dim > 0 }
+		?.run { listMatrixOf(row, column) { r, c -> getAlgebraCofactor(c, r) } }
+		?: throw IllegalArgumentException("only square matrix has a companion")
 
 fun det(m: Matrix): Double =
 	when (m.dim) {
+		-1   -> Double.NaN
 		1    -> m[0, 0]
 		2    -> m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]
 		else -> (0 until m.column).sumByDouble { c ->
-			m[0, c] * (if (c % 2 == 0) 1 else -1) * m.getCofactor(0, c).det
+			m[0, c] * m.getAlgebraCofactor(0, c)
 		}
 	}
