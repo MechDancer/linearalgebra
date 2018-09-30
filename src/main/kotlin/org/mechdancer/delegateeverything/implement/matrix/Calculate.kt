@@ -3,8 +3,11 @@ package org.mechdancer.delegateeverything.implement.matrix
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.Vector
 
+//矩阵转换为List<Double>
 private fun Matrix.toList() =
-	(this as? ListMatrix)?.data ?: rows.flatMap { it.toList() }
+	(this as? ListMatrix)?.data
+		?: (this as? ArrayMatrix)?.array?.toList()
+		?: rows.flatMap { it.toList() }
 
 operator fun Matrix.times(k: Number) =
 	ListMatrix(column, toList().map { it * k.toDouble() })
