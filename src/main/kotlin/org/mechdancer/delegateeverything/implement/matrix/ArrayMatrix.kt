@@ -4,6 +4,7 @@ import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.ValueMutableMatrix
 import org.mechdancer.delegateeverything.core.Vector
 import org.mechdancer.delegateeverything.core.matrixView
+import org.mechdancer.delegateeverything.implement.vector.isNotZero
 import org.mechdancer.delegateeverything.implement.vector.toListVector
 
 /**
@@ -42,14 +43,16 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	}
 
 	override fun timesRow(r: Int, k: Double) {
+		if (k == 1.0) return
 		for (i in index(r, 0) until index(r + 1, 0))
 			array[i] *= k
 	}
 
 	override fun plusToRow(k: Double, r0: Int, r1: Int) {
+		if (k == .0) return
 		val difference = (r1 - r0) * column
 		for (i in index(r0, 0) until index(r0 + 1, 0))
-			array[i] += k * array[i + difference]
+			array[i + difference] += k * array[i]
 	}
 
 	override fun exchangeRow(r0: Int, r1: Int) {
@@ -60,6 +63,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	}
 
 	override fun timesColumn(c: Int, k: Double) {
+		if (k == 1.0) return
 		var i = c
 		for (r in 0 until row) {
 			array[i] *= k
@@ -68,7 +72,9 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	}
 
 	override fun plusToColumn(k: Double, c0: Int, c1: Int) {
-		var (i0, i1) = c0 to c1
+		if (k == .0) return
+		var i0 = c0
+		var i1 = c1
 		for (r in 0 until row) {
 			array[i0] += k * array[i1]
 			i0 += column
@@ -85,10 +91,17 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		}
 	}
 
+	override val rank
+		get() =
+			ArrayMatrix(column, array)
+				.rowEchelon()
+				.rows
+				.sumBy { if (it.isNotZero()) 1 else 0 }
+
 	override fun equals(other: Any?) =
 		when (other) {
 			is ListMatrix  ->
-				column == other.column && array.toList() == other.data
+				column == other.column && array.toList() == other.list
 			is ArrayMatrix ->
 				column == other.column && array.contentEquals(other.array)
 			is Matrix      ->

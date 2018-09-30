@@ -47,6 +47,12 @@ interface Matrix {
 	 */
 	fun column(c: Int): Vector
 
+	/**
+	 * Get the rank of this matrix
+	 * 获取矩阵的秩
+	 */
+	val rank: Int
+
 	override fun equals(other: Any?): Boolean
 	override fun hashCode(): Int
 	override fun toString(): String

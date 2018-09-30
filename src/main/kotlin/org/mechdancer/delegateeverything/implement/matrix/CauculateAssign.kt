@@ -32,8 +32,33 @@ private fun ValueMutableMatrix.zip(other: Matrix, block: (Double, Double) -> Dou
 operator fun ValueMutableMatrix.plusAssign(other: Matrix) = zip(other) { a, b -> a + b }
 operator fun ValueMutableMatrix.minusAssign(other: Matrix) = zip(other) { a, b -> a - b }
 
-fun ValueMutableMatrix.toRowEchelon() {
-	val orders = rows.map { vector ->
-		vector.toList().indexOfFirst { it == .0 }
+/**
+ * 通过行初等变换变为行阶梯型阵
+ */
+fun ValueMutableMatrix.rowEchelon() =
+	apply {
+		//固定行数
+		var fixed = 0
+		//按列化简
+		for (c in 0 until column) {
+			//在此列所有未固定的行中
+			(fixed until row)
+				//找到第一个非零元素
+				.firstOrNull { r -> get(r, c) != .0 }
+				//将其所在行交换到未固定的首行
+				?.let { exchangeRow(it, fixed) }
+			//全为零则直接查找下一列
+				?: continue
+
+			//取出这一行的首元
+			val head = get(fixed, c)
+			//用首元将此列未固定的其他元素化为零
+			for (r in fixed + 1 until row) {
+				plusToRow(-get(r, c) / head, fixed, r)
+				set(r, c, .0) //强保证化为零有效
+			}
+
+			//固定行数加一
+			++fixed
+		}
 	}
-}

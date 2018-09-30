@@ -5,7 +5,7 @@ import org.mechdancer.delegateeverything.core.Vector
 
 //矩阵转换为List<Double>
 private fun Matrix.toList() =
-	(this as? ListMatrix)?.data
+	(this as? ListMatrix)?.list
 		?: (this as? ArrayMatrix)?.array?.toList()
 		?: rows.flatMap { it.toList() }
 
@@ -49,3 +49,4 @@ fun Matrix.isSquare() = row == column
 fun Matrix.isNotSquare() = row != column
 
 fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
+fun Matrix.toRowEchelon() = toArrayMatrix().rowEchelon()
