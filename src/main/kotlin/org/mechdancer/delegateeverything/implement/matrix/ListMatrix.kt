@@ -6,8 +6,7 @@ import org.mechdancer.delegateeverything.implement.vector.isNotZero
 import org.mechdancer.delegateeverything.implement.vector.toListVector
 
 /**
- * [Matrix] delegated by [List] of [Double]
- * 用列表代理实现的矩阵
+ * 基于列表实现的矩阵
  */
 class ListMatrix(
 	override val column: Int,
@@ -43,11 +42,13 @@ class ListMatrix(
 
 	override fun equals(other: Any?) =
 		when (other) {
-			is ListMatrix  ->
+			is ListMatrix        ->
 				column == other.column && list == other.list
-			is ArrayMatrix ->
+			is MutableListMatrix ->
+				column == other.column && list == other.list
+			is ArrayMatrix       ->
 				column == other.column && list == other.array.toList()
-			is Matrix      ->
+			is Matrix            ->
 				row == other.row &&
 					column == other.column &&
 					(0 until row).all { r ->
@@ -55,7 +56,7 @@ class ListMatrix(
 							other[r, c] == this[r, c]
 						}
 					}
-			else           -> false
+			else                 -> false
 		}
 
 	override fun hashCode() = list.hashCode()

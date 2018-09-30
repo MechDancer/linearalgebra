@@ -34,5 +34,6 @@ fun Matrix.toListMatrix(): ListMatrix =
 
 fun Matrix.toArrayMatrix(): ArrayMatrix =
 	(this as? ArrayMatrix)
+		?.clone()
 		?: (this as? ListMatrix)?.let { ArrayMatrix(column, it.list.toDoubleArray()) }
 		?: arrayMatrixOf(row, column) { r, c -> this[r, c] }

@@ -1,32 +1,33 @@
 package org.mechdancer.delegateeverything.implement.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
-import org.mechdancer.delegateeverything.core.ValueMutableMatrix
+import org.mechdancer.delegateeverything.core.MutableMatrix
 import org.mechdancer.delegateeverything.core.matrixView
 import org.mechdancer.delegateeverything.implement.vector.isNotZero
 import org.mechdancer.delegateeverything.implement.vector.toListVector
 
 /**
- * [Matrix] of [DoubleArray]
- * 基于数组实现的矩阵
- * 值可变，线程不安全
+ * 基于可变列表实现的矩阵
  */
-class ArrayMatrix(override val column: Int, val array: DoubleArray)
-	: ValueMutableMatrix {
+class MutableListMatrix(column: Int, val list: MutableList<Double>)
+	: MutableMatrix {
 	init {
-		assert(array.size % column == 0)
+		assert(list.size % column == 0)
 	}
 
-	override val row = array.size / column
+	override var row = list.size / column
+		private set
+	override var column = column
+		private set
 
 	private fun index(r: Int, c: Int) = r * column + c
-	override operator fun get(r: Int, c: Int) = array[index(r, c)]
+	override fun get(r: Int, c: Int) = list[index(r, c)]
 	override operator fun set(r: Int, c: Int, value: Double) {
-		array[index(r, c)] = value
+		list[index(r, c)] = value
 	}
 
-	override fun row(r: Int) = array.copyOfRange(r * column, (r + 1) * column).toList().toListVector()
-	override fun column(c: Int) = array.filterIndexed { i, _ -> i % column == c }.toListVector()
+	override fun row(r: Int) = list.subList(r * column, (r + 1) * column).toListVector()
+	override fun column(c: Int) = list.filterIndexed { i, _ -> i % column == c }.toListVector()
 
 	override val rows get() = (0 until row).map(::row)
 	override val columns get() = (0 until column).map(::column)
@@ -44,28 +45,30 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	override fun timesRow(r: Int, k: Double) {
 		if (k == 1.0) return
 		for (i in index(r, 0) until index(r + 1, 0))
-			array[i] *= k
+			list[i] *= k
 	}
 
 	override fun plusToRow(k: Double, r0: Int, r1: Int) {
 		if (k == .0) return
 		val difference = (r1 - r0) * column
 		for (i in index(r0, 0) until index(r0 + 1, 0))
-			array[i + difference] += k * array[i]
+			list[i + difference] += k * list[i]
 	}
 
 	override fun exchangeRow(r0: Int, r1: Int) {
 		if (r0 == r1) return
-		val temp = array.copyOfRange(index(r0, 0), index(r0 + 1, 0))
-		System.arraycopy(array, index(r1, 0), array, index(r0, 0), column)
-		System.arraycopy(temp, 0, array, index(r1, 0), column)
+		(0 until column).forEach { c ->
+			val temp = get(r0, c)
+			set(r1, c, get(r1, c))
+			set(r0, c, temp)
+		}
 	}
 
 	override fun timesColumn(c: Int, k: Double) {
 		if (k == 1.0) return
 		var i = c
 		for (r in 0 until row) {
-			array[i] *= k
+			list[i] *= k
 			i += column
 		}
 	}
@@ -75,7 +78,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		var i0 = c0
 		var i1 = c1
 		for (r in 0 until row) {
-			array[i0] += k * array[i1]
+			list[i0] += k * list[i1]
 			i0 += column
 			i1 += column
 		}
@@ -90,9 +93,48 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		}
 	}
 
+	override fun addRow(r: Int, vector: List<Double>) {
+		assert(vector.size == column)
+		if (r == row) {
+			list.addAll(vector)
+		} else {
+			val p = index(r + 1, 0)
+			vector.forEach { list.add(p, it) }
+		}
+		++row
+	}
+
+	override fun addColumn(c: Int, vector: List<Double>) {
+		assert(vector.size == row)
+		var i = index(row - 1, c)
+		vector
+			.asReversed()
+			.forEach {
+				list.add(i, it)
+				i -= column
+			}
+		++column
+	}
+
+	override fun removeRow(r: Int) {
+		val p = index(r, 0)
+		for (t in 0 until column)
+			list.removeAt(p)
+		--row
+	}
+
+	override fun removeColumn(c: Int) {
+		var i = index(row - 1, c)
+		for (t in 0 until row) {
+			list.removeAt(i)
+			i -= column
+		}
+		--column
+	}
+
 	override val rank
 		get() =
-			clone()
+			ArrayMatrix(column, list.toDoubleArray())
 				.rowEchelon()
 				.rows
 				.sumBy { if (it.isNotZero()) 1 else 0 }
@@ -100,25 +142,25 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	override fun equals(other: Any?) =
 		when (other) {
 			is ListMatrix        ->
-				column == other.column && array.toList() == other.list
+				column == other.column && list == other.list
 			is MutableListMatrix ->
-				column == other.column && array.toList() == other.list
+				column == other.column && list == other.list
 			is ArrayMatrix       ->
-				column == other.column && array.contentEquals(other.array)
+				column == other.column && list == other.array.toList()
 			is Matrix            ->
 				row == other.row &&
 					column == other.column &&
 					(0 until row).all { r ->
 						(0 until column).all { c ->
-							other[r, c] == get(r, c)
+							other[r, c] == this[r, c]
 						}
 					}
 			else                 -> false
 		}
 
-	override fun hashCode() = array.hashCode()
+	override fun hashCode() = list.hashCode()
 
 	override fun toString() = matrixView()
 
-	public override fun clone() = ArrayMatrix(column, array)
+	override fun clone() = MutableListMatrix(column, list.toMutableList())
 }

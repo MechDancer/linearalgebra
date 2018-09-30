@@ -4,7 +4,7 @@ package org.mechdancer.delegateeverything.core
  * Matrix with mutable value and fixed size
  * 值可变，规格不可变的矩阵
  */
-interface ValueMutableMatrix : Matrix {
+interface ValueMutableMatrix : Matrix, Cloneable {
 	/**
 	 * Set an element of this matrix
 	 * 设置[r]行[c]列处的元素
@@ -15,13 +15,13 @@ interface ValueMutableMatrix : Matrix {
 	 * Set an whole line
 	 * 修改一整行
 	 */
-	fun setRow(r: Int, vector: Vector)
+	fun setRow(r: Int, vector: List<Double>)
 
 	/**
 	 * Set an whole column
 	 * 修改一整列
 	 */
-	fun setColumn(c: Int, vector: Vector)
+	fun setColumn(c: Int, vector: List<Double>)
 
 	/**
 	 * 初等行变换：第[r]行数乘[k]
@@ -52,4 +52,6 @@ interface ValueMutableMatrix : Matrix {
 	 * 初等列变换：[c0]和[c1]交换
 	 */
 	fun exchangeColumn(c0: Int, c1: Int)
+
+	override fun clone(): ValueMutableMatrix
 }
