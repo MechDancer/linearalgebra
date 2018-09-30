@@ -31,41 +31,53 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	override val rows get() = (0 until row).map(::row)
 	override val columns get() = (0 until column).map(::column)
 
-	override fun setRow(r: Int, value: Vector) {
-		assert(value.dimension == column)
-		(0 until column).forEach { c -> set(r, c, value[c]) }
+	override fun setRow(r: Int, vector: Vector) {
+		assert(vector.dimension == column)
+		vector.toList().forEachIndexed { c, value -> set(r, c, value) }
 	}
 
-	override fun setColumn(c: Int, value: Vector) {
-		assert(value.dimension == row)
-		(0 until row).forEach { r -> set(r, c, value[r]) }
+	override fun setColumn(c: Int, vector: Vector) {
+		assert(vector.dimension == row)
+		vector.toList().forEachIndexed { r, value -> set(r, c, value) }
 	}
 
 	override fun timesRow(r: Int, k: Double) {
-		(0 until column).forEach { c -> set(r, c, k * get(r, c)) }
+		for (i in index(r, 0) until index(r + 1, 0))
+			array[i] *= k
 	}
 
-	override fun plusToRow(r0: Int, r1: Int) {
-		(0 until column).forEach { c -> set(r1, c, get(r0, c) + get(r1, c)) }
+	override fun plusToRow(k: Double, r0: Int, r1: Int) {
+		val difference = (r1 - r0) * column
+		for (i in index(r0, 0) until index(r0 + 1, 0))
+			array[i] += k * array[i + difference]
 	}
 
 	override fun exchangeRow(r0: Int, r1: Int) {
-		(0 until column).forEach { c ->
-			val temp = get(r0, c)
-			set(r0, c, get(r1, c))
-			set(r1, c, temp)
-		}
+		if (r0 == r1) return
+		val temp = array.copyOfRange(index(r0, 0), index(r0 + 1, 0))
+		System.arraycopy(array, index(r1, 0), array, index(r0, 0), column)
+		System.arraycopy(temp, 0, array, index(r1, 0), column)
 	}
 
 	override fun timesColumn(c: Int, k: Double) {
-		(0 until row).forEach { r -> set(r, c, k * get(r, c)) }
+		var i = c
+		for (r in 0 until row) {
+			array[i] *= k
+			i += column
+		}
 	}
 
-	override fun plusToColumn(c0: Int, c1: Int) {
-		(0 until row).forEach { r -> set(r, c1, get(r, c0) + get(r, c1)) }
+	override fun plusToColumn(k: Double, c0: Int, c1: Int) {
+		var (i0, i1) = c0 to c1
+		for (r in 0 until row) {
+			array[i0] += k * array[i1]
+			i0 += column
+			i1 += column
+		}
 	}
 
 	override fun exchangeColumn(c0: Int, c1: Int) {
+		if (c0 == c1) return
 		(0 until row).forEach { r ->
 			val temp = get(r, c0)
 			set(r, c0, get(r, c1))

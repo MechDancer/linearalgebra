@@ -32,11 +32,8 @@ private fun ValueMutableMatrix.zip(other: Matrix, block: (Double, Double) -> Dou
 operator fun ValueMutableMatrix.plusAssign(other: Matrix) = zip(other) { a, b -> a + b }
 operator fun ValueMutableMatrix.minusAssign(other: Matrix) = zip(other) { a, b -> a - b }
 
-fun main(args: Array<String>) {
-	val m = ArrayMatrix(3, doubleArrayOf(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0))
-	println("A =")
-	println(m)
-	m += listMatrixOfUnit(3)
-	println("B =")
-	println(m)
+fun ValueMutableMatrix.toRowEchelon() {
+	val orders = rows.map { vector ->
+		vector.toList().indexOfFirst { it == .0 }
+	}
 }

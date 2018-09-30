@@ -15,13 +15,13 @@ interface ValueMutableMatrix : Matrix {
 	 * Set an whole line
 	 * 修改一整行
 	 */
-	fun setRow(r: Int, value: Vector)
+	fun setRow(r: Int, vector: Vector)
 
 	/**
 	 * Set an whole column
 	 * 修改一整列
 	 */
-	fun setColumn(c: Int, value: Vector)
+	fun setColumn(c: Int, vector: Vector)
 
 	/**
 	 * 初等行变换：第[r]行数乘[k]
@@ -29,9 +29,9 @@ interface ValueMutableMatrix : Matrix {
 	fun timesRow(r: Int, k: Double)
 
 	/**
-	 * 初等行变换：[r0]加到[r1]
+	 * 初等行变换：[k]倍[r0]加到[r1]
 	 */
-	fun plusToRow(r0: Int, r1: Int)
+	fun plusToRow(k: Double, r0: Int, r1: Int)
 
 	/**
 	 * 初等行变换：[r0]和[r1]交换
@@ -44,9 +44,9 @@ interface ValueMutableMatrix : Matrix {
 	fun timesColumn(c: Int, k: Double)
 
 	/**
-	 * 初等列变换：[c0]加到[c1]
+	 * 初等列变换：[k]倍[c0]加到[c1]
 	 */
-	fun plusToColumn(c0: Int, c1: Int)
+	fun plusToColumn(k: Double, c0: Int, c1: Int)
 
 	/**
 	 * 初等列变换：[c0]和[c1]交换
