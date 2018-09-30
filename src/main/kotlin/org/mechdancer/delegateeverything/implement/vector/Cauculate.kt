@@ -1,7 +1,7 @@
-package org.mechdancer.delegateeverything.list.vector
+package org.mechdancer.delegateeverything.implement.vector
 
 import org.mechdancer.delegateeverything.core.Vector
-import org.mechdancer.delegateeverything.list.vector.Relation.*
+import org.mechdancer.delegateeverything.implement.vector.Relation.*
 import kotlin.math.acos
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)

@@ -1,7 +1,8 @@
-package org.mechdancer.delegateeverything.list.matrix
+package org.mechdancer.delegateeverything.implement.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
-import org.mechdancer.delegateeverything.list.vector.toListVector
+import org.mechdancer.delegateeverything.core.matrixView
+import org.mechdancer.delegateeverything.implement.vector.toListVector
 
 /**
  * [Matrix] delegated by [List] of [Double]

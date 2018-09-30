@@ -1,5 +1,9 @@
 package org.mechdancer.delegateeverything.core
 
+/**
+ * Matrix
+ * 矩阵
+ */
 interface Matrix {
 	/**
 	 * Number of rows

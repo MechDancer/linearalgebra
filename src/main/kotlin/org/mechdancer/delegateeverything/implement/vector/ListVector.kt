@@ -1,6 +1,7 @@
-package org.mechdancer.delegateeverything.list.vector
+package org.mechdancer.delegateeverything.implement.vector
 
 import org.mechdancer.delegateeverything.core.Vector
+import org.mechdancer.delegateeverything.core.columnView
 import kotlin.math.sqrt
 
 /**

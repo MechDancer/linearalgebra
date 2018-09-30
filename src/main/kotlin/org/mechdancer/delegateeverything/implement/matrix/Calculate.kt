@@ -1,4 +1,4 @@
-package org.mechdancer.delegateeverything.list.matrix
+package org.mechdancer.delegateeverything.implement.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.Vector

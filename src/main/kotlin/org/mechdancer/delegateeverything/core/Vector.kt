@@ -1,5 +1,9 @@
 package org.mechdancer.delegateeverything.core
 
+/**
+ * Vector
+ * 向量
+ */
 interface Vector {
 	/**
 	 * Dimension

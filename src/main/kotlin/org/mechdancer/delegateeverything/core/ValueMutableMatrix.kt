@@ -1,6 +1,7 @@
 package org.mechdancer.delegateeverything.core
 
 /**
+ * Matrix with mutable value and fixed size
  * 值可变，规格不可变的矩阵
  */
 interface ValueMutableMatrix : Matrix {
@@ -23,7 +24,7 @@ interface ValueMutableMatrix : Matrix {
 	fun setColumn(c: Int, value: Vector)
 
 	/**
-	 * 初等行变换：数乘
+	 * 初等行变换：第[r]行数乘[k]
 	 */
 	fun timesRow(r: Int, k: Double)
 
@@ -38,7 +39,7 @@ interface ValueMutableMatrix : Matrix {
 	fun exchangeRow(r0: Int, r1: Int)
 
 	/**
-	 * 初等列变换：数乘
+	 * 初等列变换：第[c]列数乘[k]
 	 */
 	fun timesColumn(c: Int, k: Double)
 
