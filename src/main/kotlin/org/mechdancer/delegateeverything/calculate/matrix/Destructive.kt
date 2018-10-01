@@ -1,7 +1,8 @@
-package org.mechdancer.delegateeverything.implement.matrix
+package org.mechdancer.delegateeverything.calculate.matrix
 
+import org.mechdancer.delegateeverything.calculate.vector.isNotZero
 import org.mechdancer.delegateeverything.core.ValueMutableMatrix
-import org.mechdancer.delegateeverything.implement.vector.isNotZero
+import org.mechdancer.delegateeverything.implement.matrix.arrayMatrixOfUnit
 
 /**
  * 计算矩阵的秩，将破坏原矩阵

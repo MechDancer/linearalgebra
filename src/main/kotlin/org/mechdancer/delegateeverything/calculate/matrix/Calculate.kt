@@ -1,7 +1,8 @@
-package org.mechdancer.delegateeverything.implement.matrix
+package org.mechdancer.delegateeverything.calculate.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.Vector
+import org.mechdancer.delegateeverything.implement.matrix.*
 
 //矩阵转换为List<Double>
 private fun Matrix.toList() =
@@ -9,10 +10,8 @@ private fun Matrix.toList() =
 		?: (this as? ArrayMatrix)?.array?.toList()
 		?: rows.flatMap { it.toList() }
 
-operator fun Matrix.times(k: Number) =
-	ListMatrix(column, toList().map { it * k.toDouble() })
-
-operator fun Matrix.div(k: Number) = times(1 / k.toDouble())
+operator fun Matrix.times(k: Number) = ListMatrix(column, toList().map { it * k.toDouble() })
+operator fun Matrix.div(k: Number) = ListMatrix(column, toList().map { it / k.toDouble() })
 
 private fun differentSizeException(a: Matrix, b: Matrix) =
 	IllegalArgumentException("operate two matrix of different size (${a.row}*${a.column} and ${b.row}*${b.column})")
@@ -35,28 +34,24 @@ operator fun Matrix.times(other: Matrix) =
 		}
 		?: throw IllegalArgumentException("column of left matrix must equals to row of right matrix")
 
-operator fun Matrix.times(vector: Vector) =
-	times(vector.toListMatrix())
+operator fun Matrix.div(other: Matrix) = other.inverse()?.let { times(it) }
+operator fun Matrix.times(vector: Vector) = times(vector.toListMatrix())
 
 operator fun Matrix.invoke(right: Matrix) = times(right)
 operator fun Matrix.invoke(right: Vector) = times(right)
 operator fun Matrix.invoke(right: Number) = times(right.toDouble())
 
-operator fun Matrix.unaryPlus() = this
-operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })
-
-fun Matrix.isSquare() = row == column
-fun Matrix.isNotSquare() = row != column
-
 val Matrix.dim get() = if (isSquare()) row else -1
 
+operator fun Matrix.unaryPlus() = this
+operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })
 fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
 fun Matrix.rowEchelon() = toArrayMatrix().rowEchelonAssign()
 
-fun Matrix.getCofactor(r: Int, c: Int) = Cofactor(this, r, c)
+fun Matrix.getCofactorOf(r: Int, c: Int) = Cofactor(this, r, c)
 
 private fun Matrix.getAlgebraCofactor(r: Int, c: Int): Double =
-	(if ((r + c) % 2 == 0) 1 else -1) * getCofactor(r, c).det
+	(if ((r + c) % 2 == 0) 1 else -1) * getCofactorOf(r, c).det
 
 fun Matrix.companion() =
 	takeIf { dim > 0 }

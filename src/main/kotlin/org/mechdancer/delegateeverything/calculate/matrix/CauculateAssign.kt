@@ -1,7 +1,8 @@
-package org.mechdancer.delegateeverything.implement.matrix
+package org.mechdancer.delegateeverything.calculate.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.ValueMutableMatrix
+import org.mechdancer.delegateeverything.implement.matrix.ArrayMatrix
 
 //对矩阵各项操作
 private fun ValueMutableMatrix.forEach(block: (Double) -> Double) =

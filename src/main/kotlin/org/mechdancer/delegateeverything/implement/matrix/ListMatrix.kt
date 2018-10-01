@@ -1,5 +1,7 @@
 package org.mechdancer.delegateeverything.implement.matrix
 
+import org.mechdancer.delegateeverything.calculate.matrix.det
+import org.mechdancer.delegateeverything.calculate.matrix.getRankDestructive
 import org.mechdancer.delegateeverything.core.Matrix
 import org.mechdancer.delegateeverything.core.matrixView
 import org.mechdancer.delegateeverything.implement.vector.toListVector

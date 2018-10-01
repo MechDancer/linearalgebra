@@ -1,6 +1,11 @@
 package org.mechdancer.algebra.test.newTest
 
-import org.mechdancer.delegateeverything.implement.matrix.*
+import org.mechdancer.delegateeverything.calculate.matrix.inverse
+import org.mechdancer.delegateeverything.calculate.matrix.simplifyAssignWith
+import org.mechdancer.delegateeverything.calculate.matrix.times
+import org.mechdancer.delegateeverything.implement.matrix.ListMatrix
+import org.mechdancer.delegateeverything.implement.matrix.arrayMatrixOfUnit
+import org.mechdancer.delegateeverything.implement.matrix.toArrayMatrix
 
 fun main(args: Array<String>) {
 	val o = ListMatrix(3, listOf(
