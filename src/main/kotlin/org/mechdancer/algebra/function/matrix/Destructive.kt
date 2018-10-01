@@ -16,5 +16,5 @@ fun ValueMutableMatrix.rankDestructive() =
 fun ValueMutableMatrix.inverseDestructive() = run {
 	val u = arrayMatrixOfUnit(dim)
 	simplifyAssignWith(u)
-	if (row(row - 1).isNotZero()) u else null
+	if (lastRow.isNotZero()) u else null
 }

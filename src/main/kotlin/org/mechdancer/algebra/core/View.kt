@@ -23,7 +23,7 @@ private fun border(lastIndex: Int) =
 		trans(lastIndex, '┌', '│', '└') to trans(lastIndex, '┐', '│', '┘')
 
 //双精度浮点格式工具
-private val formatter = DecimalFormat(".##")
+private val formatter = DecimalFormat("#.##")
 
 //格式化双精度浮点数
 private fun format(value: Double) =
