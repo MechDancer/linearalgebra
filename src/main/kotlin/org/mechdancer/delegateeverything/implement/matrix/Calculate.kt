@@ -73,3 +73,5 @@ fun det(m: Matrix): Double =
 			m[0, c] * m.getAlgebraCofactor(0, c)
 		}
 	}
+
+fun Matrix.inverse() = toArrayMatrix().inverseDestructive()
