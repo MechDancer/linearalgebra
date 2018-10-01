@@ -1,7 +1,8 @@
 package org.mechdancer.delegateeverything.implement.vector
 
 import org.mechdancer.delegateeverything.core.Vector
-import org.mechdancer.delegateeverything.implement.vector.Relation.*
+import org.mechdancer.delegateeverything.implement.vector.DistanceType.*
+import kotlin.math.abs
 import kotlin.math.acos
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
@@ -26,7 +27,7 @@ infix fun Vector.dot(other: Vector) = zip(other) { a, b -> a * b }.sum()
 fun Vector.normalize() = div(norm)
 
 /** 计算两个向量之间的某种关系 */
-enum class Relation(val between: (Vector, Vector) -> Double) {
+enum class DistanceType(val between: (Vector, Vector) -> Double) {
 	/** 用弧度表示的夹角 */
 	IncludedAngle({ one, other -> acos((one dot other) / one.norm / other.norm) }),
 
@@ -35,6 +36,11 @@ enum class Relation(val between: (Vector, Vector) -> Double) {
 
 	/** 曼哈顿距离 */
 	Manhattan({ one, other -> (one - other).toList().sum() }),
+
+	/** 切比雪夫距离 */
+	Chebyshev({ one, other -> (one - other).toList().asSequence().map(::abs).max() ?: .0 });
+
+	infix fun between(pair: Pair<Vector, Vector>) = between(pair.first, pair.second)
 }
 
 /** @return 与[other]间用弧度表示的夹角 */
@@ -45,6 +51,11 @@ infix fun Vector.euclid(other: Vector) = Euclid.between(this, other)
 
 /** @return 与[other]间的曼哈顿距离 */
 infix fun Vector.manhattan(other: Vector) = Manhattan.between(this, other)
+
+/** @return 与[other]间的切比雪夫距离 */
+infix fun Vector.chebyshev(other: Vector) = Chebyshev.between(this, other)
+
+fun distance(one: Vector, other: Vector, type: DistanceType) = type.between(one, other)
 
 /** 复制向量，并进行指定的修改 */
 fun Vector.copy(vararg change: Pair<Int, Number>): Vector {

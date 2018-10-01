@@ -46,19 +46,10 @@ fun ValueMutableMatrix.transposeAssign() {
 		}
 }
 
-///**
-// * 原地获取余子式
-// */
-//fun MutableMatrix.getCofactorAssign(r: Int, c: Int) =
-//	apply {
-//		removeRow(r)
-//		removeColumn(c)
-//	}
-
 /**
  * 原地通过行初等变换变为行阶梯型阵
  */
-fun ValueMutableMatrix.rowEchelonAssignWith(other: ValueMutableMatrix?) =
+fun ValueMutableMatrix.rowEchelonAssignWith(other: Iterable<ValueMutableMatrix>) =
 	apply {
 		//固定行数
 		var fixed = 0
@@ -69,9 +60,9 @@ fun ValueMutableMatrix.rowEchelonAssignWith(other: ValueMutableMatrix?) =
 				//找到第一个非零元素
 				.firstOrNull { r -> get(r, c) != .0 }
 				//将其所在行交换到未固定的首行
-				?.let {
-					exchangeRow(it, fixed)
-					other?.exchangeRow(it, fixed)
+				?.let { r ->
+					exchangeRow(r, fixed)
+					other.forEach { it.exchangeRow(r, fixed) }
 				}
 			//全为零则直接查找下一列
 				?: continue
@@ -82,7 +73,7 @@ fun ValueMutableMatrix.rowEchelonAssignWith(other: ValueMutableMatrix?) =
 			for (r in fixed + 1 until row) {
 				val k = -get(r, c) / head
 				plusToRow(k, fixed, r)
-				other?.plusToRow(k, fixed, r)
+				other.forEach { it.plusToRow(k, fixed, r) }
 				//强保证化为零有效
 				set(r, c, .0)
 			}
@@ -95,7 +86,7 @@ fun ValueMutableMatrix.rowEchelonAssignWith(other: ValueMutableMatrix?) =
 /**
  * 原地通过行初等变换变为最简行阶梯型阵
  */
-fun ValueMutableMatrix.simplifyAssignWith(other: ValueMutableMatrix?) =
+fun ValueMutableMatrix.simplifyAssignWith(other: Iterable<ValueMutableMatrix>) =
 	rowEchelonAssignWith(other)
 		.apply {
 			var c = column
@@ -114,7 +105,7 @@ fun ValueMutableMatrix.simplifyAssignWith(other: ValueMutableMatrix?) =
 				for (t in (0 until r)) {
 					val k = -get(t, c) / tail
 					plusToRow(k, r, t)
-					other?.plusToRow(k, r, t)
+					other.forEach { it.plusToRow(k, r, t) }
 					//强保证化为零有效
 					set(t, c, .0)
 				}
@@ -127,20 +118,24 @@ fun ValueMutableMatrix.simplifyAssignWith(other: ValueMutableMatrix?) =
 					val temp = get(r, c++)
 					if (temp != .0) {
 						timesRow(r, 1 / temp)
-						other?.timesRow(r, 1 / temp)
+						other.forEach { it.timesRow(r, 1 / temp) }
 						break
 					}
 				}
 		}
 
+fun ValueMutableMatrix.rowEchelonAssignWith(vararg other: ValueMutableMatrix) =
+	rowEchelonAssignWith(other.toList())
+
+fun ValueMutableMatrix.simplifyAssignWith(vararg other: ValueMutableMatrix) =
+	simplifyAssignWith(other.toList())
+
 /**
  * 原地通过行初等变换变为行阶梯型阵
  */
-fun ValueMutableMatrix.rowEchelonAssign() =
-	rowEchelonAssignWith(null)
+fun ValueMutableMatrix.rowEchelonAssign() = rowEchelonAssignWith()
 
 /**
  * 原地通过行初等变换变为最简行阶梯型阵
  */
-fun ValueMutableMatrix.simplifyAssign() =
-	simplifyAssignWith(null)
+fun ValueMutableMatrix.simplifyAssign() = simplifyAssignWith()
