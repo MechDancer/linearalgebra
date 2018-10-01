@@ -1,7 +1,11 @@
-package org.mechdancer.algebra.implement.matrix
+package org.mechdancer.algebra.implement.matrix.builder
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.implement.matrix.ArrayMatrix
+import org.mechdancer.algebra.implement.matrix.ListMatrix
+import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode
+import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode.Constant
 
 // Vector -> Matrix
 
@@ -46,3 +50,10 @@ fun Matrix.toArrayMatrix(): ArrayMatrix =
 	(this as? ArrayMatrix)?.clone()
 		?: (this as? ListMatrix)?.let { ArrayMatrix(column, it.list.toDoubleArray()) }
 		?: arrayMatrixOf(row, column, ::get)
+
+// DSL Builder
+
+fun matrix(
+	mode: Mode = Constant,
+	block: MatrixBuilder.() -> Unit
+) = MatrixBuilder().apply(block).build(mode)

@@ -5,7 +5,7 @@ import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.matrix.lastRow
 import org.mechdancer.algebra.function.matrix.simplifyAssignWith
 import org.mechdancer.algebra.function.vector.isNotZero
-import org.mechdancer.algebra.implement.matrix.toArrayMatrix
+import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 
 /**
  * 解方程

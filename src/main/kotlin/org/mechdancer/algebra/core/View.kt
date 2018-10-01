@@ -1,6 +1,7 @@
 package org.mechdancer.algebra.core
 
 import java.text.DecimalFormat
+import kotlin.math.max
 
 //转边框字符（一行）
 private fun trans(default: Char) = { _: Int -> default }
@@ -78,9 +79,13 @@ fun Matrix.matrixView(): String {
 		(0 until column).joinToString("") { c -> one(c, format(get(r, c))) }
 	}
 	return buildString {
-		append(blank((widths.sum() + widths.size + 4 - header.length) / 2))
+		val total = widths.sum() + widths.size + 3
+		val inner = max(0, (header.length - total) / 2)
+		append(blank(max(0, total + 1 - header.length) / 2))
 		appendln(header)
 		val (pre, fix) = border(row - 1)
-		append((0 until row).joinToString("\n") { r -> "${pre(r)}${line(r)} ${fix(r)}" })
+		append((0 until row).joinToString("\n") { r ->
+			"${pre(r)}${blank(inner)}${line(r)}${blank(inner + 1)}${fix(r)}"
+		})
 	}
 }

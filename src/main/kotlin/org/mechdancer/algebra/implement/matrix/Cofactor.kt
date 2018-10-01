@@ -5,6 +5,7 @@ import org.mechdancer.algebra.core.SubMatrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.rankDestructive
+import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.vector.without
 
 class Cofactor(

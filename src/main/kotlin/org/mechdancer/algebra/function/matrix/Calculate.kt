@@ -3,7 +3,11 @@ package org.mechdancer.algebra.function.matrix
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.vector.dot
-import org.mechdancer.algebra.implement.matrix.*
+import org.mechdancer.algebra.implement.matrix.ArrayMatrix
+import org.mechdancer.algebra.implement.matrix.Cofactor
+import org.mechdancer.algebra.implement.matrix.ListMatrix
+import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
+import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
 
 //矩阵转换为List<Double>
