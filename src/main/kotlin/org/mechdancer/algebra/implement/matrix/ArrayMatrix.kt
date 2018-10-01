@@ -1,7 +1,7 @@
 package org.mechdancer.algebra.implement.matrix
 
+import org.mechdancer.algebra.core.Determinant
 import org.mechdancer.algebra.core.Matrix
-import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.rankDestructive
@@ -13,7 +13,10 @@ import org.mechdancer.algebra.implement.vector.toListVector
  * 值可变，线程不安全
  */
 class ArrayMatrix(override val column: Int, val array: DoubleArray)
-	: ValueMutableMatrix {
+	: Determinant() {
+	override fun updateRank() = clone().rankDestructive()
+	override fun updateDet() = determinantValue()
+
 	init {
 		assert(array.size % column == 0)
 	}
@@ -23,6 +26,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	private fun index(r: Int, c: Int) = r * column + c
 	override operator fun get(r: Int, c: Int) = array[index(r, c)]
 	override operator fun set(r: Int, c: Int, value: Double) {
+		disable()
 		array[index(r, c)] = value
 	}
 
@@ -34,16 +38,19 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 
 	override fun setRow(r: Int, vector: List<Double>) {
 		assert(vector.size == column)
+		disable()
 		vector.forEachIndexed { c, value -> set(r, c, value) }
 	}
 
 	override fun setColumn(c: Int, vector: List<Double>) {
 		assert(vector.size == row)
+		disable()
 		vector.forEachIndexed { r, value -> set(r, c, value) }
 	}
 
 	override fun timesRow(r: Int, k: Double) {
 		if (k == 1.0) return
+		super.timesRow(r, k)
 		for (i in index(r, 0) until index(r + 1, 0))
 			array[i] *= k
 	}
@@ -57,6 +64,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 
 	override fun exchangeRow(r0: Int, r1: Int) {
 		if (r0 == r1) return
+		super.exchangeRow(r0, r1)
 		val temp = array.copyOfRange(index(r0, 0), index(r0 + 1, 0))
 		System.arraycopy(array, index(r1, 0), array, index(r0, 0), column)
 		System.arraycopy(temp, 0, array, index(r1, 0), column)
@@ -64,6 +72,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 
 	override fun timesColumn(c: Int, k: Double) {
 		if (k == 1.0) return
+		super.timesColumn(c, k)
 		var i = c
 		for (r in 0 until row) {
 			array[i] *= k
@@ -84,16 +93,13 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 
 	override fun exchangeColumn(c0: Int, c1: Int) {
 		if (c0 == c1) return
+		super.exchangeColumn(c0, c1)
 		(0 until row).forEach { r ->
 			val temp = get(r, c0)
 			set(r, c0, get(r, c1))
 			set(r, c1, temp)
 		}
 	}
-
-	override val rank get() = clone().rankDestructive()
-
-	override val det get() = determinantValue()
 
 	override fun equals(other: Any?) =
 		when (other) {
