@@ -21,7 +21,7 @@ interface Determinant {
 	val column: Int
 
 	/**
-	 * The dimension of this determinant
+	 * The dim of this determinant
 	 */
 	val dimension: Int
 

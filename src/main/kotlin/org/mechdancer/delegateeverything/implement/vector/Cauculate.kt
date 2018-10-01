@@ -8,10 +8,10 @@ operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::
 operator fun Vector.div(k: Number) = times(1 / k.toDouble())
 
 private fun differentDimException(a: Vector, b: Vector) =
-	IllegalArgumentException("operate two vector of different dimension (${a.dimension} and ${b.dimension})")
+	IllegalArgumentException("operate two vector of different dim (${a.dim} and ${b.dim})")
 
 private fun Vector.zip(other: Vector, block: (Double, Double) -> Double) =
-	takeIf { dimension == other.dimension }
+	takeIf { dim == other.dim }
 		?.let { toList().zip(other.toList(), block) }
 		?: throw differentDimException(this, other)
 
@@ -49,7 +49,7 @@ infix fun Vector.manhattan(other: Vector) = Manhattan.between(this, other)
 /** 复制向量，并进行指定的修改 */
 fun Vector.copy(vararg change: Pair<Int, Number>): Vector {
 	val map = change.associate { it }
-	return List(dimension) { map[it]?.toDouble() ?: get(it) }.let(::ListVector)
+	return List(dim) { map[it]?.toDouble() ?: get(it) }.let(::ListVector)
 }
 
 /** 从向量选取指定的维度组成新的向量 */

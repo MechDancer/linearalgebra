@@ -53,8 +53,7 @@ val Matrix.dim get() = if (isSquare()) row else -1
 fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
 fun Matrix.rowEchelon() = toArrayMatrix().rowEchelonAssign()
 
-fun Matrix.getCofactor(r: Int, c: Int) =
-	tomutableListMatrix().getCofactorAssign(r, c)
+fun Matrix.getCofactor(r: Int, c: Int) = Cofactor(this, r, c)
 
 private fun Matrix.getAlgebraCofactor(r: Int, c: Int): Double =
 	(if ((r + c) % 2 == 0) 1 else -1) * getCofactor(r, c).det

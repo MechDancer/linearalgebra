@@ -1,10 +1,10 @@
 package org.mechdancer.algebra
 
 internal val dimensionArgumentError =
-	IllegalArgumentException("dimension error")
+	IllegalArgumentException("dim error")
 
 internal val dimensionStateError =
-	IllegalStateException("dimension error")
+	IllegalStateException("dim error")
 
 internal val rowIndexError =
 	IndexOutOfBoundsException("wrong row index")

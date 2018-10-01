@@ -1,5 +1,7 @@
 package org.mechdancer.delegateeverything.implement.vector
 
+import org.mechdancer.delegateeverything.core.Vector
+
 fun Iterable<Number>.toListVector() =
 	map { it.toDouble() }.let(::ListVector)
 
@@ -12,4 +14,5 @@ fun listVectorOf(vararg item: Number) =
 fun listVectorOfZero(dim: Int) =
 	List(dim) { .0 }.toListVector()
 
-
+fun Vector.without(i: Int) =
+	VectorExcludeOne(this, i)

@@ -27,6 +27,7 @@ fun main(args: Array<String>) {
 
 	println("m * u = ")
 	println(o * u)
+	println()
 
 	println(o.inverse())
 }

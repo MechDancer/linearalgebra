@@ -1,7 +1,6 @@
 package org.mechdancer.delegateeverything.implement.matrix
 
 import org.mechdancer.delegateeverything.core.Matrix
-import org.mechdancer.delegateeverything.core.MutableMatrix
 import org.mechdancer.delegateeverything.core.ValueMutableMatrix
 
 //对矩阵各项操作
@@ -47,14 +46,14 @@ fun ValueMutableMatrix.transposeAssign() {
 		}
 }
 
-/**
- * 原地获取余子式
- */
-fun MutableMatrix.getCofactorAssign(r: Int, c: Int) =
-	apply {
-		removeRow(r)
-		removeColumn(c)
-	}
+///**
+// * 原地获取余子式
+// */
+//fun MutableMatrix.getCofactorAssign(r: Int, c: Int) =
+//	apply {
+//		removeRow(r)
+//		removeColumn(c)
+//	}
 
 /**
  * 原地通过行初等变换变为行阶梯型阵

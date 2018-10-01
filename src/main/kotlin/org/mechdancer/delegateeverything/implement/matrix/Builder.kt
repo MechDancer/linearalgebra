@@ -6,13 +6,13 @@ import org.mechdancer.delegateeverything.core.Vector
 // Vector -> Matrix
 
 fun Vector.toListMatrix() = ListMatrix(1, toList())
-fun Vector.toListMatrixRow() = ListMatrix(dimension, toList())
+fun Vector.toListMatrixRow() = ListMatrix(dim, toList())
 
 fun Vector.toArrayMatrix() = ArrayMatrix(1, toList().toDoubleArray())
-fun Vector.toArrayMatrixRow() = ArrayMatrix(dimension, toList().toDoubleArray())
+fun Vector.toArrayMatrixRow() = ArrayMatrix(dim, toList().toDoubleArray())
 
 fun Vector.toMutableListMatrix() = MutableListMatrix(1, toList().toMutableList())
-fun Vector.toMutableListMatrixRow() = MutableListMatrix(dimension, toList().toMutableList())
+fun Vector.toMutableListMatrixRow() = MutableListMatrix(dim, toList().toMutableList())
 
 // Function -> Matrix
 

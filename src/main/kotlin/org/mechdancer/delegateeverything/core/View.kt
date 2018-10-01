@@ -40,7 +40,7 @@ private fun blank(length: Int) = " ".repeat(length)
  */
 fun Vector.columnView(): String {
 	//标头
-	val header = "${dimension}D Vector"
+	val header = "${dim}D Vector"
 	//缓存字符串
 	val string = toList().asSequence().map(formatter::format)
 	//总宽度
@@ -54,7 +54,7 @@ fun Vector.columnView(): String {
 	return buildString {
 		append(blank((width + 3 - header.length) / 2))
 		appendln(header)
-		val (pre, fix) = border(dimension - 1)
+		val (pre, fix) = border(dim - 1)
 		append(string.mapIndexed { i, str -> "${pre(i)}${one(str)}${fix(i)}" }.joinToString("\n"))
 	}
 }

@@ -12,7 +12,7 @@ import org.mechdancer.algebra.vector.Vector
 interface Matrix {
 
 	/**
-	 * The dimension of this matrix
+	 * The dim of this matrix
 	 * (Only square matrix has)
 	 *
 	 * 方阵的维数
@@ -215,7 +215,7 @@ interface Matrix {
 		/**
 		 * Construct unit matrix
 		 *
-		 * @param dimension the dimension of this matrix
+		 * @param dimension the dim of this matrix
 		 * @return result
 		 */
 		fun unitOf(dimension: Int): Matrix {

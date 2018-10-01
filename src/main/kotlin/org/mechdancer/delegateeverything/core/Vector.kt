@@ -9,13 +9,13 @@ interface Vector {
 	 * Dimension
 	 * 维数
 	 */
-	val dimension: Int
+	val dim: Int
 
 	/**
-	 * Get item on the [index] dimension
+	 * Get item on the [i] dim
 	 * 获取指定维度上的值
 	 */
-	operator fun get(index: Int): Double
+	operator fun get(i: Int): Double
 
 	/**
 	 * Norm

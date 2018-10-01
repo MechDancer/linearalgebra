@@ -17,7 +17,7 @@ interface Vector {
 	val dimension: Int
 
 	/**
-	 * Get item on the [index] dimension
+	 * Get item on the [index] dim
 	 * 获取指定维度上的值
 	 */
 	operator fun get(index: Int): Double
