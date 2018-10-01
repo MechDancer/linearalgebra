@@ -40,8 +40,6 @@ class ListMatrix(
 		when (other) {
 			is ListMatrix        ->
 				column == other.column && list == other.list
-			is MutableListMatrix ->
-				column == other.column && list == other.list
 			is ArrayMatrix       ->
 				column == other.column && list == other.array.toList()
 			is Matrix            ->

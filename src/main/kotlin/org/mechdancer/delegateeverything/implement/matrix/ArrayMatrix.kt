@@ -97,8 +97,6 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		when (other) {
 			is ListMatrix        ->
 				column == other.column && array.toList() == other.list
-			is MutableListMatrix ->
-				column == other.column && array.toList() == other.list
 			is ArrayMatrix       ->
 				column == other.column && array.contentEquals(other.array)
 			is Matrix            ->
