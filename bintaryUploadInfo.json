@@ -2,10 +2,11 @@
   "package": {
     "name": "linearalgebra",
     "repo": "maven",
-    "subject": "mechdancer",
+    "subject": "MechDancer",
     "desc": "linear algebra kotlin utility",
     "website_url": "https://github.com/MechDancer/linearalgebra",
     "issue_tracker_url": "https://github.com/MechDancer/linearalgebra/issues",
+    "vcs_url": "https://github.com/MechDancer/linearalgebra.git ",
     "labels": [
       "kotlin",
       "math"
