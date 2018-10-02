@@ -6,11 +6,12 @@ jdk:
 sudo: true
 
 before_install:
+  # 赋予执行权限
   - chmod a+x gradlew
 
 script:
-  - ./gradlew assemble
-  - ./gradlew check
+  # 生成工程并执行测试
+  - ./gradlew clean build jar
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
