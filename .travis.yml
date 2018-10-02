@@ -10,8 +10,8 @@ before_install:
   - chmod a+x gradlew
 
 script:
-  # 生成工程并执行测试
-  - ./gradlew clean build
+  # 清理、生成、测试、文档
+  - ./gradlew clean build dokka
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
