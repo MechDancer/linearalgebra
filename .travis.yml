@@ -11,7 +11,7 @@ before_install:
 
 script:
   # 生成工程并执行测试
-  - ./gradlew clean build jar
+  - ./gradlew clean build
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -21,5 +21,13 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+deploy:
+  provider: bintray
+  file: "bintaryUploadInfo.json"
+  user: BintrayUser
+  key: BintrayAPIKey
+  passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
+  skip_cleanup: true # to upload artifacts created during the build
+
 notifications:
-   webhooks: https://oapi.dingtalk.com/robot/send?access_token=4b59c5ece57fc88af8fda28cc07573c4caf525aa69afc0cc888ccf3ce6dbe41b
+  webhooks: https://oapi.dingtalk.com/robot/send?access_token=4b59c5ece57fc88af8fda28cc07573c4caf525aa69afc0cc888ccf3ce6dbe41b
