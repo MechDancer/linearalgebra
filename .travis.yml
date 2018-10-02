@@ -27,6 +27,7 @@ deploy:
     file:         $artifacts
     api_key:      GitHubToken
     on:
+      branch:     version2
       jdk:        oraclejdk8
   - provider:     bintray
     skip_cleanup: true
