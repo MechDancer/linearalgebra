@@ -22,13 +22,21 @@ cache:
     - $HOME/.gradle/wrapper/
 
 deploy:
-  provider: bintray
-  file: "bintaryUploadInfo.json"
-  user: BintrayUser
-  key: BintrayAPIKey
-  skip_cleanup: true # to upload artifacts created during the build
-  on:
-    branch: version2
+  - provider:     releases
+    skip_cleanup: true
+    file:         $artifacts
+    api_key:      GitHubToken
+    on:
+      tags:       true
+      jdk:        oraclejdk8
+  - provider:     bintray
+    skip_cleanup: true
+    file:         "deploy.json"
+    user:         BintrayUser
+    key:          BintrayAPIKey
+    on:
+      tags:       true
+      branch:     version2
 
 notifications:
   webhooks: https://oapi.dingtalk.com/robot/send?access_token=4b59c5ece57fc88af8fda28cc07573c4caf525aa69afc0cc888ccf3ce6dbe41b
