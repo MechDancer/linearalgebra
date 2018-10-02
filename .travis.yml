@@ -22,6 +22,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 deploy:
+  # 发布到 GitHub Release
   - provider:     releases
     skip_cleanup: true
     file_glob:    true
@@ -29,7 +30,7 @@ deploy:
     api_key:      GitHubToken
     on:
       branch:     version2
-
+  # 发布到 Bintray （布星）
   - provider:     bintray
     skip_cleanup: true
     file:         "deploy.json"
