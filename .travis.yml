@@ -27,7 +27,6 @@ deploy:
     file:         $artifacts
     api_key:      GitHubToken
     on:
-      tags:       true
       jdk:        oraclejdk8
   - provider:     bintray
     skip_cleanup: true
@@ -35,8 +34,8 @@ deploy:
     user:         BintrayUser
     key:          BintrayAPIKey
     on:
-      tags:       true
       branch:     version2
+      jdk:        oraclejdk8
 
 notifications:
   webhooks: https://oapi.dingtalk.com/robot/send?access_token=4b59c5ece57fc88af8fda28cc07573c4caf525aa69afc0cc888ccf3ce6dbe41b
