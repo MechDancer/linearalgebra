@@ -21,6 +21,12 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+before_deploy:
+  - "echo 'ready?'"
+  - "echo $HelloWorld"
+  - echo $HelloWorld
+  - echo HelloWorld
+
 deploy:
   # 发布到 GitHub Release
   - provider:     releases
