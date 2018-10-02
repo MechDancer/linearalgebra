@@ -3,7 +3,7 @@
     "name": "linearalgebra",
     "repo": "maven",
     "subject": "mechdancer",
-    "desc": "linear algebra kotlin utilities",
+    "desc": "linear algebra kotlin utility",
     "website_url": "https://github.com/MechDancer/linearalgebra",
     "issue_tracker_url": "https://github.com/MechDancer/linearalgebra/issues",
     "labels": [
