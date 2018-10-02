@@ -58,5 +58,5 @@ class ListMatrix(
 
 	override fun hashCode() = list.hashCode()
 
-	override fun toString() = matrixView()
+	override fun toString() = matrixView("$row x $column Matrix")
 }

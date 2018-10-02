@@ -1,7 +1,7 @@
 package org.mechdancer.algebra.core
 
+import org.mechdancer.algebra.implement.matrix.builder.toListMatrix
 import java.text.DecimalFormat
-import kotlin.math.max
 
 //转边框字符（一行）
 private fun trans(default: Char) = { _: Int -> default }
@@ -36,56 +36,78 @@ private fun format(value: Double) =
 //构造指定长度的空白
 private fun blank(length: Int) = " ".repeat(length)
 
-/**
- * 将向量以列形式转换为字符串
- */
-fun Vector.columnView(): String {
-	//标头
-	val header = "${dim}D Vector"
-	//缓存字符串
-	val string = toList().asSequence().map(formatter::format)
-	//总宽度
-	val width = kotlin.math.max((string.map { it.length }.max() ?: 0) + 2, header.length - 2)
-	//变换一项
-	val one = { str: String ->
-		val right = (width - str.length) / 2
-		val left = width - str.length - right
-		"${blank(left)}$str${blank(right)}"
-	}
-	return buildString {
-		append(blank((width + 3 - header.length) / 2))
-		appendln(header)
-		val (pre, fix) = border(dim - 1)
-		append(string.mapIndexed { i, str -> "${pre(i)}${one(str)}${fix(i)}" }.joinToString("\n"))
-	}
+//变换一项 : 向两边添加空格，把元素补到所在列的宽度
+private fun enlarge(str: String, width: Int): String {
+	val left = (width - str.length + 1) / 2
+	val right = width - str.length - left
+	return "${blank(left)}$str${blank(right)}"
 }
 
 /**
+ * Convert a column vector to string
+ * 将向量以列形式转换为字符串
+ */
+fun Vector.columnView() =
+	toListMatrix().matrixView("${dim}D Vector")
+
+/**
+ * Convert the matrix to string
  * 将矩阵显示成字符串
  */
-fun Matrix.matrixView(): String {
-	//标头
-	val header = "$row x $column Matrix"
-	//每列宽度
-	val widths = columns.map { it.toList().map { num -> format(num).length }.max() ?: 0 }
-	//变换一项
-	val one = { c: Int, str: String ->
-		val right = (widths[c] - str.length) / 2
-		val left = widths[c] - str.length - right
-		"${blank(left + 1)}$str${blank(right)}"
+fun Matrix.matrixView(
+	header: String = "$row x $column Matrix"
+): String {
+	//每列宽度 = 每列最宽元素的宽度
+	val widths = columns.map {
+		it.toList()
+			.map { num -> format(num).length }
+			.max() ?: 0
 	}
-	//变换一行
-	val line = { r: Int ->
-		(0 until column).joinToString("") { c -> one(c, format(get(r, c))) }
-	}
+
+	//变换一行 : 相邻元素以空格隔开
+	fun line(r: Int) =
+		(0 until column).joinToString(" ") { c ->
+			enlarge(format(get(r, c)), widths[c])
+		}
+
+	//构造
 	return buildString {
-		val total = widths.sum() + widths.size + 3
-		val inner = max(0, (header.length - total) / 2)
-		append(blank(max(0, total + 1 - header.length) / 2))
-		appendln(header)
+		//矩阵内元素和空格的总宽度
+		val inner = widths.sum() + widths.size + 1
+		//外部需补充的空白
+		val blank = ((header.length - inner - 2) / 2)
+			.let { n ->
+				if (n > 0) blank(n)
+				else "".also { append(blank(-n)) }
+			}
+		append("$header\n")
 		val (pre, fix) = border(row - 1)
 		append((0 until row).joinToString("\n") { r ->
-			"${pre(r)}${blank(inner)}${line(r)}${blank(inner + 1)}${fix(r)}"
+			"$blank${pre(r)} ${line(r)} ${fix(r)}"
 		})
+	}.let {
+		//只有一列则用 0 表示 0
+		it.takeIf { column > 1 } ?: it.replace('_', '0')
+	}
+}
+
+//按行切分字符串
+private fun String.splitToLines(): List<String> {
+	val list = split('\n')
+	val width = list.asSequence().map { it.length }.max() ?: 0
+	return list.map { "$it${blank(width - it.length)}" }
+}
+
+/**
+ * 将一系列字符串横向排列
+ */
+fun tie(vararg items: Any?): String {
+	val list = items.map { it.toString().splitToLines() }
+	val widths = list.associate { it to it.firstOrNull()?.length }
+	val row = list.asSequence().map { it.size }.max() ?: 0
+	return (0 until row).joinToString("\n") { r ->
+		list.joinToString(" | ") { lines ->
+			lines.getOrNull(r) ?: blank(widths[lines] ?: 0)
+		}
 	}
 }

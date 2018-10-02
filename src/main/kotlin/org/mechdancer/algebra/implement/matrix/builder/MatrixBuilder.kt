@@ -7,23 +7,29 @@ import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode.Constant
 import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode.ValueMutable
+import kotlin.math.abs
 
 class MatrixBuilder {
+	private var size = 0
 	private var count = 0
 	private val data = mutableListOf<Double>()
-	private val column
-		get() =
-			if (count > 0) data.size / count
-			else -count
 
 	fun row(vararg number: Number) {
-		if (count < 0) throw RuntimeException()
+		when {
+			count < 0 -> throw RuntimeException()
+			count > 0 -> if (size != number.size) throw RuntimeException()
+			else      -> size = number.size
+		}
 		++count
 		data.addAll(number.map { it.toDouble() })
 	}
 
 	fun column(vararg number: Number) {
-		if (count > 0) throw RuntimeException()
+		when {
+			count > 0 -> throw RuntimeException()
+			count < 0 -> if (size != number.size) throw RuntimeException()
+			else      -> size = number.size
+		}
 		--count
 		data.addAll(number.map { it.toDouble() })
 	}
@@ -31,10 +37,10 @@ class MatrixBuilder {
 	internal fun build(mode: Mode): Matrix =
 		when (mode) {
 			Constant     ->
-				ListMatrix(column, data)
+				ListMatrix(data.size / abs(count), data)
 					.run { if (count < 0) transpose() else this }
 			ValueMutable ->
-				ArrayMatrix(column, data.toDoubleArray())
+				ArrayMatrix(data.size / abs(count), data.toDoubleArray())
 					.apply { if (count < 0) transposeAssign() }
 		}
 

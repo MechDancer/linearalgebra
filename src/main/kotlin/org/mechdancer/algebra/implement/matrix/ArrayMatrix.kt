@@ -120,7 +120,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 
 	override fun hashCode() = array.hashCode()
 
-	override fun toString() = matrixView()
+	override fun toString() = matrixView("$row x $column Matrix")
 
 	override fun clone() = ArrayMatrix(column, array)
 }

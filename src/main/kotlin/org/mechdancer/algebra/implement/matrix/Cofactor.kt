@@ -45,5 +45,5 @@ class Cofactor(
 			}
 
 	override fun hashCode() = Triple(origin, pr, pc).hashCode()
-	override fun toString() = matrixView()
+	override fun toString() = matrixView("$row x $column Matrix")
 }
