@@ -26,7 +26,6 @@ deploy:
   file: "bintaryUploadInfo.json"
   user: BintrayUser
   key: BintrayAPIKey
-  passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
   skip_cleanup: true # to upload artifacts created during the build
 
 notifications:
