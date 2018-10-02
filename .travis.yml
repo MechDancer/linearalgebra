@@ -21,9 +21,6 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-before_deploy:
-  - echo $HelloWorld
-
 deploy:
   # 发布到 GitHub Release
   - provider:     releases
@@ -32,6 +29,7 @@ deploy:
     file:         "build/libs/*"
     api_key:      $GitHubToken
     on:
+      tags:       true
       branch:     version2
   # 发布到 Bintray （布星）
   - provider:     bintray
@@ -40,6 +38,7 @@ deploy:
     user:         $BintrayUser
     key:          $BintrayAPIKey
     on:
+      tags:       true
       branch:     version2
 
 notifications:
