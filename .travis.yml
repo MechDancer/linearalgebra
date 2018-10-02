@@ -22,7 +22,6 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_deploy:
-  - "echo $HelloWorld"
   - echo $HelloWorld
 
 deploy:
