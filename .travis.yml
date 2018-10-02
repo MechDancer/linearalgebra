@@ -22,10 +22,8 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_deploy:
-  - "echo 'ready?'"
   - "echo $HelloWorld"
   - echo $HelloWorld
-  - echo HelloWorld
 
 deploy:
   # 发布到 GitHub Release
@@ -33,15 +31,15 @@ deploy:
     skip_cleanup: true
     file_glob:    true
     file:         "build/libs/*"
-    api_key:      GitHubToken
+    api_key:      $GitHubToken
     on:
       branch:     version2
   # 发布到 Bintray （布星）
   - provider:     bintray
     skip_cleanup: true
     file:         "deploy.json"
-    user:         BintrayUser
-    key:          BintrayAPIKey
+    user:         $BintrayUser
+    key:          $BintrayAPIKey
     on:
       branch:     version2
 
