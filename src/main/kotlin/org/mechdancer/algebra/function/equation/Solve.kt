@@ -21,7 +21,7 @@ fun EquationSet.toMatrixForm(): EquationSetOfMatrix {
 	assert(isReasonable())
 	val (args, constants) =
 		splitCollect(
-			{ listMatrixOf(it.size, 6) { r, c -> it[r][c] } },
+			{ listMatrixOf(it.size, it.first().dim) { r, c -> it[r][c] } },
 			{ it.toListVector() }
 		)
 	return EquationSetOfMatrix(args, constants)
