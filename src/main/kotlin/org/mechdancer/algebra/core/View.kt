@@ -1,5 +1,8 @@
 package org.mechdancer.algebra.core
 
+import org.mechdancer.algebra.function.equation.args
+import org.mechdancer.algebra.function.equation.constants
+import org.mechdancer.algebra.implement.equation.builder.toMatrixForm
 import org.mechdancer.algebra.implement.matrix.builder.toListMatrix
 import java.text.DecimalFormat
 
@@ -111,3 +114,13 @@ fun tie(vararg items: Any?): String {
 		}
 	}
 }
+
+/**
+ * 方程组表示为矩阵和向量并列
+ */
+fun EquationSet.matrixView() = toMatrixForm().matrixView()
+
+/**
+ * 方程组表示为矩阵和向量并列
+ */
+fun EquationSetOfMatrix.matrixView() = tie(args, constants)

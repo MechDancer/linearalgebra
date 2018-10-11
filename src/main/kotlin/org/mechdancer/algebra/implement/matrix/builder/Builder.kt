@@ -2,6 +2,7 @@ package org.mechdancer.algebra.implement.matrix.builder
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.function.matrix.transpose
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode
@@ -22,6 +23,16 @@ fun listMatrixOf(row: Int, column: Int, block: (Int, Int) -> Number): ListMatrix
 
 fun arrayMatrixOf(row: Int, column: Int, block: (Int, Int) -> Number): ArrayMatrix =
 	ArrayMatrix(column, DoubleArray(row * column) { block(it / column, it % column).toDouble() })
+
+// List -> Matrix
+
+infix fun List<Number>.foldAsRowOf(length: Int) = ListMatrix(length, this.map { it.toDouble() })
+
+infix fun List<Number>.foldToRows(count: Int) = foldAsRowOf(size / count)
+
+infix fun List<Number>.foldAsColumnOf(length: Int) = foldAsRowOf(length).transpose()
+
+infix fun List<Number>.foldToColumns(count: Int) = foldToRows(count).transpose()
 
 // Zero Matrix
 
