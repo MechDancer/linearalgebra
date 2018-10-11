@@ -12,7 +12,7 @@ import org.mechdancer.algebra.implement.vector.toListVector
  */
 class ListMatrix(
 	override val column: Int,
-	val list: List<Double>
+	internal val list: List<Double>
 ) : Matrix {
 	init {
 		assert(list.size % column == 0)

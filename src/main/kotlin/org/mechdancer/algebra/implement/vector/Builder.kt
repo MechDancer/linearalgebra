@@ -14,5 +14,5 @@ fun listVectorOf(vararg item: Number) =
 fun listVectorOfZero(dim: Int) =
 	List(dim) { .0 }.toListVector()
 
-fun Vector.without(i: Int) =
+infix fun Vector.without(i: Int) =
 	VectorExcludeOne(this, i)
