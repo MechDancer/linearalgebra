@@ -11,9 +11,9 @@ class Radian(val value: Double) {
 
 	companion object {
 		const val halfPI = PI / 2
-		val zero by lazy { Radian(.0) }
-		val right by lazy { Radian(PI / 2) }
-		val flat by lazy { Radian(PI) }
-		val round by lazy { Radian(PI * 2) }
+		val zero = Radian(.0)
+		val right = Radian(halfPI)
+		val flat = Radian(PI)
+		val round = Radian(PI * 2)
 	}
 }

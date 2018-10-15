@@ -29,3 +29,9 @@ fun Vector.isRight() = toRad().isRight()
 fun Vector.isObtuse() = toRad().isObtuse()
 fun Vector.isFlat() = toRad().isFlat()
 fun Vector.isRound() = toRad().isRound()
+
+operator fun Degree.compareTo(other: Degree) = value.compareTo(other.value)
+operator fun Degree.compareTo(other: Radian) = value.compareTo(other.value / PI * 180)
+
+operator fun Radian.compareTo(other: Degree) = value.compareTo(other.value / 180 * PI)
+operator fun Radian.compareTo(other: Radian) = value.compareTo(other.value)
