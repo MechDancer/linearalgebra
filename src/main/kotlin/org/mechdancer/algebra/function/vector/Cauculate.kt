@@ -25,5 +25,6 @@ infix fun Vector.dot(other: Vector) = zip(other) { a, b -> a * b }.sum()
 
 operator fun Vector.unaryPlus() = this
 operator fun Vector.unaryMinus() = toList().map { -it }.let(::ListVector)
+fun Vector.reversed() = -this
 
 fun Vector.normalize() = div(norm)

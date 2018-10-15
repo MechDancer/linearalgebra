@@ -15,7 +15,7 @@ fun Matrix.assertSquare() {
 
 fun assertCanMultiply(a: Matrix, b: Vector) {
 	if (a.column != b.dim)
-		throw UnsupportedOperationException("matrix of ${a.row}*${a.column} and ${b.dim}* 1 is not match to multiply")
+		throw UnsupportedOperationException("matrix of ${a.row}*${a.column} and ${b.dim}*1 is not match to multiply")
 }
 
 fun assertCanMultiply(a: Matrix, b: Matrix) {
