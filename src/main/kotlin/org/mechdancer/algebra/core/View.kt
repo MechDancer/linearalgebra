@@ -54,6 +54,13 @@ fun Vector.columnView() =
 	toListMatrix().matrixView("${dim}D Vector")
 
 /**
+ * Convert a row vector to string
+ * 将向量以行形式转换为字符串
+ */
+fun Vector.rowView() =
+	"${dim}D Vector [${toList().joinToString(" ") { format(it) }}]"
+
+/**
  * Convert the matrix to string
  * 将矩阵显示成字符串
  */

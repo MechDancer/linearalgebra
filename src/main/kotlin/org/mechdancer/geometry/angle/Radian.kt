@@ -7,7 +7,7 @@ import kotlin.math.PI
  * 弧度
  */
 class Radian(val value: Double) {
-	override fun toString() = "$value rad"
+	override fun toString() = angleView()
 
 	companion object {
 		const val halfPI = PI / 2
