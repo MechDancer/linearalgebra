@@ -12,7 +12,7 @@ import org.mechdancer.algebra.implement.vector.toListVector
  * 基于数组实现的矩阵
  * 值可变，线程不安全
  */
-class ArrayMatrix(override val column: Int, internal val array: DoubleArray)
+class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	: Determinant() {
 	override fun updateRank() = clone().rankDestructive()
 	override fun updateDet() = determinantValue()
