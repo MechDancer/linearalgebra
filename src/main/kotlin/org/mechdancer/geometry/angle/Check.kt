@@ -1,13 +1,9 @@
 package org.mechdancer.geometry.angle
 
-import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.geometry.angle.Radian.Companion.halfPI
 import kotlin.math.PI
 import kotlin.math.abs
-
-fun Vector.is2D() = dim == 2
-fun Vector.isNot2D() = dim != 2
-fun Vector.isMoreThan2D() = dim > 2
 
 fun Degree.isZero() = 0.0 == value
 fun Degree.isAcute() = -90.0 < value && value < 90.0
@@ -23,12 +19,12 @@ fun Radian.isObtuse() = abs(value).let { halfPI < it && it < PI }
 fun Radian.isFlat() = PI == abs(value)
 fun Radian.isRound() = 2 * PI == abs(value)
 
-fun Vector.isZero() = toRad().isZero()
-fun Vector.isAcute() = toRad().isAcute()
-fun Vector.isRight() = toRad().isRight()
-fun Vector.isObtuse() = toRad().isObtuse()
-fun Vector.isFlat() = toRad().isFlat()
-fun Vector.isRound() = toRad().isRound()
+fun Vector2D.isZeroAngle() = toRad().isZero()
+fun Vector2D.isAcute() = toRad().isAcute()
+fun Vector2D.isRight() = toRad().isRight()
+fun Vector2D.isObtuse() = toRad().isObtuse()
+fun Vector2D.isFlat() = toRad().isFlat()
+fun Vector2D.isRound() = toRad().isRound()
 
 operator fun Degree.compareTo(other: Degree) = value.compareTo(other.value)
 operator fun Degree.compareTo(other: Radian) = value.compareTo(other.value / PI * 180)

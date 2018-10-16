@@ -5,8 +5,8 @@ import org.mechdancer.algebra.core.columnView
 import kotlin.math.sqrt
 
 /**
- * [Vector] delegated by [List] of [Double]
- * 用列表代理实现的向量
+ * Vector of List of Double
+ * 用浮点列表实现的向量
  */
 class ListVector(val data: List<Double>) : Vector {
 	override val dim = data.size

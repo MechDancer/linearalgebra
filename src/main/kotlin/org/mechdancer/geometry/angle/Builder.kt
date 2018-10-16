@@ -1,9 +1,6 @@
 package org.mechdancer.geometry.angle
 
-import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.function.vector.x
-import org.mechdancer.algebra.function.vector.y
-import org.mechdancer.algebra.implement.vector.listVectorOf
+import org.mechdancer.algebra.implement.vector.Vector2D
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -37,7 +34,7 @@ fun Radian.toDegree() = Degree(value / PI * 180)
  * Calculate the radian of a direction vector
  * 方向向量转弧度
  */
-fun Vector.toRad(): Radian {
+fun Vector2D.toRad(): Radian {
 	assert(dim == 2)
 	return Radian(atan2(y, x))
 }
@@ -46,7 +43,7 @@ fun Vector.toRad(): Radian {
  * Calculate the angle of a direction vector
  * 方向向量转角度
  */
-fun Vector.toDegree(): Degree {
+fun Vector2D.toDegree(): Degree {
 	assert(dim == 2)
 	return Degree(atan2(y, x) / PI * 180)
 }
@@ -55,26 +52,26 @@ fun Vector.toDegree(): Degree {
  * Calculate the direction vector of a radian
  * 弧度转方向向量
  */
-fun Radian.toListVector() =
-	listVectorOf(cos(value), sin(value))
+fun Radian.toVector() =
+	Vector2D(cos(value), sin(value))
 
 /**
  * Calculate the direction vector of a angle
  * 弧度转方向向量
  */
-fun Degree.toListVector() =
-	(value / 180 * PI).let { listVectorOf(cos(it), sin(it)) }
+fun Degree.toVector() =
+	(value / 180 * PI).let { Vector2D(cos(it), sin(it)) }
 
 /**
  * Calculate the direction vector of a radian
  * 弧度转方向向量
  */
-fun Radian.toListVectorOf(norm: Number) =
-	norm.toDouble().let { listVectorOf(it * cos(value), it * sin(value)) }
+fun Radian.toVectorOf(norm: Number) =
+	norm.toDouble().let { Vector2D(it * cos(value), it * sin(value)) }
 
 /**
  * Calculate the direction vector of a angle
  * 弧度转方向向量
  */
 fun Degree.toListVectorOf(norm: Number) =
-	toRad().toListVectorOf(norm)
+	toRad().toVectorOf(norm)

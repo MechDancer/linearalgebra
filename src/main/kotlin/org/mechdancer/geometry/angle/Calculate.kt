@@ -1,6 +1,6 @@
 package org.mechdancer.geometry.angle
 
-import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.geometry.angle.Radian.Companion.halfPI
 import kotlin.math.PI
 import kotlin.math.abs
@@ -46,14 +46,14 @@ infix fun Radian.rotate(other: Degree) =
 infix fun Radian.rotate(other: Radian) =
 	Radian(value + other.value)
 
-infix fun Vector.rotate(other: Number) =
-	toRad().rotate(other).toListVectorOf(norm)
+infix fun Vector2D.rotate(other: Number) =
+	toRad().rotate(other).toVectorOf(norm)
 
-infix fun Vector.rotate(other: Degree) =
-	toRad().rotate(other).toListVectorOf(norm)
+infix fun Vector2D.rotate(other: Degree) =
+	toRad().rotate(other).toVectorOf(norm)
 
-infix fun Vector.rotate(other: Radian) =
-	toRad().rotate(other).toListVectorOf(norm)
+infix fun Vector2D.rotate(other: Radian) =
+	toRad().rotate(other).toVectorOf(norm)
 
 fun Radian.complementary(): Radian {
 	val abs = abs(value)
@@ -79,8 +79,8 @@ fun Degree.supplementary(): Degree {
 	return Degree(value.sign * (180 - abs))
 }
 
-fun Vector.complementary() =
-	toRad().complementary().toListVectorOf(norm)
+fun Vector2D.complementary() =
+	toRad().complementary().toVectorOf(norm)
 
-fun Vector.supplementary() =
-	toRad().supplementary().toListVectorOf(norm)
+fun Vector2D.supplementary() =
+	toRad().supplementary().toVectorOf(norm)

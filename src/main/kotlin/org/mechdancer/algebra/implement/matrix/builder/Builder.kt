@@ -53,7 +53,7 @@ fun arrayMatrixOfUnit(dim: Int): ArrayMatrix =
 // Matrix -> Matrix
 
 fun Matrix.toListMatrix(): ListMatrix =
-	(this as? ListMatrix)
+	this as? ListMatrix
 		?: (this as? ArrayMatrix)?.let { ListMatrix(column, it.array.toList()) }
 		?: listMatrixOf(row, column, ::get)
 

@@ -1,6 +1,18 @@
 package org.mechdancer.algebra.implement.vector
 
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.function.vector.x
+import org.mechdancer.algebra.function.vector.y
+
+// vector -> vector
+
+fun Vector.to2D(): Vector2D =
+	this as? Vector2D
+		?: takeIf { dim == 2 }?.let { Vector2D(x, y) }
+		?: throw IllegalArgumentException()
+
+fun Vector.toListVector(): ListVector =
+	this as? ListVector ?: ListVector(toList())
 
 // iterable -> vector
 
@@ -15,10 +27,16 @@ fun Array<Number>.toListVector() =
 // dsl builder
 
 fun listVectorOf(vararg item: Number) =
-	item.map { it.toDouble() }.toListVector()
+	ListVector(item.map { it.toDouble() })
 
 fun listVectorOfZero(dim: Int) =
-	List(dim) { .0 }.toListVector()
+	ListVector(List(dim) { .0 })
+
+fun Vector2DOf(x: Number, y: Number) =
+	Vector2D(x.toDouble(), y.toDouble())
+
+fun Vector2DOfZero() =
+	Vector2D(.0, .0)
 
 // to sub-vector
 
