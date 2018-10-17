@@ -2,6 +2,7 @@ package org.mechdancer.algebra.implement.matrix.builder
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.transpose
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
@@ -50,6 +51,18 @@ fun listMatrixOfUnit(dim: Int): ListMatrix =
 fun arrayMatrixOfUnit(dim: Int): ArrayMatrix =
 	arrayMatrixOf(dim, dim) { r, c -> if (r == c) 1.0 else .0 }
 
+// Number Matrix
+
+infix fun Number.toListMatrix(dim: Int): ListMatrix {
+	val value = toDouble()
+	return listMatrixOf(dim, dim) { r, c -> if (r == c) value else .0 }
+}
+
+infix fun Number.toArrayMatrix(dim: Int): ArrayMatrix {
+	val value = toDouble()
+	return arrayMatrixOf(dim, dim) { r, c -> if (r == c) value else .0 }
+}
+
 // Matrix -> Matrix
 
 fun Matrix.toListMatrix(): ListMatrix =
@@ -68,3 +81,28 @@ fun matrix(
 	mode: Mode = Constant,
 	block: MatrixBuilder.() -> Unit
 ) = MatrixBuilder().apply(block).build(mode)
+
+// super shortcut
+
+object O {
+	@JvmStatic
+	operator fun invoke(m: Int) = listMatrixOfZero(m, m)
+
+	@JvmStatic
+	operator fun invoke(m: Int, n: Int) = listMatrixOfZero(m, n)
+}
+
+object I {
+	@JvmStatic
+	operator fun invoke(n: Int) = listMatrixOfUnit(n)
+}
+
+object N {
+	@JvmStatic
+	operator fun invoke(n: Int, x: Number) = x toListMatrix n
+}
+
+object Det {
+	@JvmStatic
+	operator fun invoke(matrix: Matrix) = matrix.determinantValue()
+}

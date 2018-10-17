@@ -32,10 +32,10 @@ fun listVectorOf(vararg item: Number) =
 fun listVectorOfZero(dim: Int) =
 	ListVector(List(dim) { .0 })
 
-fun Vector2DOf(x: Number, y: Number) =
+fun vector2DOf(x: Number, y: Number) =
 	Vector2D(x.toDouble(), y.toDouble())
 
-fun Vector2DOfZero() =
+fun vector2DOfZero() =
 	Vector2D(.0, .0)
 
 // to sub-vector

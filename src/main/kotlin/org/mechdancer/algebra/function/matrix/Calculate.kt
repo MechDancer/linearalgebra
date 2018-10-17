@@ -6,6 +6,7 @@ import org.mechdancer.algebra.function.vector.dot
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.ListMatrix
+import org.mechdancer.algebra.implement.matrix.builder.I
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
@@ -51,6 +52,19 @@ operator fun Matrix.div(other: Matrix) = other.inverse()?.let { times(it) }
 operator fun Matrix.invoke(right: Matrix) = times(right)
 operator fun Matrix.invoke(right: Vector) = times(right)
 operator fun Matrix.invoke(right: Number) = times(right)
+
+infix fun Matrix.power(n: Int): Matrix {
+	assertSquare()
+	assert(n >= 0)
+	return when (n) {
+		0    -> I(dim)
+		else -> {
+			var temp = this
+			for (i in 1 until n) temp *= this
+			temp
+		}
+	}
+}
 
 operator fun Matrix.unaryPlus() = this
 operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })

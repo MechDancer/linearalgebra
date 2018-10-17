@@ -28,32 +28,32 @@ fun Degree.adjust(): Degree {
 	return Degree(temp)
 }
 
-infix fun Degree.rotate(other: Number) =
-	Degree(value + other.toDouble())
+infix fun Degree.rotate(angle: Number) =
+	Degree(value + angle.toDouble())
 
-infix fun Degree.rotate(other: Degree) =
-	Degree(value + other.value)
+infix fun Degree.rotate(angle: Degree) =
+	Degree(value + angle.value)
 
-infix fun Degree.rotate(other: Radian) =
-	Degree(value + other.value / PI * 180)
+infix fun Degree.rotate(angle: Radian) =
+	Degree(value + angle.value / PI * 180)
 
-infix fun Radian.rotate(other: Number) =
-	Radian(value + other.toDouble())
+infix fun Radian.rotate(angle: Number) =
+	Radian(value + angle.toDouble())
 
-infix fun Radian.rotate(other: Degree) =
-	Radian(value + other.value / 180 * PI)
+infix fun Radian.rotate(angle: Degree) =
+	Radian(value + angle.value / 180 * PI)
 
-infix fun Radian.rotate(other: Radian) =
-	Radian(value + other.value)
+infix fun Radian.rotate(angle: Radian) =
+	Radian(value + angle.value)
 
-infix fun Vector2D.rotate(other: Number) =
-	toRad().rotate(other).toVectorOf(norm)
+infix fun Vector2D.rotate(angle: Number) =
+	toRad().rotate(angle).toVectorOf(norm)
 
-infix fun Vector2D.rotate(other: Degree) =
-	toRad().rotate(other).toVectorOf(norm)
+infix fun Vector2D.rotate(angle: Degree) =
+	toRad().rotate(angle).toVectorOf(norm)
 
-infix fun Vector2D.rotate(other: Radian) =
-	toRad().rotate(other).toVectorOf(norm)
+infix fun Vector2D.rotate(angle: Radian) =
+	toRad().rotate(angle).toVectorOf(norm)
 
 fun Radian.complementary(): Radian {
 	val abs = abs(value)
