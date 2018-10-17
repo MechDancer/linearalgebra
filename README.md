@@ -176,3 +176,50 @@ val set = listOf(set1, set2, set3).flatten().toSet()
 
 * 扩展函数被转化为了静态函数，可直接打开类调用
 
+## 显示
+
+库同时提供了美观的可视化功能。
+
+* 矩阵
+
+  ```kotlin
+  matrix {
+    row(1, 2, 3)
+    row(3, 2, 1)
+  }
+  ```
+
+  ```shell
+  2 x 3 Matrix
+   ┌ 1 2 3 ┐
+   └ 3 2 1 ┘
+  ```
+
+* 向量
+
+  ```kotlin
+  listVectorOf(23, 12)
+  ```
+
+  ```shell
+  2d vector
+   ┌ 23 ┐
+   └ 12 ┘
+  ```
+
+* 方程组
+
+  ```kotlin
+  equations {
+    this[1, 1] = 35
+    this[2, 4] = 94
+  }
+  ```
+
+  ```shell
+  2 members equation set
+  ┌ 1 1 ┐ | ┌ 35 ┐
+  └ 2 4 ┘ | └ 94 ┘
+  ```
+
+

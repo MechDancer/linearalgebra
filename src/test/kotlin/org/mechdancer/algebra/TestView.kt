@@ -1,7 +1,10 @@
 package org.mechdancer.algebra
 
 import org.junit.Test
+import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.core.tie
+import org.mechdancer.algebra.function.equation.solve
+import org.mechdancer.algebra.implement.equation.builder.equations
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOfUnit
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 
@@ -24,12 +27,20 @@ class TestView {
 		println(a)
 		println()
 
-		println(b)
-		println()
-
-		println(c)
-		println()
-
 		println(tie(a, b, c))
+		println()
+
+		val d = equations {
+			this[1, 1] = 35
+			this[2, 4] = 94
+		}
+
+		println(d.matrixView())
+		println()
+
+		val e = d.solve()
+
+		println(e)
+		println()
 	}
 }
