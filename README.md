@@ -35,9 +35,9 @@
 目前方程组并无实现的必要，因此只是一些类型别名。
 
 ```kotlin
-typealias Equation            = Pair<Vector, Number> //方程包括参数向量和常数项
-typealias EquationSet         = Set<Equation>        //方程组是方程的集合
-typealias EquationSetOfMatrix = Pair<Matrix, Vector> //方程组也可以写成增广矩阵的形式
+typealias Equation        = Pair<Vector, Number> //方程包括参数向量和常数项
+typealias EquationSet     = Set<Equation>        //方程组是方程的集合
+typealias AugmentedMatrix = Pair<Matrix, Vector> //增广矩阵是系数矩阵和常数向量的组合
 ```
 
 * 注意：由于 Java 不支持 Kotlin 的类型别名，因此在 Java 中调用库需要使用这些类型的本名。
@@ -93,7 +93,7 @@ typealias EquationSetOfMatrix = Pair<Matrix, Vector> //方程组也可以写成�
 * 使用函数构造零矩阵和单位矩阵：
 
   ```kotlin
-  listMatrixOfZero
+  listMatrixOfZero(n) // 构造 n 阶零矩阵
   ```
 
 * 构造 n 阶数值矩阵：
@@ -150,10 +150,10 @@ typealias EquationSetOfMatrix = Pair<Matrix, Vector> //方程组也可以写成�
 我们只为方程组提供了一种构造工具：
 
 ```kotlin
-equations {         // 今有雉兔同笼
-    this[1, 1] = 35 // 上有三十五头
-    this[2, 4] = 94 // 下有九十四足
-}.solve()           // 问雉兔各几何
+equations {         // 今有雉兔同笼，
+    this[1, 1] = 35 // 上有三十五头，
+    this[2, 4] = 94 // 下有九十四足，
+}.solve()           // 问雉兔各几何？
 ```
 
 由于所谓方程组只是方程的集合，因此可以方便地使用 `flatten()` 来合并方程组。
