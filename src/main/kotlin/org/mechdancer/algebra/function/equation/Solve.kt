@@ -1,7 +1,7 @@
 package org.mechdancer.algebra.function.equation
 
+import org.mechdancer.algebra.core.AugmentedMatrix
 import org.mechdancer.algebra.core.EquationSet
-import org.mechdancer.algebra.core.EquationSetOfMatrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.matrix.lastRow
 import org.mechdancer.algebra.function.matrix.simplifyAssignWith
@@ -12,15 +12,17 @@ import org.mechdancer.algebra.implement.equation.builder.toMatrixForm
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 
 /**
- * 尽可能解一个用 <参数 - 常数> 对描述的方程组
+ * Try best to solve a equation set
+ * 尽可能解一个方程组
  */
 fun EquationSet.solve() = toMatrixForm().solve()
 
 /**
- * 尽可能解一个用系数矩阵和常数向量描述的方程组
+ * Try best to solve a equation set
+ * 尽可能解一个方程组
  */
-tailrec fun EquationSetOfMatrix.solve(): Vector? {
-	assert(isReasonable())
+tailrec fun AugmentedMatrix.solve(): Vector? {
+	assert(isAvailable())
 	return when {
 		//适定，直接用高斯消元解
 		isWellPosed()      -> {
@@ -36,7 +38,7 @@ tailrec fun EquationSetOfMatrix.solve(): Vector? {
 			// │ y │=│ A ││ x │ => │ A │ │ y │=│ A │ │ A ││ x │
 			// └   ┘ └   ┘└   ┘    └   ┘ └   ┘ └   ┘ └   ┘└   ┘
 			args.transpose()
-				.let { EquationSetOfMatrix(it * args, it * constants) }
+				.let { AugmentedMatrix(it * args, it * constants) }
 				.solve()
 		//欠定，解为超平面，暂时无法解
 		else               ->

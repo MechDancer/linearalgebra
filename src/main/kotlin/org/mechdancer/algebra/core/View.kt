@@ -117,6 +117,7 @@ private fun String.splitToLines(): List<String> {
 }
 
 /**
+ * Put some multi-line string horizontal
  * 将一系列字符串横向排列
  */
 fun tie(vararg items: Any?): String {
@@ -131,14 +132,16 @@ fun tie(vararg items: Any?): String {
 }
 
 /**
- * 方程组表示为矩阵和向量并列
+ * A equation will be display as an augmented matrix
+ * 方程组显示为增广矩阵
  */
 fun EquationSet.matrixView() = toMatrixForm().matrixView()
 
 /**
- * 方程组表示为矩阵和向量并列
+ * A equation will be display as an augmented matrix
+ * 方程组显示为增广矩阵
  */
-fun EquationSetOfMatrix.matrixView() =
+fun AugmentedMatrix.matrixView() =
 	buildString {
 		appendln("${args.column} members equation set")
 		tie(

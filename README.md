@@ -150,10 +150,10 @@ typealias EquationSetOfMatrix = Pair<Matrix, Vector> //方程组也可以写成�
 我们只为方程组提供了一种构造工具：
 
 ```kotlin
-equations {
-    this[x, y, 0, 0, 1, 0] = x1
-    this[0, 0, x, y, 0, 1] = y1
-}
+equations {         // 今有雉兔同笼
+    this[1, 1] = 35 // 上有三十五头
+    this[2, 4] = 94 // 下有九十四足
+}.solve()           // 问雉兔各几何
 ```
 
 由于所谓方程组只是方程的集合，因此可以方便地使用 `flatten()` 来合并方程组。

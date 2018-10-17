@@ -12,6 +12,6 @@ class EquationSetBuilder {
 	val equationSet = object : Set<Equation> by equations {}
 
 	operator fun set(vararg args: Number, value: Number) {
-		equations += Equation(args.map { it.toDouble() }.toListVector(), value)
+		equations += Equation(args.map { it.toDouble() }.toListVector(), value.toDouble())
 	}
 }

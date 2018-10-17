@@ -15,6 +15,9 @@ abstract class Determinant : ValueMutableMatrix {
 	private var detAvailable = false
 
 	/**
+	 * Changing values directly will invalid the determinant value
+	 * Then the value must be calculated again
+	 * Invoke this method to mark the value invalid
 	 * 直接赋值操作将导致秩和行列式值无效化，需要重新计算
 	 * 进行此类操作需调用此方法进行标记
 	 */
@@ -24,11 +27,13 @@ abstract class Determinant : ValueMutableMatrix {
 	}
 
 	/**
+	 * Invoke this method to update the rank
 	 * 秩通过此方法进行更新，需要子类实现
 	 */
 	protected abstract fun updateRank(): Int
 
 	/**
+	 * Invoke this method to update the determinant value
 	 * 行列式值通过此方法进行更新，需要子类实现
 	 */
 	protected abstract fun updateDet(): Double
