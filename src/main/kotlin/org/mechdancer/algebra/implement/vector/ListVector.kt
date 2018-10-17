@@ -20,3 +20,7 @@ class ListVector(val data: List<Double>) : Vector {
 	override fun hashCode() = data.hashCode()
 	override fun toString() = columnView()
 }
+
+fun main(args: Array<String>) {
+	ListVector(listOf()).let(::println)
+}

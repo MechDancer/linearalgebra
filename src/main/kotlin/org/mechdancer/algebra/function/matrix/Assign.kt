@@ -6,7 +6,7 @@ import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 
 //对矩阵各项操作
 private fun ValueMutableMatrix.forEach(block: (Double) -> Double) =
-	(this as? ArrayMatrix)?.array
+	(this as? ArrayMatrix)?.data
 		?.let { it.forEachIndexed { i, value -> it[i] = block(value) } }
 		?: run {
 			for (r in 0 until row)

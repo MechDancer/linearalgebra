@@ -51,7 +51,7 @@ private fun enlarge(str: String, width: Int): String {
  * 将向量以列形式转换为字符串
  */
 fun Vector.columnView() =
-	toListMatrix().matrixView("${dim}D Vector")
+	toListMatrix().matrixView("${dim}d vector")
 
 /**
  * Convert a row vector to string
@@ -65,7 +65,7 @@ fun Vector.rowView() =
  * 将矩阵显示成字符串
  */
 fun Matrix.matrixView(
-	header: String = "$row x $column Matrix"
+	header: String = "$row x $column matrix"
 ): String {
 	//每列宽度 = 每列最宽元素的宽度
 	val widths = columns.map {
@@ -87,10 +87,18 @@ fun Matrix.matrixView(
 		//外部需补充的空白
 		val blank = ((header.length - inner - 2) / 2)
 			.let { n ->
-				if (n > 0) blank(n)
-				else "".also { append(blank(-n)) }
+				if (n > 0) {
+					if (header.isNotBlank())
+						append("$header\n")
+					blank(n)
+				} else {
+					if (header.isNotBlank()) {
+						append(blank(-n))
+						append("$header\n")
+					}
+					""
+				}
 			}
-		append("$header\n")
 		val (pre, fix) = border(row - 1)
 		append((0 until row).joinToString("\n") { r ->
 			"$blank${pre(r)} ${line(r)} ${fix(r)}"
@@ -130,4 +138,12 @@ fun EquationSet.matrixView() = toMatrixForm().matrixView()
 /**
  * 方程组表示为矩阵和向量并列
  */
-fun EquationSetOfMatrix.matrixView() = tie(args, constants)
+fun EquationSetOfMatrix.matrixView() =
+	buildString {
+		appendln("${args.column} members equation set")
+		tie(
+			args.matrixView(""),
+			constants.toListMatrix().matrixView("")
+		).let(this::append)
+	}
+

@@ -12,26 +12,26 @@ import org.mechdancer.algebra.implement.vector.toListVector
  * 基于数组实现的矩阵
  * 值可变，线程不安全
  */
-class ArrayMatrix(override val column: Int, val array: DoubleArray)
+class ArrayMatrix(override val column: Int, val data: DoubleArray)
 	: Determinant() {
 	override fun updateRank() = clone().rankDestructive()
 	override fun updateDet() = determinantValue()
 
 	init {
-		assert(array.size % column == 0)
+		assert(data.size % column == 0)
 	}
 
-	override val row = array.size / column
+	override val row = data.size / column
 
 	private fun index(r: Int, c: Int) = r * column + c
-	override operator fun get(r: Int, c: Int) = array[index(r, c)]
+	override operator fun get(r: Int, c: Int) = data[index(r, c)]
 	override operator fun set(r: Int, c: Int, value: Double) {
 		disable()
-		array[index(r, c)] = value
+		data[index(r, c)] = value
 	}
 
-	override fun row(r: Int) = array.copyOfRange(r * column, (r + 1) * column).toList().toListVector()
-	override fun column(c: Int) = array.filterIndexed { i, _ -> i % column == c }.toListVector()
+	override fun row(r: Int) = data.copyOfRange(r * column, (r + 1) * column).toList().toListVector()
+	override fun column(c: Int) = data.filterIndexed { i, _ -> i % column == c }.toListVector()
 
 	override val rows get() = (0 until row).map(::row)
 	override val columns get() = (0 until column).map(::column)
@@ -52,22 +52,22 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		if (k == 1.0) return
 		super.timesRow(r, k)
 		for (i in index(r, 0) until index(r + 1, 0))
-			array[i] *= k
+			data[i] *= k
 	}
 
 	override fun plusToRow(k: Double, r0: Int, r1: Int) {
 		if (k == .0) return
 		val difference = (r1 - r0) * column
 		for (i in index(r0, 0) until index(r0 + 1, 0))
-			array[i + difference] += k * array[i]
+			data[i + difference] += k * data[i]
 	}
 
 	override fun exchangeRow(r0: Int, r1: Int) {
 		if (r0 == r1) return
 		super.exchangeRow(r0, r1)
-		val temp = array.copyOfRange(index(r0, 0), index(r0 + 1, 0))
-		System.arraycopy(array, index(r1, 0), array, index(r0, 0), column)
-		System.arraycopy(temp, 0, array, index(r1, 0), column)
+		val temp = data.copyOfRange(index(r0, 0), index(r0 + 1, 0))
+		System.arraycopy(data, index(r1, 0), data, index(r0, 0), column)
+		System.arraycopy(temp, 0, data, index(r1, 0), column)
 	}
 
 	override fun timesColumn(c: Int, k: Double) {
@@ -75,7 +75,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		super.timesColumn(c, k)
 		var i = c
 		for (r in 0 until row) {
-			array[i] *= k
+			data[i] *= k
 			i += column
 		}
 	}
@@ -85,7 +85,7 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 		var i0 = c0
 		var i1 = c1
 		for (r in 0 until row) {
-			array[i0] += k * array[i1]
+			data[i0] += k * data[i1]
 			i0 += column
 			i1 += column
 		}
@@ -104,9 +104,9 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 	override fun equals(other: Any?) =
 		when (other) {
 			is ListMatrix  ->
-				column == other.column && array.toList() == other.list
+				column == other.column && data.toList() == other.data
 			is ArrayMatrix ->
-				column == other.column && array.contentEquals(other.array)
+				column == other.column && data.contentEquals(other.data)
 			is Matrix      ->
 				row == other.row &&
 					column == other.column &&
@@ -118,9 +118,9 @@ class ArrayMatrix(override val column: Int, val array: DoubleArray)
 			else           -> false
 		}
 
-	override fun hashCode() = array.hashCode()
+	override fun hashCode() = data.hashCode()
 
 	override fun toString() = matrixView("$row x $column Matrix")
 
-	override fun clone() = ArrayMatrix(column, array)
+	override fun clone() = ArrayMatrix(column, data)
 }

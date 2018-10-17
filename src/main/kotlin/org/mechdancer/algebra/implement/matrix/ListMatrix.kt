@@ -12,26 +12,26 @@ import org.mechdancer.algebra.implement.vector.toListVector
  */
 class ListMatrix(
 	override val column: Int,
-	val list: List<Double>
+	val data: List<Double>
 ) : Matrix {
 	init {
-		assert(list.size % column == 0)
+		assert(data.size % column == 0)
 	}
 
-	override val row = list.size / column
-	override fun get(r: Int, c: Int) = list[r * column + c]
+	override val row = data.size / column
+	override fun get(r: Int, c: Int) = data[r * column + c]
 
 	override fun row(r: Int) = rows[r]
 	override fun column(c: Int) = columns[c]
 
 	override val rows by lazy {
 		(0 until row).map { r ->
-			list.subList(r * column, (r + 1) * column).toListVector()
+			data.subList(r * column, (r + 1) * column).toListVector()
 		}
 	}
 	override val columns by lazy {
 		(0 until column).map { c ->
-			list.filterIndexed { i, _ -> i % column == c }.toListVector()
+			data.filterIndexed { i, _ -> i % column == c }.toListVector()
 		}
 	}
 
@@ -42,9 +42,9 @@ class ListMatrix(
 	override fun equals(other: Any?) =
 		when (other) {
 			is ListMatrix  ->
-				column == other.column && list == other.list
+				column == other.column && data == other.data
 			is ArrayMatrix ->
-				column == other.column && list == other.array.toList()
+				column == other.column && data == other.data.toList()
 			is Matrix      ->
 				row == other.row &&
 					column == other.column &&
@@ -56,7 +56,7 @@ class ListMatrix(
 			else           -> false
 		}
 
-	override fun hashCode() = list.hashCode()
+	override fun hashCode() = data.hashCode()
 
 	override fun toString() = matrixView("$row x $column Matrix")
 }

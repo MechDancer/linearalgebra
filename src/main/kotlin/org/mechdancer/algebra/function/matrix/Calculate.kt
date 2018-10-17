@@ -13,8 +13,8 @@ import org.mechdancer.algebra.implement.vector.toListVector
 
 //矩阵转换为List<Double>
 private fun Matrix.toList() =
-	(this as? ListMatrix)?.list
-		?: (this as? ArrayMatrix)?.array?.toList()
+	(this as? ListMatrix)?.data
+		?: (this as? ArrayMatrix)?.data?.toList()
 		?: rows.flatMap { it.toList() }
 
 operator fun Number.times(m: Matrix): Matrix {

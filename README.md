@@ -1,154 +1,178 @@
-# kotlin 线性代数库
-[ ![Download](https://api.bintray.com/packages/mechdancer/maven/linearalgebra/images/download.svg) ](https://bintray.com/mechdancer/maven/linearalgebra/_latestVersion)
+# Kotlin 线性代数库
 [![Build Status](https://www.travis-ci.org/MechDancer/linearalgebra.svg?branch=master)](https://www.travis-ci.org/MechDancer/linearalgebra)
 
-大量不可变类组成的非常安全的线性代数库，支持各种向量和矩阵运算。
+支持线性代数各类常用判定和计算，以及线性空间内的一些解析几何计算问题。
 
-~~持续更新~~  
-咕咕咕……
+## 类型
 
-## 矩阵数据
+库主要支持三类线性代数的数学结构，`向量` 、`矩阵` 和 `线性方程组`。出于性能考虑，向量和矩阵各自有多种实现，用户需要从中选择一种。
 
-`MatrixElement` 代表矩阵中的一行，矩阵规定为行定义。`MatrixData` 为 `List<MatrixElement>`，代表由许多行组成的一个完整矩阵数据。矩阵数据是不可变的，对应着唯一一个矩阵。`MatrixElement` 同样作为向量的数据储存容器。
+### 向量
 
-### 工具类
+目前向量提供两种实现：
 
-我们提供了可变工具类和不可变工具类用来操作矩阵数据。不可变矩阵数据工具类是指如同在一个矩阵内的矩阵数据一样，它是不可变的，每次操作都会生成新的矩阵数据。可变矩阵工具类与之相反，仅在最后需要结果时才生成矩阵数据。通过工具类，可以快速进行取余子式、进行初等行变换等操作。
+* 列表向量 `ListVector`
 
-## 矩阵
+* 二维向量 `Vector2D`
 
-矩阵支持的运算：
+列表向量的数据存在一个 `List<Double>` 中，可以通过成员 `data` 直接访问。0 维向量也是有效的。
 
-* 取元素
-* 与矩阵相加（减）
-* 与矩阵相乘（除）
-* 与向量相乘（除）
-* 数乘（除）
-* 求 n 次幂
-* 转为行列式（并计算）
-* 初等行变换
-* 求伴随矩阵
-* 转置
-* 阶梯化简
+二维向量是特化为二维的向量，支持一些平面几何的相关操作。两个二维向量进行返回向量的二元运算时返回的仍是二维向量。处理平面几何问题时使用这种实现可以避免许多不必要的维数检查。
 
-求逆我们提供了两种方法 —— `inverseByCompanion()`、`inverseByRowEchelon()`。
+这两种实现都是不可变的。
 
-### 行列式
+### 矩阵
 
-行列式在矩阵的基础上提供了求值功能，通过拆分余子式实现。行列式和矩阵可以无缝转化，并且拥有矩阵全部功能。
+矩阵的很多操作只修改矩阵内很少的额元素，此时原地计算将具有很大的性能优势。为了支持这些操作，矩阵有两种接口：不可变的 `Matrix` 和元素值可变的 `ValueMutableMatrix`。库为这两种接口分别提供了一种实现：
 
-### 建立一个矩阵
+|         接口        |    实现     |  直接访问数据  |
+| :----------------: | :---------: | :----------: |
+|       Matrix       | ListMatrix  |     data     |
+| ValueMutableMatrix | ArrayMatrix |     data     |
 
-#### 矩阵建造者
+### 方程组
 
-矩阵建造者提供了 DSL 来快速可视化建立一个矩阵，例如：
+目前方程组并无实现的必要，因此只是一些类型别名。
 
 ```kotlin
-val matrix = matrix {
-	Row[1.0, 2.0]
-	Row[2.0, 1.0]
-}
+typealias Equation            = Pair<Vector, Number> //方程包括参数向量和常数项
+typealias EquationSet         = Set<Equation>        //方程组是方程的集合
+typealias EquationSetOfMatrix = Pair<Matrix, Vector> //方程组也可以写成增广矩阵的形式
 ```
 
-除了通过行定义外，您也可以使用 `Column[...]` 通过列定义，但我们并不推荐这样做。
+* 注意：由于 Java 不支持 Kotlin 的类型别名，因此在 Java 中调用库需要使用这些类型的本名。
+* 扩展方法在 Java 中会表现为有一个参数的静态函数。
 
-#### 直接建立
+## 录入和构造
 
-如果不想使用矩阵建造者，可以先建立 `MatrixData`，也就是 `List<List<Double>>`，之后对其调用 `toMatrix()` 即可获得矩阵。除了通过 `MatrixData` 建立矩阵外，库中还提供了构造单位矩阵、零矩阵、范德蒙矩阵等常用函数。
+借助丰富的 DSL 函数，用户可以选择多种录入风格。
 
-## 向量
+### 向量
 
-向量支持的运算：
+* 可变参数函数：`listVectorOf(x, y, z)`
 
-* 取元素
-* 与向量加（减）
-* 与向量点乘
-* 与向量叉乘（三维）
+* n 维零向量：`listVectorOfZero(n)`
 
-向量被看作矩阵的一行，同样使用 `MatrixElement` 储存数据。您可以使用顶层函数 `vectorOf(...)` 建立一个向量，也可以建立 `MatrixElement` 后对其调用 `toVector()` 获得向量。为了便利，我们特别定义了二维向量类和三维向量类。它们支持了解构，并且可以通过 `Axis3D` 获得元素。
+* 2 维向量：`vector2DOf(x, y)`
 
-## 线性方程组
+* 2 维零向量：`vector2DOfZero()`
 
-我们通过与矩阵的结合，实现了求解线性方程组。
+* 从数字可遍历集 `Itorable<Number>` 或数字数组 `Array<Number>` 构造：
 
-### 线性方程组建造者
+  ```kotlin
+  list .toListVector()
+  array.toListVector()
+  ```
 
-与矩阵类似，线性方程组由 DSL 建立：
+### 矩阵
+
+构造矩阵的方式更多：
+
+* 使用函数构造：
+
+  ```kotlin
+  // map := (行号, 列号) → 元素值
+  listMatrixOf(row, column, map)
+  arrayMatrixOf(row, column, map)
+  ```
+
+* 折叠数组或列表：
+
+  ```kotlin
+  list  foldToRowOf    3 //数字列表折叠到 3 列的不可变矩阵
+  list  foldToRows     3 //数字列表折叠到 3 行的不可变矩阵
+  list  foldToColumnOf 3 //数字列表折叠到 3 行的不可变矩阵
+  list  foldToCloumns  3 //数字列表折叠到 3 列的不可变矩阵
+  
+  array foldToRowOf    3 //数字数组折叠到 3 列的值可变矩阵
+  array foldToRows     3 //数字数组折叠到 3 行的值可变矩阵
+  array foldToColumnOf 3 //数字数组折叠到 3 行的值可变矩阵
+  array foldToCloumns  3 //数字数组折叠到 3 列的值可变矩阵
+  ```
+
+* 使用函数构造零矩阵和单位矩阵：
+
+  ```kotlin
+  listMatrixOfZero
+  ```
+
+* 构造 n 阶数值矩阵：
+
+  ```kotlin
+  2.5 toListMatrix  2 // 等价于 2.5 的 2 阶不可变数值矩阵
+  2.5 toArrayMatrix 2 // 等价于 2.5 的 2 阶值可变数值矩阵
+  ```
+
+* 从向量构造矩阵：
+
+  ```kotlin
+  vector.toListMatrix()     // 将列向量转化为一列的不可变矩阵
+  vector.toListMatrixRow()  // 将行向量转化为一行的不可变矩阵
+  
+  vector.toArrayMatrix()    // 将列向量转化为一列的值可变矩阵
+  vector.toArrayMatrixRow() // 将行向量转化为一行的值可变矩阵
+  ```
+
+* 列出矩阵元素：
+
+  ```kotlin
+  // 按行构造不可变矩阵
+  matrix {
+    row(0, 0, 1)
+    row(0, 1, 0)
+    row(1, 0, 0)
+  }
+  
+  // 按列构造值可变矩阵
+  matrix(ValueMutable) {
+    column(0, 0, 1)
+    column(0, 1, 0)
+    column(1, 0, 0)
+  }
+  ```
+
+  * 元素要么按行列举，要么按列列举，混合行列将在运行时产生错误。
+
+* 使用 “数学家” 缩写：
+
+  ```kotlin
+  val a = O(3)     // 3 x 3 零矩阵
+  val b = O(5, 3)  // 5 x 3 零矩阵
+  
+  val c = I(2)     // 2 阶单位阵
+  val d = N(6, .2) // 等价于 0.2 的 6 阶数值阵
+  ```
+
+  * 这些缩写本质是只用静态方法的单例类，由于名字非常短，很可能与其他同名同型的东西混淆，使用时应谨慎。
+
+### 方程组
+
+我们只为方程组提供了一种构造工具：
 
 ```kotlin
-/*
-	2x+3y-5z=3
-	x-2y+z=0
-	3x+y+3z=7
-	 */
-
-	private val equation = linearEquation {
-		coefficient = matrix {
-			Row[2.0, 3.0, -5.0]
-			Row[1.0, -2.0, 1.0]
-			Row[3.0, 1.0, 3.0]
-		}
-
-		constant = vectorOf(3.0, .0, 7.0)
-
-	}
+equations {
+    this[x, y, 0, 0, 1, 0] = x1
+    this[0, 0, x, y, 0, 1] = y1
+}
 ```
 
-`coefficient` 对应方程系数，`constant` 对应等号后的常量。
-
-### 解算器
+由于所谓方程组只是方程的集合，因此可以方便地使用 `flatten()` 来合并方程组。
 
 ```kotlin
-@FunctionalInterface
-interface Solver {
-	fun solve(equation: LinearEquation): Vector
-}
+val set = listOf(set1, set2, set3).flatten().toSet()
 ```
 
-线性方程组是可被解的，这件事由解算器负责。解算器是一个函数式接口，接收一个线性方程组，返回一组解。如果试图解齐次线性方程组，程序会抛出异常。您可以自己实现解算器，我们在库中提供了两个 `CommonSolver`、`CramerSolver`。`CramerSolver` 使用克莱布法则解算方程组，这要求了矩阵是非奇异的，换句话说方程数与未知数个数必须相同。`CommonSolver` 则通过拼接增广矩阵对其进行阶梯化简实现。
+由于集合 `Set` 的特性，在 `toSet()` 过程中，完全相同的方程会被消除掉。
 
-## 分数
+## 运算
 
+本线性代数库以扩展方法形式支持极其丰富的线性代数运算，未来还将越来越多。因此在此不一一列举，使用 IDEA 和 Kotlin 语言的用户请开启代码补全以查阅，或查看本工程的单元测试代码，那里提供了一些示例。
 
+使用 Java 的用户请注意：
 
-## 开始使用
+* 访问字段被转化为了 getXXX() 函数
 
-* Gradle
-* Maven
-* Bintray
+* 设置字段被转化为里 setXXX(value) 函数
 
-您需要将其添加至  [仓库和依赖](https://docs.gradle.org/current/userguide/declaring_dependencies.html) 中。
+* 扩展函数被转化为了静态函数，可直接打开类调用
 
-### Gradle
-
-```groovy
-repositories {
-    jcenter()
-}
-dependencies {
-    compile 'org.mechdancer:linearalgebra:0.1.1'
-}
-```
-
-### Maven
-
-```xml
-<repositories>
-   <repository>
-     <id>jcenter</id>
-     <name>JCenter</name>
-     <url>https://jcenter.bintray.com/</url>
-   </repository>
-</repositories>
-
-<dependency>
-  <groupId>org.mechdancer</groupId>
-  <artifactId>linearalgebra</artifactId>
-  <version>0.1.1</version>
-  <type>pom</type>
-</dependency>
-```
-
-### Bintray
-
-您总可以从 bintray 直接下载 jar：[ ![Download](https://api.bintray.com/packages/mechdancer/maven/linearalgebra/images/download.svg) ](https://bintray.com/mechdancer/maven/linearalgebra/_latestVersion)
