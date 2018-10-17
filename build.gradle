@@ -13,7 +13,7 @@ buildscript {
 }
 
 group 'org.mechdancer'
-version '0.2.2-dev-1'
+version '0.2.2-dev-2'
 
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
@@ -40,7 +40,7 @@ publish {
     userOrg = 'mechdancer'
     groupId = 'org.mechdancer'
     artifactId = 'linearalgebra'
-    publishVersion = '0.2.2-dev-1'
+    publishVersion = '0.2.2-dev-2'
     desc = 'linearalgebra kotlin utilities'
     website = 'https://github.com/MechDancer/linearalgebra'
 }
