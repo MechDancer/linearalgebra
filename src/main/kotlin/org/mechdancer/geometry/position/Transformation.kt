@@ -5,7 +5,7 @@ import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.core.tie
 import org.mechdancer.algebra.function.matrix.inverse
 import org.mechdancer.algebra.function.matrix.times
-import org.mechdancer.algebra.function.vector.minus
+import org.mechdancer.algebra.function.matrix.unaryMinus
 import org.mechdancer.algebra.function.vector.plus
 import org.mechdancer.algebra.implement.vector.Vector2D
 
@@ -19,13 +19,6 @@ class Transformation(
 	private val matrix: Matrix,
 	private val vector: Vector
 ) {
-	init {
-		assert(matrix.det != .0)
-	}
-
-	// 逆变换矩阵
-	private val inverse by lazy { matrix.inverse()!! }
-
 	/**
 	 * 变换一点
 	 */
@@ -34,7 +27,11 @@ class Transformation(
 	/**
 	 * 反变换一点
 	 */
-	fun reverse(point: Vector2D) = inverse * (point - vector)
+	val reversed by lazy {
+		matrix.inverse()?.let {
+			Transformation(it, -it * vector)
+		}
+	}
 
 	/**
 	 * 判断变换是不是手性的

@@ -15,6 +15,17 @@ class TestTransformation {
 			listVectorOf(1, 1) to listVectorOf(+1, -1)
 		).toTransformation()
 		Assert.assertTrue(transformation?.isChiral() == true)
+		Assert.assertEquals(
+			vector2DOf(4, -2),
+			transformation
+				?.invoke(vector2DOf(4, 2))
+		)
+		Assert.assertEquals(
+			vector2DOf(4, 2),
+			transformation
+				?.reversed
+				?.invoke(vector2DOf(4, -2))
+		)
 	}
 
 	@Test

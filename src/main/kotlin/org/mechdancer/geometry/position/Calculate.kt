@@ -21,10 +21,9 @@ fun Vector2D.rotate(angle: Radian, centre: Vector2D) =
 	minus(centre).rotate(angle).plus(centre)
 
 /**
- * 最小二乘法从任意维点对集推算空间变换子
+ * 最小二乘法从点对集推算空间变换子
  */
-fun <T : Vector, U : Vector>
-	Map<T, U>.toTransformation(): Transformation? {
+fun Map<out Vector, Vector>.toTransformation(): Transformation? {
 	val dims =
 		keys.map { it.dim }
 			.toMutableSet()

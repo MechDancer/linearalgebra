@@ -17,7 +17,7 @@ enum class DistanceType(val between: (Vector, Vector) -> Double) {
 	Manhattan({ one, other -> (one - other).toList().sum() }),
 
 	/** 切比雪夫距离 */
-	Chebyshev({ one, other -> (one - other).toList().asSequence().map(::abs).max() ?: .0 });
+	Chebyshev({ one, other -> (one - other).toList().map(::abs).max() ?: Double.NaN });
 
 	infix fun between(pair: Pair<Vector, Vector>) = between(pair.first, pair.second)
 }
