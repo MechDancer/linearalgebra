@@ -24,6 +24,9 @@ fun Iterable<Number>.toListVector() =
 fun Array<Number>.toListVector() =
 	map { it.toDouble() }.let(::ListVector)
 
+fun DoubleArray.toListVector() =
+	toList().let(::ListVector)
+
 // dsl builder
 
 fun listVectorOf(vararg item: Number) =

@@ -5,8 +5,8 @@ import org.mechdancer.algebra.function.matrix.transpose
 import org.mechdancer.algebra.function.matrix.transposeAssign
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
-import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode.Constant
-import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode.ValueMutable
+import org.mechdancer.algebra.implement.matrix.builder.BuilderMode.Immutable
+import org.mechdancer.algebra.implement.matrix.builder.BuilderMode.ValueMutable
 import kotlin.math.abs
 
 class MatrixBuilder {
@@ -34,19 +34,13 @@ class MatrixBuilder {
 		data.addAll(number.map { it.toDouble() })
 	}
 
-	internal fun build(mode: Mode): Matrix =
+	internal fun build(mode: BuilderMode): Matrix =
 		when (mode) {
-			Constant     ->
+			Immutable    ->
 				ListMatrix(data.size / abs(count), data)
 					.run { if (count < 0) transpose() else this }
 			ValueMutable ->
 				ArrayMatrix(data.size / abs(count), data.toDoubleArray())
 					.apply { if (count < 0) transposeAssign() }
 		}
-
-	enum class Mode {
-		ValueMutable, Constant;
-	}
 }
-
-

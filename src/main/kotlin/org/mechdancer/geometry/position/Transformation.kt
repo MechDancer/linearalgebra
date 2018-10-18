@@ -11,7 +11,7 @@ import org.mechdancer.algebra.implement.vector.Vector2D
 
 /**
  * 空间变换
- * 二维笛卡尔坐标系之间的变换
+ * 笛卡尔坐标系之间的变换
  * @param matrix 变换矩阵
  * @param vector 平移向量
  */
@@ -19,6 +19,11 @@ class Transformation(
 	private val matrix: Matrix,
 	private val vector: Vector
 ) {
+	init {
+		assert(matrix.det != .0)
+	}
+
+	// 逆变换矩阵
 	private val inverse by lazy { matrix.inverse()!! }
 
 	/**

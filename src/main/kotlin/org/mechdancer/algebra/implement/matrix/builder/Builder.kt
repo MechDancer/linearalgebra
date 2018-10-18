@@ -6,8 +6,7 @@ import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.transpose
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
-import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode
-import org.mechdancer.algebra.implement.matrix.builder.MatrixBuilder.Mode.Constant
+import org.mechdancer.algebra.implement.matrix.builder.BuilderMode.Immutable
 
 // Vector -> Matrix
 
@@ -94,9 +93,14 @@ fun Matrix.toArrayMatrix(): ArrayMatrix =
 // DSL Builder
 
 fun matrix(
-	mode: Mode = Constant,
+	mode: BuilderMode = Immutable,
 	block: MatrixBuilder.() -> Unit
 ) = MatrixBuilder().apply(block).build(mode)
+
+fun blockMatrix(
+	mode: BuilderMode = Immutable,
+	block: BlockMatrixBuilder.() -> Unit
+) = BlockMatrixBuilder().apply(block).build(mode)
 
 // super shortcut
 
@@ -116,6 +120,9 @@ object I {
 object N {
 	@JvmStatic
 	operator fun invoke(n: Int, x: Number) = x toListMatrix n
+
+	@JvmStatic
+	operator fun invoke(x: Number) = x toListMatrix 1
 }
 
 object Det {
