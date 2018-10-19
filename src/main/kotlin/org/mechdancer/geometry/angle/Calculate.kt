@@ -1,7 +1,10 @@
 package org.mechdancer.geometry.angle
 
+import org.mechdancer.algebra.function.vector.minus
+import org.mechdancer.algebra.function.vector.plus
 import org.mechdancer.algebra.implement.vector.Vector2D
-import org.mechdancer.geometry.angle.Radian.Companion.halfPI
+import org.mechdancer.geometry.angle.Angle.Companion.halfPI
+import org.mechdancer.geometry.angle.Angle.Companion.twicePI
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
@@ -10,77 +13,39 @@ import kotlin.math.sign
  * Adjust radian into [-PI, +PI]
  * 调整弧度到[-PI, +PI]
  */
-fun Radian.adjust(): Radian {
+fun Angle.adjust(): Angle {
 	var temp = value
-	while (temp > +PI) temp -= 2 * PI
-	while (temp < -PI) temp += 2 * PI
-	return Radian(temp)
+	while (temp > +PI) temp -= twicePI
+	while (temp < -PI) temp += twicePI
+	return Angle(temp)
 }
 
-/**
- * Adjust angle into [-180°, +180°]
- * 调整角度到[-180°, +180°]
- */
-fun Degree.adjust(): Degree {
-	var temp = value
-	while (temp > +180) temp -= 360
-	while (temp < -180) temp += 360
-	return Degree(temp)
-}
+infix fun Angle.rotate(angle: Angle) =
+	Angle(value + angle.value)
 
-infix fun Degree.rotate(angle: Number) =
-	Degree(value + angle.toDouble())
+infix fun Vector2D.rotate(angle: Angle) =
+	toAngle().rotate(angle).toVectorOf(norm)
 
-infix fun Degree.rotate(angle: Degree) =
-	Degree(value + angle.value)
+fun Vector2D.rotate(angle: Angle, centre: Vector2D) =
+	minus(centre).rotate(angle).plus(centre)
 
-infix fun Degree.rotate(angle: Radian) =
-	Degree(value + angle.value / PI * 180)
-
-infix fun Radian.rotate(angle: Number) =
-	Radian(value + angle.toDouble())
-
-infix fun Radian.rotate(angle: Degree) =
-	Radian(value + angle.value / 180 * PI)
-
-infix fun Radian.rotate(angle: Radian) =
-	Radian(value + angle.value)
-
-infix fun Vector2D.rotate(angle: Number) =
-	toRad().rotate(angle).toVectorOf(norm)
-
-infix fun Vector2D.rotate(angle: Degree) =
-	toRad().rotate(angle).toVectorOf(norm)
-
-infix fun Vector2D.rotate(angle: Radian) =
-	toRad().rotate(angle).toVectorOf(norm)
-
-fun Radian.complementary(): Radian {
+fun Angle.complementary(): Angle {
 	val abs = abs(value)
 	assert(abs in .0..halfPI)
-	return Radian(value.sign * (halfPI - abs))
+	return Angle(value.sign * (halfPI - abs))
 }
 
-fun Radian.supplementary(): Radian {
+fun Angle.supplementary(): Angle {
 	val abs = abs(value)
 	assert(abs in .0..PI)
-	return Radian(value.sign * (PI - abs))
-}
-
-fun Degree.complementary(): Degree {
-	val abs = abs(value)
-	assert(abs in 0..90)
-	return Degree(value.sign * (90 - abs))
-}
-
-fun Degree.supplementary(): Degree {
-	val abs = abs(value)
-	assert(abs in 0..180)
-	return Degree(value.sign * (180 - abs))
+	return Angle(value.sign * (PI - abs))
 }
 
 fun Vector2D.complementary() =
-	toRad().complementary().toVectorOf(norm)
+	toAngle().complementary().toVectorOf(norm)
 
 fun Vector2D.supplementary() =
-	toRad().supplementary().toVectorOf(norm)
+	toAngle().supplementary().toVectorOf(norm)
+
+operator fun Angle.minus(other: Angle) =
+	Angle(value - other.value).adjust()

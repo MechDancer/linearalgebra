@@ -58,7 +58,7 @@ fun listMatrixOfZero(dim: Int): ListMatrix =
 fun arrayMatrixOfZero(dim: Int): ArrayMatrix =
 	arrayMatrixOf(dim, dim) { _, _ -> .0 }
 
-// Unit Matrix
+// AngleUnit Matrix
 
 fun listMatrixOfUnit(dim: Int): ListMatrix =
 	listMatrixOf(dim, dim) { r, c -> if (r == c) 1.0 else .0 }
