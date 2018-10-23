@@ -1,8 +1,10 @@
 package org.mechdancer.algebra.function.vector
 
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.function.uniqueValue
 import org.mechdancer.algebra.implement.vector.ListVector
 import org.mechdancer.algebra.implement.vector.Vector2D
+import org.mechdancer.algebra.implement.vector.listVectorOfZero
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
 operator fun Vector.div(k: Number) = toList().map { it / k.toDouble() }.let(::ListVector)
@@ -39,3 +41,13 @@ operator fun Vector2D.unaryMinus() = Vector2D(-x, -y)
 
 fun Vector.reversed() = -this
 fun Vector.normalize() = div(norm)
+
+/**
+ * 求向量表示的点集的“重心”
+ */
+fun Collection<Vector>.centre() =
+	uniqueValue(Vector::dim)
+		.let(::listVectorOfZero)
+		.let { fold(it) { sum, v -> sum + v } }
+		.div(size)
+

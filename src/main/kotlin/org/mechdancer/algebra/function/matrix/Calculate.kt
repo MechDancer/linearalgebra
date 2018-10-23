@@ -76,11 +76,18 @@ fun Matrix.cofactorOf(r: Int, c: Int) = Cofactor(this, r, c)
 private fun Matrix.algebraCofactorOf(r: Int, c: Int): Double =
 	(if ((r + c) % 2 == 0) 1 else -1) * cofactorOf(r, c).determinantValue()
 
+/**
+ * 求伴随矩阵
+ */
 fun Matrix.companion(): Matrix {
 	assertSquare()
 	return listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r) }
 }
 
+/**
+ * 计算矩阵的行列式值
+ * 不会访问矩阵的行列式缓存，因此可用于实现类内
+ */
 fun Matrix.determinantValue() =
 	if (isNotSquare()) .0
 	else when (row) {
@@ -92,7 +99,15 @@ fun Matrix.determinantValue() =
 		else -> .0
 	}
 
+/**
+ * 求不可变矩阵的逆矩阵
+ */
 fun Matrix.inverse() = toArrayMatrix().inverseDestructive()
+
+/**
+ * 求实对称矩阵的迹（所有特征值的和）
+ */
+fun Matrix.trace() = jacobiMethod(1E-6).sumByDouble { it.first }
 
 object D {
 	@JvmStatic
@@ -102,4 +117,9 @@ object D {
 object R {
 	@JvmStatic
 	operator fun invoke(matrix: Matrix) = matrix.rank
+}
+
+object T {
+	@JvmStatic
+	operator fun invoke(matrix: Matrix) = matrix.trace()
 }
