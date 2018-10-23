@@ -81,9 +81,9 @@ fun Matrix.companion(): Matrix {
 	return listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r) }
 }
 
-fun Matrix.determinantValue(): Double {
-	assertSquare()
-	return when (row) {
+fun Matrix.determinantValue() =
+	if (isNotSquare()) .0
+	else when (row) {
 		1    -> get(0, 0)
 		2    -> get(0, 0) * get(1, 1) - get(0, 1) * get(1, 0)
 		rank -> (0 until column).sumByDouble { c ->
@@ -91,6 +91,15 @@ fun Matrix.determinantValue(): Double {
 		}
 		else -> .0
 	}
-}
 
 fun Matrix.inverse() = toArrayMatrix().inverseDestructive()
+
+object D {
+	@JvmStatic
+	operator fun invoke(matrix: Matrix) = matrix.det
+}
+
+object R {
+	@JvmStatic
+	operator fun invoke(matrix: Matrix) = matrix.rank
+}

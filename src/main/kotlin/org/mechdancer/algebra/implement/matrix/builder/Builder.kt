@@ -2,7 +2,6 @@ package org.mechdancer.algebra.implement.matrix.builder
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.transpose
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
@@ -123,9 +122,4 @@ object N {
 
 	@JvmStatic
 	operator fun invoke(x: Number) = x toListMatrix 1
-}
-
-object Det {
-	@JvmStatic
-	operator fun invoke(matrix: Matrix) = matrix.determinantValue()
 }

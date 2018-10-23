@@ -1,10 +1,8 @@
 package org.mechdancer.geometry.angle
 
+import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.implement.vector.Vector2D
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 /**
  * Point that a number is a radian actually
@@ -36,3 +34,25 @@ fun Angle.toVector() = Vector2D(cos(value), sin(value))
  */
 fun Angle.toVectorOf(norm: Number) =
 	norm.toDouble().let { Vector2D(it * cos(value), it * sin(value)) }
+
+/**
+ * 求方向余弦
+ */
+fun Vector.toCos() = toList().map { it / norm }
+
+/**
+ * 求特定维度的方向余弦
+ */
+fun Vector.toCos(index: Int) = get(index) / norm
+
+/**
+ * 求方向角
+ */
+fun Vector.toAngel() = toList().map { acos(it / norm).toRad() }
+
+/**
+ * 求特定维度的方向角
+ */
+fun Vector.toAngle(index: Int) = acos(get(index) / norm).toRad()
+
+
