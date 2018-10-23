@@ -1,9 +1,13 @@
 package org.mechdancer.algebra.matrix
 
+import org.junit.Assert
 import org.junit.Test
+import org.mechdancer.algebra.core.rowView
 import org.mechdancer.algebra.function.matrix.*
 import org.mechdancer.algebra.implement.matrix.builder.I
 import org.mechdancer.algebra.implement.matrix.builder.matrix
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 class TestMatrixCalculate {
 	@Test
@@ -160,5 +164,28 @@ class TestMatrixCalculate {
 			}
 			(a - b).inverse()!! power 2
 		}
+	}
+
+	@Test
+	fun problem8() {
+		val sqrt2 = sqrt(2.0)
+		val eigenvalue = setOf(2 - sqrt2, 2.0, 2 + sqrt2)
+		val matrix = matrix {
+			row(2, -1, 0)
+			row(-1, 2, -1)
+			row(0, -1, 2)
+		}
+		(matrix jacobiMethod 1E-6)
+			.also {
+				it.forEach { pair ->
+					val (l, v) = pair
+					println("$l: ${v.rowView()}")
+				}
+			}
+			.map { it.first }
+			.sorted()
+			.zip(eigenvalue) { a, b -> abs(a - b) }
+			.all { it < 1E-6 }
+			.let(Assert::assertTrue)
 	}
 }

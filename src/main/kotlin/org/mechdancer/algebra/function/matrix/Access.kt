@@ -25,3 +25,14 @@ val Matrix.firstColumn get() = column(0)
  * 获取矩阵的最后一列
  */
 val Matrix.lastColumn get() = column(column - 1)
+
+/**
+ * Map elements with index on rows and columns
+ * 带二维序号展开
+ */
+fun <T> Matrix.mapIndexed(block: (Int, Int, Double) -> T) =
+	(0 until row).flatMap { r ->
+		(0 until column).map { c ->
+			block(r, c, get(r, c))
+		}
+	}
