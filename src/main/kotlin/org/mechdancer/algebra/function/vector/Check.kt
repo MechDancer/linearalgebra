@@ -36,3 +36,27 @@ fun Vector.isNot2D() = dim != 2
  * 判断是否维度比二维更高
  */
 fun Vector.isMoreThan2D() = dim > 2
+
+/**
+ * 判断两个向量是否正交
+ */
+fun Vector.isOrthogonalTo(other: Vector) =
+	this dot other == .0
+
+/**
+ * 判断两个向量是否不正交
+ */
+fun Vector.isNotOrthogonalTo(other: Vector) =
+	this dot other != .0
+
+/**
+ * 判断两个向量是否平行
+ */
+fun Vector.isParallelTo(other: Vector) =
+	this dot other / norm / other.norm == 1.0
+
+/**
+ * 判断两个向量是否平行
+ */
+fun Vector.isNotParallelTo(other: Vector) =
+	this dot other / norm / other.norm != 1.0
