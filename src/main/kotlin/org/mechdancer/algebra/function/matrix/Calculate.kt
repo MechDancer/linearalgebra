@@ -1,6 +1,7 @@
 package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
+import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.vector.dot
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
@@ -9,6 +10,7 @@ import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.I
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
+import org.mechdancer.algebra.implement.matrix.builder.toDiagonalListMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
 
 //矩阵转换为List<Double>
@@ -102,7 +104,25 @@ fun Matrix.determinantValue() =
 /**
  * 求不可变矩阵的逆矩阵
  */
-fun Matrix.inverse() = toArrayMatrix().inverseDestructive()
+fun Matrix.inverse() =
+	when {
+		// 不方，无法求逆
+		isNotSquare()  -> null
+		// 对角阵上各元素取倒数可得逆对角阵
+		isDiagonal()   ->
+			diagonal
+				.takeIf { list -> list.all { it != .0 } }
+				?.map { 1 / it }
+				?.toDiagonalListMatrix()
+		// 正交矩阵的转置与逆相等
+		isOrthogonal() -> transpose()
+		// 对于值可变矩阵，克隆可能有更高的效率，否则重新构造可变矩阵
+		else           ->
+			((this as? ValueMutableMatrix)
+				?.clone()
+				?: toArrayMatrix())
+				.inverseDestructive()
+	}
 
 /**
  * 求实对称矩阵的迹（所有特征值的和）

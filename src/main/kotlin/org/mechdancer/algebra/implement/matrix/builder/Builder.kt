@@ -33,15 +33,37 @@ infix fun Iterable<Number>.foldToColumnOf(length: Int) = foldToRowOf(length).tra
 
 infix fun Iterable<Number>.foldToColumns(count: Int) = foldToRows(count).transpose()
 
-// Array -> Matrix
+// DoubleArray -> Matrix
 
-infix fun Array<Number>.foldToRowOf(length: Int) = ArrayMatrix(length, map { it.toDouble() }.toDoubleArray())
+infix fun DoubleArray.foldToRowOf(length: Int) = ArrayMatrix(length, this)
 
-infix fun Array<Number>.foldToRows(count: Int) = foldToRowOf(size / count)
+infix fun DoubleArray.foldToRows(count: Int) = foldToRowOf(size / count)
 
-infix fun Array<Number>.foldToColumnOf(length: Int) = foldToRowOf(length).transpose()
+infix fun DoubleArray.foldToColumnOf(length: Int) = foldToRowOf(length).transpose()
 
-infix fun Array<Number>.foldToColumns(count: Int) = foldToRows(count).transpose()
+infix fun DoubleArray.foldToColumns(count: Int) = foldToRows(count).transpose()
+
+// Diagonal Matrix
+
+fun Iterable<Number>.toDiagonalListMatrix() = toList().let {
+	listMatrixOf(it.size, it.size) { r, c -> if (r == c) it[r] else .0 }
+}
+
+fun Iterable<Number>.toDiagonalArrayMatrix() = toList().let {
+	arrayMatrixOf(it.size, it.size) { r, c -> if (r == c) it[r] else .0 }
+}
+
+fun Array<Number>.toDiagonalListMatrix() =
+	listMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
+
+fun Array<Number>.toDiagonalArrayMatrix() =
+	arrayMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
+
+fun DoubleArray.toDiagonalListMatrix() =
+	listMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
+
+fun DoubleArray.toDiagonalArrayMatrix() =
+	arrayMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
 
 // Zero Matrix
 
@@ -57,7 +79,7 @@ fun listMatrixOfZero(dim: Int): ListMatrix =
 fun arrayMatrixOfZero(dim: Int): ArrayMatrix =
 	arrayMatrixOf(dim, dim) { _, _ -> .0 }
 
-// AngleUnit Matrix
+// Unit Matrix
 
 fun listMatrixOfUnit(dim: Int): ListMatrix =
 	listMatrixOf(dim, dim) { r, c -> if (r == c) 1.0 else .0 }

@@ -1,6 +1,7 @@
 package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
+import kotlin.math.min
 
 /**
  * Get the first row of a matrix
@@ -25,6 +26,23 @@ val Matrix.firstColumn get() = column(0)
  * 获取矩阵的最后一列
  */
 val Matrix.lastColumn get() = column(column - 1)
+
+/**
+ * Get the main diagonal of a matrix
+ * 获取矩阵主对角线
+ */
+val Matrix.diagonal get() = List(min(row, column)) { i -> get(i, i) }
+
+/**
+ * Filter elements with index on rows and columns
+ * 带二维序号过滤
+ */
+fun Matrix.filterIndexed(block: (Int, Int, Double) -> Boolean) =
+	(0 until row).flatMap { r ->
+		(0 until column).map { c ->
+			get(r, c).takeIf { block(r, c, it) }?.let { r to c to it }
+		}
+	}.filterNotNull()
 
 /**
  * Map elements with index on rows and columns
