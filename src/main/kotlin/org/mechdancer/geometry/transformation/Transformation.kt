@@ -1,4 +1,4 @@
-package org.mechdancer.geometry.position
+package org.mechdancer.geometry.transformation
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
@@ -7,7 +7,6 @@ import org.mechdancer.algebra.function.matrix.inverse
 import org.mechdancer.algebra.function.matrix.times
 import org.mechdancer.algebra.function.matrix.unaryMinus
 import org.mechdancer.algebra.function.vector.plus
-import org.mechdancer.algebra.implement.vector.Vector2D
 
 /**
  * 空间变换
@@ -16,13 +15,13 @@ import org.mechdancer.algebra.implement.vector.Vector2D
  * @param vector 平移向量
  */
 class Transformation(
-	private val matrix: Matrix,
-	private val vector: Vector
+	val matrix: Matrix,
+	val vector: Vector
 ) {
 	/**
 	 * 变换一点
 	 */
-	operator fun invoke(point: Vector2D) = matrix * point + vector
+	operator fun invoke(point: Vector) = matrix * point + vector
 
 	/**
 	 * 反变换一点
