@@ -138,6 +138,27 @@ class TestMatrixCalculate {
 			(a + b power 2) - (a * a + 2 * a * b + b * b)
 		}
 	}
-}
 
-// test_path
+	@Test
+	fun problem7() {
+		problem(
+			name = "3-5",
+			result = matrix {
+				row(1, 2, 5)
+				row(0, 1, 2)
+				row(0, 0, 1)
+			}) {
+			val a = matrix {
+				row(1, 0, 0)
+				row(1, 1, 0)
+				row(1, 1, 1)
+			}
+			val b = matrix {
+				row(0, 1, 1)
+				row(1, 0, 1)
+				row(1, 1, 0)
+			}
+			(a - b).inverse()!! power 2
+		}
+	}
+}
