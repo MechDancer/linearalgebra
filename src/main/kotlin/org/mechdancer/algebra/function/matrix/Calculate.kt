@@ -49,7 +49,7 @@ operator fun Matrix.times(other: Matrix): Matrix {
 	}
 }
 
-operator fun Matrix.div(other: Matrix) = other.inverse()?.let { times(it) }
+operator fun Matrix.div(other: Matrix) = other.inverseOrNull()?.let { it * this }
 
 operator fun Matrix.invoke(right: Matrix) = times(right)
 operator fun Matrix.invoke(right: Vector) = times(right)
@@ -81,10 +81,13 @@ private fun Matrix.algebraCofactorOf(r: Int, c: Int): Double =
 /**
  * 求伴随矩阵
  */
-fun Matrix.companion(): Matrix {
-	assertSquare()
-	return listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r) }
-}
+fun Matrix.companion() = companionOrNull() ?: throw NotSquareException
+
+/**
+ * 用空表示伴随矩阵不存在
+ */
+fun Matrix.companionOrNull() =
+	takeIf { isSquare() }?.let { listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r) } }
 
 /**
  * 计算矩阵的行列式值
@@ -104,7 +107,15 @@ fun Matrix.determinantValue() =
 /**
  * 求不可变矩阵的逆矩阵
  */
-fun Matrix.inverse() =
+fun Matrix.inverse(): Matrix {
+	assertSquare()
+	return inverseOrNull() ?: throw NotFullRankException
+}
+
+/**
+ * 用空表示逆矩阵不存在
+ */
+fun Matrix.inverseOrNull() =
 	when {
 		// 不方，无法求逆
 		isNotSquare()  -> null

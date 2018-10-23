@@ -3,7 +3,7 @@ package org.mechdancer.geometry.transformation
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.core.tie
-import org.mechdancer.algebra.function.matrix.inverse
+import org.mechdancer.algebra.function.matrix.inverseOrNull
 import org.mechdancer.algebra.function.matrix.times
 import org.mechdancer.algebra.function.matrix.unaryMinus
 import org.mechdancer.algebra.function.vector.plus
@@ -14,7 +14,7 @@ import org.mechdancer.algebra.function.vector.plus
  * @param matrix 变换矩阵
  * @param vector 平移向量
  */
-class Transformation(
+data class Transformation(
 	val matrix: Matrix,
 	val vector: Vector
 ) {
@@ -27,7 +27,7 @@ class Transformation(
 	 * 反变换一点
 	 */
 	val reversed by lazy {
-		matrix.inverse()?.let {
+		matrix.inverseOrNull()?.let {
 			Transformation(it, -it * vector)
 		}
 	}

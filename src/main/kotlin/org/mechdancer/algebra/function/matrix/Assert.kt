@@ -9,10 +9,15 @@ internal fun assertSameSize(a: Matrix, b: Matrix) {
 		throw UnsupportedOperationException("operate two matrix of different size (${a.row}*${a.column} and ${b.row}*${b.column})")
 }
 
+internal val Matrix.NotSquareException
+	get() = UnsupportedOperationException("$row * $column is not a square")
+
+internal val NotFullRankException
+	get() = UnsupportedOperationException("matrix is not full-rank, so some operation is invalid")
+
 // 断言矩阵是方阵
 internal fun Matrix.assertSquare() {
-	if (row != column)
-		throw UnsupportedOperationException("$row * $column is not a square")
+	if (row != column) throw NotSquareException
 }
 
 // 断言矩阵能乘向量

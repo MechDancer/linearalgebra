@@ -1,10 +1,10 @@
 package org.mechdancer.algebra.function.vector
 
 import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.function.uniqueValue
 import org.mechdancer.algebra.implement.vector.ListVector
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
+import org.mechdancer.algebra.uniqueValue
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
 operator fun Vector.div(k: Number) = toList().map { it / k.toDouble() }.let(::ListVector)

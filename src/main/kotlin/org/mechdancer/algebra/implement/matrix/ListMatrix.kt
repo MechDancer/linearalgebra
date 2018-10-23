@@ -2,6 +2,7 @@ package org.mechdancer.algebra.implement.matrix
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
+import org.mechdancer.algebra.doubleEquals
 import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.rankDestructive
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
@@ -40,20 +41,18 @@ class ListMatrix(
 	override val det by lazy { determinantValue() }
 
 	override fun equals(other: Any?) =
-		when (other) {
-			is ListMatrix  ->
-				column == other.column && data == other.data
-			is ArrayMatrix ->
-				column == other.column && data == other.data.toList()
-			is Matrix      ->
-				row == other.row &&
-					column == other.column &&
-					(0 until row).all { r ->
-						(0 until column).all { c ->
-							other[r, c] == this[r, c]
-						}
+		other is Matrix
+			&& row == other.row
+			&& column == other.column
+			&& when (other) {
+			is ListMatrix  -> data.zip(other.data, ::doubleEquals).all { it }
+			is ArrayMatrix -> other.data.zip(data, ::doubleEquals).all { it }
+			else           ->
+				(0 until row).all { r ->
+					(0 until column).all { c ->
+						doubleEquals(other[r, c], this[r, c])
 					}
-			else           -> false
+				}
 		}
 
 	override fun hashCode() = data.hashCode()

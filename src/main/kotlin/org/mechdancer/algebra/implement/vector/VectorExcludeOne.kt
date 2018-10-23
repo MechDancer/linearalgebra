@@ -3,6 +3,7 @@ package org.mechdancer.algebra.implement.vector
 import org.mechdancer.algebra.core.SubVector
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.core.columnView
+import org.mechdancer.algebra.doubleEquals
 import kotlin.math.sqrt
 
 class VectorExcludeOne(
@@ -27,7 +28,7 @@ class VectorExcludeOne(
 			.apply { removeAt(exclude) }
 
 	override fun equals(other: Any?) =
-		other is Vector && toList() == other.toList()
+		other is Vector && toList().zip(other.toList(), ::doubleEquals).all { it }
 
 	override fun hashCode() = toList().hashCode()
 	override fun toString() = columnView()

@@ -24,7 +24,7 @@ class TestMatrixCalculate {
 				row(0, 4, 0)
 				row(2, 0, 2)
 			}
-			val a = b * (b - 2 * I(3)).inverse()!!
+			val a = b * (b - 2 * I(3)).inverse()
 			(a - I(3)).inverse()
 		}
 	}
@@ -68,7 +68,7 @@ class TestMatrixCalculate {
 				row(2, 0)
 				row(3, 1)
 			}
-			a.inverse()!! * c * b.inverse()!!
+			a.inverse() * c * b.inverse()
 		}
 	}
 
@@ -86,7 +86,7 @@ class TestMatrixCalculate {
 				row(+0, 2, 0)
 				row(-1, 0, 1)
 			}
-			(I(3) - (a power 2)) * (I(3) - a).inverse()!!
+			(I(3) - (a power 2)) * (I(3) - a).inverse()
 		}
 	}
 
@@ -114,9 +114,9 @@ class TestMatrixCalculate {
 			}
 
 			val ct = c.transpose()
-			val xt = (I(4) - c.inverse()!! * b).transpose()
+			val xt = (I(4) - c.inverse() * b).transpose()
 
-			I(4) * ct.inverse()!! * xt.inverse()!!
+			I(4) * ct.inverse() * xt.inverse()
 		}
 	}
 
@@ -162,7 +162,7 @@ class TestMatrixCalculate {
 				row(1, 0, 1)
 				row(1, 1, 0)
 			}
-			(a - b).inverse()!! power 2
+			(a - b).inverse() power 2
 		}
 	}
 

@@ -42,26 +42,30 @@ class TestTransformation {
 
 	@Test
 	fun testTransformation3() {
-		mapOf(
+		val t0 = mapOf(
 			vector2DOf(0, 0) to vector2DOf(0, 0),
 			vector2DOf(1, 0) to vector2DOf(+0, +1),
 			vector2DOf(0, 1) to vector2DOf(-1, +0)
-		).toTransformation().also(::println)
-		mapOf(
+		).toTransformation()
+		val t1 = mapOf(
 			vector2DOf(0, 0) to vector2DOf(0, 0),
 			vector2DOf(1, 0) to vector2DOf(+0, +1),
 			vector2DOf(0, 1) to vector2DOf(-1, +0)
-		).toTransformation2D().also(::println)
+		).toTransformation2D()
 
-		mapOf(
+		Assert.assertEquals(t0, t1)
+
+		val t2 = mapOf(
 			vector2DOf(0, 0) to vector2DOf(0, 0),
 			vector2DOf(1, 0) to vector2DOf(1, 0),
 			vector2DOf(0, 1) to vector2DOf(0, -1)
-		).toTransformation().also(::println)
-		mapOf(
+		).toTransformation()
+		val t3 = mapOf(
 			vector2DOf(0, 0) to vector2DOf(0, 0),
 			vector2DOf(1, 0) to vector2DOf(1, 0),
 			vector2DOf(0, 1) to vector2DOf(0, -1)
-		).toTransformation2DChiral().also(::println)
+		).toTransformation2DChiral()
+
+		Assert.assertEquals(t2, t3)
 	}
 }

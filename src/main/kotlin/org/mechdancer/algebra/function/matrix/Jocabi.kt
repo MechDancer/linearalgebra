@@ -45,7 +45,7 @@ fun rotationOnPlane(order: Int, theta: Double, i: Int, j: Int): Matrix {
  * @param    threshold 阈值，绝对值小于此阈值的非对角元素不再变换
  * @return   特征值特征向量对的集合
  */
-infix fun Matrix.jacobiMethod(threshold: Double): Set<Pair<Double, Vector>> {
+infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 	assert(isSymmetric())
 
 	// 一维不必计算，此后每多一个维度就多迭代 10 倍次数
@@ -75,5 +75,5 @@ infix fun Matrix.jacobiMethod(threshold: Double): Set<Pair<Double, Vector>> {
 		eigenvectors *= rotate
 	}
 
-	return List(dim) { i -> middle[i, i] to eigenvectors.column(i) }.toSet()
+	return List(dim) { i -> middle[i, i] to eigenvectors.column(i) }.sortedBy { it.first }
 }
