@@ -177,7 +177,7 @@ class TestMatrixCalculate {
 			row(-1, 2, -1)
 			row(0, -1, 2)
 		}
-		(matrix jacobiMethod 1E-6)
+		matrix.jacobiLevelUp()!!
 			.also {
 				it.forEach { pair ->
 					val (l, v) = pair
@@ -185,7 +185,7 @@ class TestMatrixCalculate {
 				}
 			}
 			.map { it.first }
-			.sorted()
+			.reversed()
 			.zip(eigenvalue) { a, b -> abs(a - b) }
 			.all { it < 1E-6 }
 			.let(Assert::assertTrue)
@@ -204,15 +204,15 @@ class TestMatrixCalculate {
 		val begin = System.nanoTime()
 		val test = { t: Number ->
 			((System.nanoTime() - begin) * 1E-9)
-				.also { Assert.assertTrue(it < t.toDouble()) }
 				.also(::println)
+				.also { Assert.assertTrue(it < t.toDouble()) }
 		}
 
-		HilbertMatrix[500]
+		HilbertMatrix[40]
 			.also { test(0.2) }
 			.also { it.inverse() }
-			.also { test(10) }
-			.also { it.norm() }
-			.also { test(15) }
+			.also { test(2) }
+			.also { println(it.norm()) }
+			.also { test(30) }
 	}
 }
