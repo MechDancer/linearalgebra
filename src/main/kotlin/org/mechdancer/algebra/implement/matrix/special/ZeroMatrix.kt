@@ -37,10 +37,10 @@ private constructor(
 	override fun toString() = matrixView()
 
 	companion object {
-		val Order0 = ZeroMatrix(0, 0)
-		val Order1 = ZeroMatrix(1, 1)
-		val Order2 = ZeroMatrix(2, 2)
-		val Order3 = ZeroMatrix(3, 3)
+		private val Order0 = ZeroMatrix(0, 0)
+		private val Order1 = ZeroMatrix(1, 1)
+		private val Order2 = ZeroMatrix(2, 2)
+		private val Order3 = ZeroMatrix(3, 3)
 
 		operator fun get(dim: Int) =
 			when (dim) {

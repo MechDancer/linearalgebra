@@ -55,9 +55,9 @@ private constructor(
 	override fun toString() = matrixView()
 
 	companion object {
-		val UnitOrder1 = NumberMatrix(1, 1, 1.0)
-		val UnitOrder2 = NumberMatrix(2, 2, 1.0)
-		val UnitOrder3 = NumberMatrix(3, 3, 1.0)
+		private val UnitOrder1 = NumberMatrix(1, 1, 1.0)
+		private val UnitOrder2 = NumberMatrix(2, 2, 1.0)
+		private val UnitOrder3 = NumberMatrix(3, 3, 1.0)
 
 		operator fun get(dim: Int, value: Number) =
 			value.toDouble()
