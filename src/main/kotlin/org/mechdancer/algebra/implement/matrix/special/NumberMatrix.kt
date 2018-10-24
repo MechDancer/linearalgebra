@@ -45,7 +45,7 @@ private constructor(
 			(other as? NumberMatrix)?.value == value
 				||
 				other.filterIndexed { r, c, it ->
-					if (r == c) it != value else it != .0
+					it != if (r == c) value else .0
 				}.isEmpty()
 			)
 
