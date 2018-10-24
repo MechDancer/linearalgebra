@@ -38,21 +38,21 @@ fun Angle.toVectorOf(norm: Number) =
 /**
  * 求方向余弦
  */
-fun Vector.toCos() = toList().map { it / norm }
+fun Vector.toCos() = toList().map { it / length }
 
 /**
  * 求特定维度的方向余弦
  */
-fun Vector.toCos(index: Int) = get(index) / norm
+fun Vector.toCos(index: Int) = get(index) / length
 
 /**
  * 求方向角
  */
-fun Vector.toAngel() = toList().map { acos(it / norm).toRad() }
+fun Vector.toAngel() = toList().map { acos(it / length).toRad() }
 
 /**
  * 求特定维度的方向角
  */
-fun Vector.toAngle(index: Int) = acos(get(index) / norm).toRad()
+fun Vector.toAngle(index: Int) = acos(get(index) / length).toRad()
 
 

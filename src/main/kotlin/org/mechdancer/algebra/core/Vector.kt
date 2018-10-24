@@ -21,7 +21,7 @@ interface Vector {
 	 * Norm
 	 * 模长
 	 */
-	val norm: Double
+	val length: Double
 
 	/**
 	 * Transform to a [List] of [Double]

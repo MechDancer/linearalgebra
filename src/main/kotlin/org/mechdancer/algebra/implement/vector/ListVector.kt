@@ -12,7 +12,7 @@ import kotlin.math.sqrt
 class ListVector(val data: List<Double>) : Vector {
 	override val dim = data.size
 	override fun get(i: Int) = data[i]
-	override val norm by lazy { sqrt(data.sumByDouble { it * it }) }
+	override val length by lazy { sqrt(data.sumByDouble { it * it }) }
 	override fun toList() = data
 
 	override fun equals(other: Any?) =

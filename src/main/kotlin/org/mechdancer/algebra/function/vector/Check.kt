@@ -15,12 +15,12 @@ fun Vector.isNotZero() = toList().any { it != .0 }
 /**
  * 判断是否单位向量
  */
-fun Vector.isNormalized() = norm == 1.0
+fun Vector.isNormalized() = length == 1.0
 
 /**
  * 判断是否非单位向量
  */
-fun Vector.isNotNormalized() = norm != 1.0
+fun Vector.isNotNormalized() = length != 1.0
 
 /**
  * 判断是否二维向量
@@ -53,10 +53,10 @@ fun Vector.isNotOrthogonalTo(other: Vector) =
  * 判断两个向量是否平行
  */
 fun Vector.isParallelTo(other: Vector) =
-	this dot other / norm / other.norm == 1.0
+	this dot other / length / other.length == 1.0
 
 /**
  * 判断两个向量是否平行
  */
 fun Vector.isNotParallelTo(other: Vector) =
-	this dot other / norm / other.norm != 1.0
+	this dot other / length / other.length != 1.0

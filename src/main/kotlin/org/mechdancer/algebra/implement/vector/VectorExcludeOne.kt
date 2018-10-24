@@ -15,7 +15,7 @@ class VectorExcludeOne(
 	override fun get(i: Int) =
 		origin[if (i < exclude) i else i - 1]
 
-	override val norm
+	override val length
 		get() =
 			(0..dim)
 				.asSequence()

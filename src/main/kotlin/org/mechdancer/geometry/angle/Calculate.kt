@@ -24,7 +24,7 @@ infix fun Angle.rotate(angle: Angle) =
 	Angle(value + angle.value)
 
 infix fun Vector2D.rotate(angle: Angle) =
-	toAngle().rotate(angle).toVectorOf(norm)
+	toAngle().rotate(angle).toVectorOf(length)
 
 fun Vector2D.rotate(angle: Angle, centre: Vector2D) =
 	minus(centre).rotate(angle).plus(centre)
@@ -42,10 +42,10 @@ fun Angle.supplementary(): Angle {
 }
 
 fun Vector2D.complementary() =
-	toAngle().complementary().toVectorOf(norm)
+	toAngle().complementary().toVectorOf(length)
 
 fun Vector2D.supplementary() =
-	toAngle().supplementary().toVectorOf(norm)
+	toAngle().supplementary().toVectorOf(length)
 
 operator fun Angle.minus(other: Angle) =
 	Angle(value - other.value).adjust()

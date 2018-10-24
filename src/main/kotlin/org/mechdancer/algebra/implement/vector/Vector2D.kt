@@ -16,7 +16,7 @@ class Vector2D(val x: Double, val y: Double) : Vector {
 			else -> throw IllegalArgumentException()
 		}
 
-	override val norm by lazy { sqrt(x * x + y * y) }
+	override val length by lazy { sqrt(x * x + y * y) }
 
 	override fun toList() = listOf(x, y)
 

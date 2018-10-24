@@ -2,22 +2,21 @@ package org.mechdancer.algebra.function.vector
 
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.vector.DistanceType.*
-import kotlin.math.abs
 import kotlin.math.acos
 
 /** 计算两个向量之间的某种距离 */
 enum class DistanceType(val between: (Vector, Vector) -> Double) {
 	/** 用弧度表示的夹角 */
-	IncludedAngle({ one, other -> acos((one dot other) / one.norm / other.norm) }),
+	IncludedAngle({ one, other -> acos((one dot other) / one.length / other.length) }),
 
 	/** 欧式距离 */
-	Euclid({ one, other -> (one - other).norm }),
+	Euclid({ one, other -> (one - other).length }),
 
 	/** 曼哈顿距离 */
-	Manhattan({ one, other -> (one - other).toList().sum() }),
+	Manhattan({ one, other -> (one - other).norm(+1) }),
 
 	/** 切比雪夫距离 */
-	Chebyshev({ one, other -> (one - other).toList().map(::abs).max() ?: Double.NaN });
+	Chebyshev({ one, other -> (one - other).norm(-1) });
 
 	infix fun between(pair: Pair<Vector, Vector>) = between(pair.first, pair.second)
 }

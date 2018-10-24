@@ -4,13 +4,11 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.vector.dot
+import org.mechdancer.algebra.function.vector.norm
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.ListMatrix
-import org.mechdancer.algebra.implement.matrix.builder.I
-import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
-import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
-import org.mechdancer.algebra.implement.matrix.builder.toDiagonalListMatrix
+import org.mechdancer.algebra.implement.matrix.builder.*
 import org.mechdancer.algebra.implement.vector.toListVector
 
 //矩阵转换为List<Double>
@@ -77,6 +75,25 @@ fun Matrix.cofactorOf(r: Int, c: Int) = Cofactor(this, r, c)
 
 private fun Matrix.algebraCofactorOf(r: Int, c: Int): Double =
 	(if ((r + c) % 2 == 0) 1 else -1) * cofactorOf(r, c).determinantValue()
+
+/**
+ * 范数
+ * @param n 阶数
+ */
+fun Matrix.norm(n: Int = 2) =
+	when (n) {
+		-1   -> rows.map { it.norm(1) }.max()
+		1    -> columns.map { it.norm(1) }.max()
+		2    -> ((transpose() * this) jacobiMethod 1E-6).map { it.first }.max()
+		else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
+	} ?: Double.NaN
+
+/**
+ * 条件数
+ * @param n 阶数
+ */
+fun Matrix.cond(n: Int = 2) =
+	norm(n) * inverse().norm(n)
 
 /**
  * 求伴随矩阵
@@ -153,4 +170,11 @@ object R {
 object T {
 	@JvmStatic
 	operator fun invoke(matrix: Matrix) = matrix.trace()
+}
+
+fun main(args: Array<String>) {
+	matrix {
+		row(5, 7)
+		row(7, 10)
+	}.cond().let(::println)
 }

@@ -5,6 +5,7 @@ import org.mechdancer.algebra.implement.vector.ListVector
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.uniqueValue
+import kotlin.math.abs
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
 operator fun Vector.div(k: Number) = toList().map { it / k.toDouble() }.let(::ListVector)
@@ -40,7 +41,7 @@ operator fun Vector.unaryMinus() = toList().map { -it }.let(::ListVector)
 operator fun Vector2D.unaryMinus() = Vector2D(-x, -y)
 
 fun Vector.reversed() = -this
-fun Vector.normalize() = div(norm)
+fun Vector.normalize() = div(length)
 
 /**
  * 求向量表示的点集的“重心”
@@ -51,3 +52,14 @@ fun Collection<Vector>.centre() =
 		.let { fold(it) { sum, v -> sum + v } }
 		.div(size)
 
+/**
+ * 范数
+ * @param n 阶数
+ */
+fun Vector.norm(n: Int = 2) =
+	when (n) {
+		-1   -> toList().map(::abs).max()
+		1    -> toList().sumByDouble(::abs)
+		2    -> length
+		else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
+	} ?: .0
