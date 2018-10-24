@@ -17,7 +17,7 @@ class Cofactor(
 	override val column get() = origin.column - 1
 
 	override fun get(r: Int, c: Int) =
-		origin[if (r < pr) r else r - 1, if (c < pc) c else c - 1]
+		origin[if (r < pr) r else r + 1, if (c < pc) c else c + 1]
 
 	override val rows
 		get() = origin.rows.map { it.without(pr) }
