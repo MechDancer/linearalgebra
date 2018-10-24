@@ -48,9 +48,10 @@ fun Vector.normalize() = div(length)
  */
 fun Collection<Vector>.centre() =
 	uniqueValue(Vector::dim)
-		.let(::listVectorOfZero)
-		.let { fold(it) { sum, v -> sum + v } }
-		.div(size)
+		?.let(::listVectorOfZero)
+		?.let { fold(it) { sum, v -> sum + v } }
+		?.div(size)
+		?: throw UnsupportedOperationException("vector dimensions are different")
 
 /**
  * 范数
