@@ -45,12 +45,11 @@ fun rotationOnPlane(order: Int, theta: Double, i: Int, j: Int): Matrix {
 infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 	assert(isSymmetric())
 
-	val times = dim * dim * 8
 	// 初始化特征值和特征向量
 	var middle = this
 	var eigenvectors: Matrix = I[dim]
 
-	for (t in 1..times) {
+	while (true) {
 		// 最大非对角线元素的序号
 		val (i, j) = middle
 			.mapIndexed { r, c, v ->
@@ -71,7 +70,9 @@ infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 		eigenvectors *= rotate
 	}
 
-	return List(dim) { i -> middle[i, i] to eigenvectors.column(i) }.sortedByDescending { it.first }
+	return List(dim) { i ->
+		middle[i, i] to eigenvectors.column(i)
+	}.sortedByDescending { it.first }
 }
 
 /**
@@ -112,7 +113,6 @@ fun Matrix.jacobiLevelUp(
 			.let(::sqrt)
 			.div(dim)
 			.let { max(it, min) }
-			.also(::println)
 
 		// 计算循环
 		while (t++ < times) {

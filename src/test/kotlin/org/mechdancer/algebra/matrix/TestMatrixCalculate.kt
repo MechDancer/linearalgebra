@@ -171,13 +171,13 @@ class TestMatrixCalculate {
 	@Test
 	fun problem8() {
 		val sqrt2 = sqrt(2.0)
-		val eigenvalue = setOf(2 - sqrt2, 2.0, 2 + sqrt2)
+		val eigenvalue = setOf(2 - sqrt2, 2.0, 2 + sqrt2).also(::println)
 		val matrix = matrix {
 			row(2, -1, 0)
 			row(-1, 2, -1)
 			row(0, -1, 2)
 		}
-		matrix.jacobiLevelUp()!!
+		matrix.jacobiMethod(1E-14)
 			.also {
 				it.forEach { pair ->
 					val (l, v) = pair
@@ -187,7 +187,7 @@ class TestMatrixCalculate {
 			.map { it.first }
 			.reversed()
 			.zip(eigenvalue) { a, b -> abs(a - b) }
-			.all { it < 1E-6 }
+			.all { it.also(::println) < 1E-6 }
 			.let(Assert::assertTrue)
 	}
 
