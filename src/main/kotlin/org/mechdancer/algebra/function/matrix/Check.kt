@@ -3,7 +3,6 @@ package org.mechdancer.algebra.function.matrix
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.implement.matrix.builder.I
 
-val Matrix.dim get() = if (row == column) row else -1
 
 fun Matrix.isSquare() = row == column
 fun Matrix.isNotSquare() = row != column
@@ -27,6 +26,6 @@ fun Matrix.isSymmetric() =
 fun Matrix.isNotSymmetric() = !isSymmetric()
 
 fun Matrix.isOrthogonal() =
-	row == column && transpose() * this == I(dim)
+	row == column && transpose() * this == I[dim]
 
 fun Matrix.isNotOrthogonal() = !isOrthogonal()

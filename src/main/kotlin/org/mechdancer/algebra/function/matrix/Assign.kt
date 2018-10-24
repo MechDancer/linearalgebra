@@ -4,8 +4,8 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 
-//对矩阵各项操作
-private fun ValueMutableMatrix.forEach(block: (Double) -> Double) =
+//对矩阵各项原地操作
+private fun ValueMutableMatrix.forEachAssign(block: (Double) -> Double) =
 	(this as? ArrayMatrix)
 		?.data
 		?.let { it.forEachIndexed { i, value -> it[i] = block(value) } }
@@ -20,7 +20,7 @@ private fun ValueMutableMatrix.forEach(block: (Double) -> Double) =
  */
 operator fun ValueMutableMatrix.timesAssign(k: Number) {
 	val arg = k.toDouble()
-	forEach { it * arg }
+	forEachAssign { it * arg }
 }
 
 /**
@@ -28,11 +28,11 @@ operator fun ValueMutableMatrix.timesAssign(k: Number) {
  */
 operator fun ValueMutableMatrix.divAssign(k: Number) {
 	val arg = k.toDouble()
-	forEach { it / arg }
+	forEachAssign { it / arg }
 }
 
 //对两个矩阵对应项操作
-private fun ValueMutableMatrix.zip(
+private fun ValueMutableMatrix.zipAssign(
 	other: Matrix,
 	block: (Double, Double) -> Double
 ) {
@@ -46,13 +46,13 @@ private fun ValueMutableMatrix.zip(
  * 原地加上另一个矩阵
  */
 operator fun ValueMutableMatrix.plusAssign(other: Matrix) =
-	zip(other) { a, b -> a + b }
+	zipAssign(other) { a, b -> a + b }
 
 /**
  * 原地减去另一个矩阵
  */
 operator fun ValueMutableMatrix.minusAssign(other: Matrix) =
-	zip(other) { a, b -> a - b }
+	zipAssign(other) { a, b -> a - b }
 
 /**
  * 原地转置

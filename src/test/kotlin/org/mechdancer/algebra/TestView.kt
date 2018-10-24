@@ -22,7 +22,7 @@ class TestView {
 			row(2, 2, 2)
 		}
 
-		val c = I(5)
+		val c = I[5]
 
 		println(a)
 		println()

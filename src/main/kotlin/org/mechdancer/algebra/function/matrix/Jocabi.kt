@@ -52,7 +52,7 @@ infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 	val times = (1 until dim).fold(1) { r, _ -> r * 10 }
 	// 初始化特征值和特征向量
 	var middle = this
-	var eigenvectors: Matrix = I(dim)
+	var eigenvectors: Matrix = I[dim]
 
 	for (t in 1..times) {
 		// 最大非对角线元素的序号

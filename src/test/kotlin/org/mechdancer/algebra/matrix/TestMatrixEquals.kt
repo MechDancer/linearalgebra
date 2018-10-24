@@ -45,7 +45,7 @@ class TestMatrixEquals {
 
 		val b = arrayMatrixOfZero(2, 3)
 
-		val c = O(2, 3)
+		val c = O[2, 3]
 
 		Assert.assertEquals(a, b)
 		Assert.assertEquals(a, c)
@@ -61,7 +61,7 @@ class TestMatrixEquals {
 
 		val b = arrayMatrixOfUnit(3)
 
-		val c = I(3)
+		val c = I[3]
 
 		Assert.assertEquals(a, b)
 		Assert.assertEquals(a, c)
@@ -77,7 +77,7 @@ class TestMatrixEquals {
 
 		val b = .3 toArrayMatrix 3
 
-		val c = N(3, .3)
+		val c = N[3, .3]
 
 		Assert.assertEquals(a, b)
 		Assert.assertEquals(a, c)

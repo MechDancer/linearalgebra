@@ -42,7 +42,7 @@ private constructor(
 		val Order2 = ZeroMatrix(2, 2)
 		val Order3 = ZeroMatrix(3, 3)
 
-		operator fun invoke(dim: Int) =
+		operator fun get(dim: Int) =
 			when (dim) {
 				0    -> ZeroMatrix.Order0
 				1    -> ZeroMatrix.Order1
@@ -51,7 +51,7 @@ private constructor(
 				else -> ZeroMatrix(dim, dim)
 			}
 
-		operator fun invoke(m: Int, n: Int) =
-			if (m == n) invoke(m) else ZeroMatrix(m, n)
+		operator fun get(m: Int, n: Int) =
+			if (m == n) get(m) else ZeroMatrix(m, n)
 	}
 }

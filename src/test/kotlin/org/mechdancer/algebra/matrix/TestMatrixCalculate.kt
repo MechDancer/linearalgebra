@@ -2,10 +2,12 @@ package org.mechdancer.algebra.matrix
 
 import org.junit.Assert
 import org.junit.Test
+import org.mechdancer.algebra.DOUBLE_PRECISION
 import org.mechdancer.algebra.core.rowView
 import org.mechdancer.algebra.function.matrix.*
 import org.mechdancer.algebra.implement.matrix.builder.I
 import org.mechdancer.algebra.implement.matrix.builder.matrix
+import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -24,8 +26,8 @@ class TestMatrixCalculate {
 				row(0, 4, 0)
 				row(2, 0, 2)
 			}
-			val a = b * (b - 2 * I(3)).inverse()
-			(a - I(3)).inverse()
+			val a = b * (b - 2 * I[3]).inverse()
+			(a - I[3]).inverse()
 		}
 	}
 
@@ -41,7 +43,7 @@ class TestMatrixCalculate {
 				row(+1, -1)
 				row(+2, +3)
 			}
-			(a power 2) - 3 * a + 2 * I(2)
+			(a power 2) - 3 * a + 2 * I[2]
 		}
 	}
 
@@ -86,7 +88,7 @@ class TestMatrixCalculate {
 				row(+0, 2, 0)
 				row(-1, 0, 1)
 			}
-			(I(3) - (a power 2)) * (I(3) - a).inverse()
+			(I[3] - (a power 2)) * (I[3] - a).inverse()
 		}
 	}
 
@@ -114,9 +116,9 @@ class TestMatrixCalculate {
 			}
 
 			val ct = c.transpose()
-			val xt = (I(4) - c.inverse() * b).transpose()
+			val xt = (I[4] - c.inverse() * b).transpose()
 
-			I(4) * ct.inverse() * xt.inverse()
+			I[4] * ct.inverse() * xt.inverse()
 		}
 	}
 
@@ -187,5 +189,30 @@ class TestMatrixCalculate {
 			.zip(eigenvalue) { a, b -> abs(a - b) }
 			.all { it < 1E-6 }
 			.let(Assert::assertTrue)
+	}
+
+	@Test
+	fun testMatrixNorm() {
+		val a = HilbertMatrix[3, 5]
+		Assert.assertEquals(1.833333333333333, a.norm(1), DOUBLE_PRECISION)
+		Assert.assertEquals(1.480485000746432, a.norm(2), DOUBLE_PRECISION)
+		Assert.assertEquals(2.283333333333333, a.norm(-1), DOUBLE_PRECISION)
+	}
+
+	@Test
+	fun testEfficiency() {
+		val begin = System.nanoTime()
+		val a = HilbertMatrix[1000]
+		((System.nanoTime() - begin) * 1E-9)
+			.also { Assert.assertTrue(it < 0.5) }
+			.also(::println)
+		a.inverse()
+		((System.nanoTime() - begin) * 1E-9)
+			.also { Assert.assertTrue(it < 60) }
+			.also(::println)
+		a.norm()
+		((System.nanoTime() - begin) * 1E-9)
+			.also { Assert.assertTrue(it < 120) }
+			.also(::println)
 	}
 }

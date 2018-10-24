@@ -59,11 +59,11 @@ private constructor(
 		val UnitOrder2 = NumberMatrix(2, 2, 1.0)
 		val UnitOrder3 = NumberMatrix(3, 3, 1.0)
 
-		operator fun invoke(dim: Int, value: Number) =
+		operator fun get(dim: Int, value: Number) =
 			value.toDouble()
 				.let {
 					when (it) {
-						0.0  -> ZeroMatrix(dim)
+						0.0  -> ZeroMatrix[dim]
 						1.0  -> when (dim) {
 							1    -> UnitOrder1
 							2    -> UnitOrder2
@@ -74,10 +74,10 @@ private constructor(
 					}
 				}
 
-		operator fun invoke(m: Int, n: Int, value: Double) =
+		operator fun get(m: Int, n: Int, value: Double) =
 			when {
-				m == n      -> invoke(m, value)
-				value == .0 -> ZeroMatrix(m, n)
+				m == n      -> get(m, value)
+				value == .0 -> ZeroMatrix[m, n]
 				else        -> NumberMatrix(m, n, value)
 			}
 	}

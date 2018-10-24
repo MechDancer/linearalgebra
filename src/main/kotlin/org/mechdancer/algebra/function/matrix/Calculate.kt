@@ -3,61 +3,98 @@ package org.mechdancer.algebra.function.matrix
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.function.vector.dot
-import org.mechdancer.algebra.function.vector.norm
-import org.mechdancer.algebra.implement.matrix.ArrayMatrix
+import org.mechdancer.algebra.function.vector.*
 import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.*
+import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
+import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
+import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.implement.vector.toListVector
+import kotlin.math.sqrt
 
-//矩阵转换为List<Double>
-private fun Matrix.toList() =
-	(this as? ListMatrix)?.data
-		?: (this as? ArrayMatrix)?.data?.toList()
-		?: rows.flatMap { it.toList() }
+// scale multiply
 
-operator fun Number.times(m: Matrix): Matrix {
-	val temp = toDouble()
-	return ListMatrix(m.column, m.toList().map { it * temp })
-}
+private fun timesStub(m: Matrix, k: Double): Matrix =
+	when (m) {
+		is ZeroMatrix   -> m
+		is NumberMatrix -> N[m.row, m.column, m.value * k]
+		else            -> m.toList().map { it * k }.foldToRows(m.row)
+	}
 
-operator fun Matrix.times(k: Number) = k * this
-operator fun Matrix.div(k: Number) = (1 / k.toDouble()) * this
+operator fun Number.times(m: Matrix) = timesStub(m, this.toDouble())
+operator fun Matrix.times(k: Number) = timesStub(this, k.toDouble())
+operator fun Matrix.div(k: Number) = timesStub(this, k.toDouble())
+
+// calculate between same size matrix
 
 //逐项应用某种操作
-private fun Matrix.zip(other: Matrix, block: (Double, Double) -> Double): Matrix {
+private fun Matrix.zipAssign(
+	other: Matrix,
+	block: (Double, Double) -> Double
+): Matrix {
 	assertSameSize(this, other)
 	return ListMatrix(column, toList().zip(other.toList(), block))
 }
 
-operator fun Matrix.plus(other: Matrix) = zip(other) { a, b -> a + b }
-operator fun Matrix.minus(other: Matrix) = zip(other) { a, b -> a - b }
+operator fun Matrix.plus(other: Matrix) = zipAssign(other) { a, b -> a + b }
+operator fun Matrix.minus(other: Matrix) = zipAssign(other) { a, b -> a - b }
 
-operator fun Matrix.times(vector: Vector): Vector {
-	assertCanMultiply(this, vector)
-	return rows.map { it dot vector }.toListVector()
-}
+// times another linear algebra type
 
-operator fun Matrix.times(other: Matrix): Matrix {
-	assertCanMultiply(this, other)
-	val period = 0 until column
-	return listMatrixOf(row, other.column) { r, c ->
-		period.sumByDouble { i -> this[r, i] * other[i, c] }
+/**
+ * 矩阵右乘向量
+ */
+operator fun Matrix.times(right: Vector): Vector {
+	assertCanMultiply(this, right)
+	return when {
+		this is ZeroMatrix || right.isZero() ->
+			listVectorOfZero(row)
+		this is NumberMatrix                 ->
+			right.select(0 until row) * value
+		else                                 ->
+			rows.map { it dot right }.toListVector()
 	}
 }
 
-operator fun Matrix.div(other: Matrix) = other.inverseOrNull()?.let { it * this }
+/**
+ * 矩阵右乘矩阵
+ */
+operator fun Matrix.times(right: Matrix): Matrix {
+	assertCanMultiply(this, right)
+	return when {
+		this is ZeroMatrix || right is ZeroMatrix ->
+			ZeroMatrix[row, right.column]
+		this is NumberMatrix                      ->
+			timesStub(right, value)
+		right is NumberMatrix                     ->
+			timesStub(this, right.value)
+		else                                      -> {
+			val period = 0 until column
+			listMatrixOf(row, right.column) { r, c ->
+				period.sumByDouble { i -> this[r, i] * right[i, c] }
+			}
+		}
+	}
+}
+
+/**
+ * 矩阵右除矩阵
+ */
+operator fun Matrix.div(right: Matrix) = right.inverseOrNull()?.let { this * it }
 
 operator fun Matrix.invoke(right: Matrix) = times(right)
 operator fun Matrix.invoke(right: Vector) = times(right)
 operator fun Matrix.invoke(right: Number) = times(right)
 
+/**
+ * 矩阵乘方
+ */
 infix fun Matrix.power(n: Int): Matrix {
 	assertSquare()
 	assert(n >= 0)
 	return when (n) {
-		0    -> I(dim)
+		0    -> I[dim]
 		else -> {
 			var temp = this
 			for (i in 1 until n) temp *= this
@@ -84,7 +121,7 @@ fun Matrix.norm(n: Int = 2) =
 	when (n) {
 		-1   -> rows.map { it.norm(1) }.max()
 		1    -> columns.map { it.norm(1) }.max()
-		2    -> ((transpose() * this) jacobiMethod 1E-6).map { it.first }.max()
+		2    -> ((transpose() * this) jacobiMethod 1E-6).map { it.first }.max()?.let(::sqrt)
 		else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
 	} ?: Double.NaN
 
@@ -92,8 +129,10 @@ fun Matrix.norm(n: Int = 2) =
  * 条件数
  * @param n 阶数
  */
-fun Matrix.cond(n: Int = 2) =
-	norm(n) * inverse().norm(n)
+fun Matrix.cond(n: Int = 2): Double {
+	assertSquare()
+	return norm(n) * inverse().norm(n)
+}
 
 /**
  * 求伴随矩阵
@@ -170,11 +209,4 @@ object R {
 object T {
 	@JvmStatic
 	operator fun invoke(matrix: Matrix) = matrix.trace()
-}
-
-fun main(args: Array<String>) {
-	matrix {
-		row(5, 7)
-		row(7, 10)
-	}.cond().let(::println)
 }

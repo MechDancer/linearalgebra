@@ -1,7 +1,37 @@
 package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
+import org.mechdancer.algebra.implement.matrix.ArrayMatrix
+import org.mechdancer.algebra.implement.matrix.ListMatrix
+import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
+import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import kotlin.math.min
+
+/**
+ * Put all elements in the matrix in a list of double
+ * 获取矩阵内数据
+ */
+fun Matrix.toList(): List<Double> =
+	(this as? ListMatrix)?.data
+		?: (this as? ArrayMatrix)?.data?.toList()
+		?: rows.flatMap { it.toList() }
+
+/**
+ * Put all elements in the matrix in a set of double
+ * 获取矩阵内所有不同的数据
+ */
+fun Matrix.toSet(): Set<Double> =
+	(this as? ZeroMatrix)?.let { setOf(.0) }
+		?: (this as? NumberMatrix)?.let { setOf(value) }
+		?: (this as? ListMatrix)?.data?.toSet()
+		?: (this as? ArrayMatrix)?.data?.toSet()
+		?: rows.flatMap { it.toList() }.toSet()
+
+/**
+ * Get the dimension of this square, for non-square matrix the dim will be -1
+ * 获取方阵的维数，非方阵的维数定义为-1
+ */
+val Matrix.dim get() = if (row == column) row else -1
 
 /**
  * Get the first row of a matrix
@@ -31,7 +61,13 @@ val Matrix.lastColumn get() = column(column - 1)
  * Get the main diagonal of a matrix
  * 获取矩阵主对角线
  */
-val Matrix.diagonal get() = List(min(row, column)) { i -> get(i, i) }
+val Matrix.diagonal
+	get() =
+		List(min(row, column)) { i ->
+			(this as? ZeroMatrix)?.let { .0 }
+				?: (this as? NumberMatrix)?.let { value }
+				?: get(i, i)
+		}
 
 /**
  * Filter elements with index on rows and columns

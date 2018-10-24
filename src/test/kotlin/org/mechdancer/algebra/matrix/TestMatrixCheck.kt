@@ -10,7 +10,7 @@ import org.mechdancer.algebra.implement.matrix.builder.matrix
 class TestMatrixCheck {
 	@Test
 	fun testSquare() {
-		I(10).isSquare().let(Assert::assertTrue)
+		I[10].isSquare().let(Assert::assertTrue)
 		matrix {
 			row(1, 2, 3)
 			row(0, 4, 4)
@@ -19,7 +19,7 @@ class TestMatrixCheck {
 
 	@Test
 	fun testSymmetric() {
-		I(10).isSymmetric().let(Assert::assertTrue)
+		I[10].isSymmetric().let(Assert::assertTrue)
 		matrix {
 			row(1, 2, 3)
 			row(0, 4, 4)

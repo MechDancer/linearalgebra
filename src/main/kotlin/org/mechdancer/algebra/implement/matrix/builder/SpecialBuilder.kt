@@ -11,5 +11,5 @@ typealias I = UnitMatrix
 
 object UnitMatrix {
 	@JvmStatic
-	operator fun invoke(n: Int) = N(n, 1.0)
+	operator fun get(n: Int) = N[n, 1.0]
 }
