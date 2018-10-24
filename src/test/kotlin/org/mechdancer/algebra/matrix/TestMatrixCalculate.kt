@@ -202,17 +202,17 @@ class TestMatrixCalculate {
 	@Test
 	fun testEfficiency() {
 		val begin = System.nanoTime()
-		val a = HilbertMatrix[1000]
-		((System.nanoTime() - begin) * 1E-9)
-			.also { Assert.assertTrue(it < 0.5) }
-			.also(::println)
-		a.inverse()
-		((System.nanoTime() - begin) * 1E-9)
-			.also { Assert.assertTrue(it < 60) }
-			.also(::println)
-		a.norm()
-		((System.nanoTime() - begin) * 1E-9)
-			.also { Assert.assertTrue(it < 120) }
-			.also(::println)
+		val test = { t: Number ->
+			((System.nanoTime() - begin) * 1E-9)
+				.also { Assert.assertTrue(it < t.toDouble()) }
+				.also(::println)
+		}
+
+		HilbertMatrix[500]
+			.also { test(0.2) }
+			.also { it.inverse() }
+			.also { test(10) }
+			.also { it.norm() }
+			.also { test(15) }
 	}
 }

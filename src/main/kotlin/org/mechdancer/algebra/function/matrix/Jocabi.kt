@@ -75,5 +75,5 @@ infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 		eigenvectors *= rotate
 	}
 
-	return List(dim) { i -> middle[i, i] to eigenvectors.column(i) }.sortedBy { it.first }
+	return List(dim) { i -> middle[i, i] to eigenvectors.column(i) }.sortedByDescending { it.first }
 }
