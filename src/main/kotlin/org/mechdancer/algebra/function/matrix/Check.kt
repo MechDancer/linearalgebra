@@ -1,7 +1,7 @@
 package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
-import org.mechdancer.algebra.implement.matrix.builder.listMatrixOfUnit
+import org.mechdancer.algebra.implement.matrix.builder.I
 
 val Matrix.dim get() = if (row == column) row else -1
 
@@ -27,6 +27,6 @@ fun Matrix.isSymmetric() =
 fun Matrix.isNotSymmetric() = !isSymmetric()
 
 fun Matrix.isOrthogonal() =
-	row == column && transpose() * this == listMatrixOfUnit(dim)
+	row == column && transpose() * this == I(dim)
 
 fun Matrix.isNotOrthogonal() = !isOrthogonal()

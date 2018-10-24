@@ -59,7 +59,7 @@ class TestMatrixEquals {
 			row(0, 0, 1)
 		}
 
-		val b = listMatrixOfUnit(3)
+		val b = arrayMatrixOfUnit(3)
 
 		val c = I(3)
 
@@ -75,7 +75,7 @@ class TestMatrixEquals {
 			row(0, 0, .3)
 		}
 
-		val b = .3 toListMatrix 3
+		val b = .3 toArrayMatrix 3
 
 		val c = N(3, .3)
 

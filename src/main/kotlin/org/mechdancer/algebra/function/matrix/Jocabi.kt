@@ -2,8 +2,8 @@ package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.implement.matrix.builder.I
 import org.mechdancer.algebra.implement.matrix.builder.arrayMatrixOfUnit
-import org.mechdancer.algebra.implement.matrix.builder.listMatrixOfUnit
 import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.cos
@@ -52,7 +52,7 @@ infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 	val times = (1 until dim).fold(1) { r, _ -> r * 10 }
 	// 初始化特征值和特征向量
 	var middle = this
-	var eigenvectors: Matrix = listMatrixOfUnit(dim)
+	var eigenvectors: Matrix = I(dim)
 
 	for (t in 1..times) {
 		// 最大非对角线元素的序号

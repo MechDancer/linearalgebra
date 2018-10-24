@@ -67,32 +67,18 @@ fun DoubleArray.toDiagonalArrayMatrix() =
 
 // Zero Matrix
 
-fun listMatrixOfZero(row: Int, column: Int): ListMatrix =
-	listMatrixOf(row, column) { _, _ -> .0 }
-
 fun arrayMatrixOfZero(row: Int, column: Int): ArrayMatrix =
 	arrayMatrixOf(row, column) { _, _ -> .0 }
-
-fun listMatrixOfZero(dim: Int): ListMatrix =
-	listMatrixOf(dim, dim) { _, _ -> .0 }
 
 fun arrayMatrixOfZero(dim: Int): ArrayMatrix =
 	arrayMatrixOf(dim, dim) { _, _ -> .0 }
 
 // Unit Matrix
 
-fun listMatrixOfUnit(dim: Int): ListMatrix =
-	listMatrixOf(dim, dim) { r, c -> if (r == c) 1.0 else .0 }
-
 fun arrayMatrixOfUnit(dim: Int): ArrayMatrix =
 	arrayMatrixOf(dim, dim) { r, c -> if (r == c) 1.0 else .0 }
 
 // Number Matrix
-
-infix fun Number.toListMatrix(dim: Int): ListMatrix {
-	val value = toDouble()
-	return listMatrixOf(dim, dim) { r, c -> if (r == c) value else .0 }
-}
 
 infix fun Number.toArrayMatrix(dim: Int): ArrayMatrix {
 	val value = toDouble()
@@ -122,26 +108,3 @@ fun blockMatrix(
 	mode: BuilderMode = Immutable,
 	block: BlockMatrixBuilder.() -> Unit
 ) = BlockMatrixBuilder().apply(block).build(mode)
-
-// super shortcut
-
-object O {
-	@JvmStatic
-	operator fun invoke(m: Int) = listMatrixOfZero(m, m)
-
-	@JvmStatic
-	operator fun invoke(m: Int, n: Int) = listMatrixOfZero(m, n)
-}
-
-object I {
-	@JvmStatic
-	operator fun invoke(n: Int) = listMatrixOfUnit(n)
-}
-
-object N {
-	@JvmStatic
-	operator fun invoke(n: Int, x: Number) = x toListMatrix n
-
-	@JvmStatic
-	operator fun invoke(x: Number) = x toListMatrix 1
-}
