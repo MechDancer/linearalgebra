@@ -8,11 +8,13 @@ import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.*
 import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
-import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
 import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.implement.vector.toListVector
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // scale multiply
@@ -109,17 +111,17 @@ infix fun Matrix.power(n: Int): Matrix {
 operator fun Matrix.unaryPlus() = this
 operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })
 fun Matrix.transpose() =
-	when (this) {
-		is ZeroMatrix,
-		is NumberMatrix,
-		is DiagonalMatrix,
-		is HilbertMatrix -> this
-		else             -> listMatrixOf(column, row) { r, c -> this[c, r] }
-	}
+	if (isSymmetric())
+		(this as? ValueMutableMatrix)?.clone() ?: this
+	else listMatrixOf(column, row) { r, c -> this[c, r] }
 
 fun Matrix.rowEchelon() = toArrayMatrix().rowEchelonAssign()
 
 fun Matrix.cofactorOf(r: Int, c: Int) = Cofactor(this, r, c)
+
+// 选择计算范围
+private fun range(column: Int) =
+	max(1E-8, min(1E-4, 10.0.pow(column * 0.2 - 12)))
 
 /**
  * 范数
@@ -129,7 +131,11 @@ fun Matrix.norm(n: Int = 2) =
 	when (n) {
 		-1   -> rows.map { it.norm(1) }.max()
 		1    -> columns.map { it.norm(1) }.max()
-		2    -> (transpose() * this).jacobiLevelUp()?.firstOrNull()?.first?.let(::sqrt)
+		2    -> (transpose() * this)
+			.jacobiLevelUp(1E-3, range(column))
+			?.firstOrNull()
+			?.first
+			?.let(::sqrt)
 		else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
 	} ?: Double.NaN
 

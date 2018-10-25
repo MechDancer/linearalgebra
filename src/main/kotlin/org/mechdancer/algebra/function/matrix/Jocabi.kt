@@ -87,8 +87,9 @@ infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
 		val theta = .5 * atan(2 * middle[i, j] / (middle[i, i] - middle[j, j]))
 		// 构造旋转矩阵
 		val rotate = rotationOnPlane(dim, theta, i, j)
+		val rotateT = rotationOnPlane(dim, -theta, i, j)
 		// 迭代
-		middle = rotate.transpose() * middle * rotate
+		middle = rotateT * middle * rotate
 		eigenvectors *= rotate
 	}
 
@@ -117,7 +118,7 @@ fun Matrix.jacobiLevelUp(
 	}
 
 	// 每轮计算次数
-	val times = dim * dim
+	val times = dim * dim * 4
 
 	// 初始化特征值和特征向量
 	var middle = this
@@ -155,6 +156,7 @@ fun Matrix.jacobiLevelUp(
 			val rotateT = rotationOnPlane(dim, -theta, i, j)
 			// 迭代
 			eigenvectors *= rotate
+
 			middle = rotateT * middle * rotate
 		}
 
