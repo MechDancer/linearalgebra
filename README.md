@@ -30,6 +30,18 @@
 |       Matrix       | ListMatrix  |     data     |
 | ValueMutableMatrix | ArrayMatrix |     data     |
 
+现在，库为下列特殊矩阵提供了特化的实现：
+
+|   特殊矩阵   |       类名        |              备注               |
+| :----------: | :---------------: | :-----------------------------: |
+|    零矩阵    |    ZeroMatrix     |                                 |
+|   数值矩阵   |   NumberMatrix    | 单位矩阵是等价于 1.0 的数值矩阵 |
+|   对角矩阵   |  DiagonalMatrix   |              方阵               |
+| 希尔伯特矩阵 |   HilbertMatrix   |                                 |
+|  范德蒙矩阵  | VandermondeMatrix |                                 |
+
+特化实现**必然**占用较少的内存，并且在进行特定计算时可能有性能优势。
+
 ### 方程组
 
 目前方程组并无实现的必要，因此只是一些类型别名。
@@ -90,17 +102,12 @@ typealias AugmentedMatrix = Pair<Matrix, Vector> //增广矩阵是系数矩阵�
   array foldToCloumns  3 //数字数组折叠到 3 列的值可变矩阵
   ```
 
-* 使用函数构造零矩阵和单位矩阵：
+* 使用函数把值可变矩阵初始化为零矩阵、单位矩阵或数值矩阵：
 
   ```kotlin
-  listMatrixOfZero(n) // 构造 n 阶零矩阵
-  ```
-
-* 构造 n 阶数值矩阵：
-
-  ```kotlin
-  2.5 toListMatrix  2 // 等价于 2.5 的 2 阶不可变数值矩阵
-  2.5 toArrayMatrix 2 // 等价于 2.5 的 2 阶值可变数值矩阵
+  arrayMatrixOfZero(n) // 初始化 n 阶值可变矩阵为零矩阵
+  arrayMatrixOfUnit(n) // 初始化 n 阶值可变矩阵为单位矩阵
+  2.5 toArrayMatrix 5  // 初始化等价于 2.5 的 5 阶值可变数值矩阵
   ```
 
 * 从向量构造矩阵：

@@ -53,12 +53,6 @@ fun Iterable<Number>.toDiagonalArrayMatrix() = toList().let {
 	arrayMatrixOf(it.size, it.size) { r, c -> if (r == c) it[r] else .0 }
 }
 
-fun Array<Number>.toDiagonalListMatrix() =
-	listMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
-
-fun Array<Number>.toDiagonalArrayMatrix() =
-	arrayMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
-
 fun DoubleArray.toDiagonalListMatrix() =
 	listMatrixOf(size, size) { r, c -> if (r == c) get(r) else .0 }
 
