@@ -7,6 +7,8 @@ import org.mechdancer.algebra.function.vector.*
 import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.*
+import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
+import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
 import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
@@ -17,9 +19,10 @@ import kotlin.math.sqrt
 
 private fun timesStub(m: Matrix, k: Double): Matrix =
 	when (m) {
-		is ZeroMatrix   -> m
-		is NumberMatrix -> N[m.row, m.column, m.value * k]
-		else            -> m.toList().map { it * k }.foldToRows(m.row)
+		is ZeroMatrix     -> m
+		is NumberMatrix   -> NumberMatrix[m.row, m.column, m.value * k]
+		is DiagonalMatrix -> DiagonalMatrix[m.daigonal.map { it * k }]
+		else              -> m.toList().map { it * k }.foldToRows(m.row)
 	}
 
 operator fun Number.times(m: Matrix) = timesStub(m, this.toDouble())
@@ -105,13 +108,18 @@ infix fun Matrix.power(n: Int): Matrix {
 
 operator fun Matrix.unaryPlus() = this
 operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })
-fun Matrix.transpose() = listMatrixOf(column, row) { r, c -> this[c, r] }
+fun Matrix.transpose() =
+	when (this) {
+		is ZeroMatrix,
+		is NumberMatrix,
+		is DiagonalMatrix,
+		is HilbertMatrix -> this
+		else             -> listMatrixOf(column, row) { r, c -> this[c, r] }
+	}
+
 fun Matrix.rowEchelon() = toArrayMatrix().rowEchelonAssign()
 
 fun Matrix.cofactorOf(r: Int, c: Int) = Cofactor(this, r, c)
-
-private fun Matrix.algebraCofactorOf(r: Int, c: Int): Double =
-	(if ((r + c) % 2 == 0) 1 else -1) * cofactorOf(r, c).determinantValue()
 
 /**
  * 范数
@@ -121,7 +129,7 @@ fun Matrix.norm(n: Int = 2) =
 	when (n) {
 		-1   -> rows.map { it.norm(1) }.max()
 		1    -> columns.map { it.norm(1) }.max()
-		2    -> (transpose() * this).jacobiLevelUp(1E-3, 1E-12)?.firstOrNull()?.first?.let(::sqrt)
+		2    -> (transpose() * this).jacobiLevelUp()?.firstOrNull()?.first?.let(::sqrt)
 		else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
 	} ?: Double.NaN
 
@@ -144,21 +152,6 @@ fun Matrix.companion() = companionOrNull() ?: throw NotSquareException
  */
 fun Matrix.companionOrNull() =
 	takeIf { isSquare() }?.let { listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r) } }
-
-/**
- * 计算矩阵的行列式值
- * 不会访问矩阵的行列式缓存，因此可用于实现类内
- */
-fun Matrix.determinantValue() =
-	if (isNotSquare()) .0
-	else when (row) {
-		1    -> get(0, 0)
-		2    -> get(0, 0) * get(1, 1) - get(0, 1) * get(1, 0)
-		rank -> (0 until column).sumByDouble { c ->
-			get(0, c) * algebraCofactorOf(0, c)
-		}
-		else -> .0
-	}
 
 /**
  * 求不可变矩阵的逆矩阵

@@ -14,7 +14,11 @@ import kotlin.math.min
 fun Matrix.toList(): List<Double> =
 	(this as? ListMatrix)?.data
 		?: (this as? ArrayMatrix)?.data?.toList()
-		?: rows.flatMap { it.toList() }
+		?: mutableListOf<Double>().apply {
+			for (r in 0 until row)
+				for (c in 0 until column)
+					add(get(r, c))
+		}
 
 /**
  * Put all elements in the matrix in a set of double
@@ -25,7 +29,11 @@ fun Matrix.toSet(): Set<Double> =
 		?: (this as? NumberMatrix)?.let { setOf(value) }
 		?: (this as? ListMatrix)?.data?.toSet()
 		?: (this as? ArrayMatrix)?.data?.toSet()
-		?: rows.flatMap { it.toList() }.toSet()
+		?: mutableSetOf<Double>().apply {
+			for (r in 0 until row)
+				for (c in 0 until column)
+					add(get(r, c))
+		}
 
 /**
  * Get the dimension of this square, for non-square matrix the dim will be -1

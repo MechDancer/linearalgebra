@@ -5,7 +5,7 @@ import org.mechdancer.algebra.core.Vector
 
 // 断言两个矩阵同型
 internal fun assertSameSize(a: Matrix, b: Matrix) {
-	if (a.row != b.row || a.column != b.column)
+	if (!checkSameSize(a, b))
 		throw UnsupportedOperationException("operate two matrix of different size (${a.row}*${a.column} and ${b.row}*${b.column})")
 }
 

@@ -3,6 +3,8 @@ package org.mechdancer.algebra.implement.matrix
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.SubMatrix
 import org.mechdancer.algebra.core.matrixView
+import org.mechdancer.algebra.function.matrix.checkElementsEquals
+import org.mechdancer.algebra.function.matrix.checkSameSize
 import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.rankDestructive
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
@@ -35,14 +37,9 @@ class Cofactor(
 	override val det = determinantValue()
 
 	override fun equals(other: Any?) =
-		other is Matrix &&
-			row == other.row &&
-			column == other.column &&
-			(0 until row).all { r ->
-				(0 until column).all { c ->
-					other[r, c] == this[r, c]
-				}
-			}
+		other is Matrix
+			&& checkSameSize(this, other)
+			&& checkElementsEquals(this, other)
 
 	override fun hashCode() = Triple(origin, pr, pc).hashCode()
 	override fun toString() = matrixView("$row x $column Matrix")

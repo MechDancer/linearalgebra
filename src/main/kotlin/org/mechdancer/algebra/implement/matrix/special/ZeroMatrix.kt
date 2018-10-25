@@ -2,8 +2,9 @@ package org.mechdancer.algebra.implement.matrix.special
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
-import org.mechdancer.algebra.function.matrix.filterIndexed
+import org.mechdancer.algebra.function.matrix.toSet
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
+import org.mechdancer.algebra.uniqueValue
 
 class ZeroMatrix
 private constructor(
@@ -30,7 +31,7 @@ private constructor(
 		other is Matrix
 			&& row == other.row
 			&& column == other.column
-			&& (other is ZeroMatrix || other.filterIndexed { _, _, it -> it != .0 }.isEmpty())
+			&& (other is ZeroMatrix || other.toSet().uniqueValue() == .0)
 
 	override fun hashCode() = row shl 4 or column
 

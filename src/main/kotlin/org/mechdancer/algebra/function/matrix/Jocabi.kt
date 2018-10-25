@@ -2,8 +2,8 @@ package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.implement.matrix.builder.I
-import org.mechdancer.algebra.implement.matrix.builder.arrayMatrixOfUnit
 import kotlin.math.*
 
 /**
@@ -19,21 +19,43 @@ fun rotationOnPlane(order: Int, theta: Double, i: Int, j: Int): Matrix {
 	assert(i in 0 until order)
 	assert(j in 0 until order)
 
-	val result = arrayMatrixOfUnit(order)
-	val cos = cos(theta)
-	val sin = sin(theta)
+	return object : Matrix {
 
-	result[i, i] = cos
-	result[j, j] = cos
+		val cos = cos(theta)
+		val sin = sin(theta)
 
-	if (i < j) { //右上取-sin,左下取+sin
-		result[i, j] = -sin
-		result[j, i] = +sin
-	} else {
-		result[j, i] = -sin
-		result[i, j] = +sin
+		val x = min(i, j)
+		val y = max(i, j)
+
+		override val row get() = order
+		override val column get() = order
+		override fun get(r: Int, c: Int) =
+			if (r == c) {
+				if (r == x || r == y) cos else 1.0
+			} else when {
+				r == x && c == y -> -sin
+				r == y && c == x -> +sin
+				else             -> .0
+			}
+
+		override fun row(r: Int) = getRow(r)
+		override fun column(c: Int) = getColumn(c)
+		override val rows get() = getRows()
+		override val columns get() = getColumns()
+
+		override val rank get() = order
+		override val det get() = 1.0
+
+		override fun equals(other: Any?) =
+			other is Matrix
+				&& checkSameSize(this, other)
+				&& checkElementsEquals(this, other)
+
+		override fun hashCode() =
+			(order shl 12) or (i shl 8) or (j shl 4) or theta.hashCode()
+
+		override fun toString() = matrixView()
 	}
-	return result
 }
 
 /**
@@ -84,7 +106,7 @@ infix fun Matrix.jacobiMethod(threshold: Double): List<Pair<Double, Vector>> {
  */
 fun Matrix.jacobiLevelUp(
 	max: Double = 1E-3,
-	min: Double = 1E-14
+	min: Double = 1E-8
 ): List<Pair<Double, Vector>>? {
 	assert(isSymmetric())
 	assert(min < max)
@@ -95,7 +117,7 @@ fun Matrix.jacobiLevelUp(
 	}
 
 	// 每轮计算次数
-	val times = dim * dim * 4
+	val times = dim * dim
 
 	// 初始化特征值和特征向量
 	var middle = this
@@ -108,7 +130,9 @@ fun Matrix.jacobiLevelUp(
 
 		// 设计关卡阈值
 		val threshold = middle
-			.mapIndexed { r, c, v -> if (r != c) v * v else .0 }
+			.mapIndexed { r, c, v ->
+				if (r != c && abs(v) > min) v * v else .0
+			}
 			.sum()
 			.let(::sqrt)
 			.div(dim)
@@ -128,10 +152,10 @@ fun Matrix.jacobiLevelUp(
 			val theta = .5 * atan(2 * middle[i, j] / (middle[i, i] - middle[j, j]))
 			// 构造旋转矩阵
 			val rotate = rotationOnPlane(dim, theta, i, j)
+			val rotateT = rotationOnPlane(dim, -theta, i, j)
 			// 迭代
-			middle = rotate.transpose() * middle * rotate
 			eigenvectors *= rotate
-
+			middle = rotateT * middle * rotate
 		}
 
 		// 超时或满足要求退出

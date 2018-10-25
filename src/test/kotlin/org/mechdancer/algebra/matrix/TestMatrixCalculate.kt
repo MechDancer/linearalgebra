@@ -209,9 +209,11 @@ class TestMatrixCalculate {
 		}
 
 		HilbertMatrix[40]
-			.also { test(0.2) }
+			.also { test(.1) }
 			.also { it.inverse() }
-			.also { test(2) }
+			.also { test(.3) }
+			.also { it.transpose() * it }
+			.also { test(.5) }
 			.also { println(it.norm()) }
 			.also { test(30) }
 	}

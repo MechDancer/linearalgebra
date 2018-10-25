@@ -2,6 +2,7 @@ package org.mechdancer.algebra.implement.matrix.special
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
+import org.mechdancer.algebra.function.matrix.checkSameSize
 import org.mechdancer.algebra.function.matrix.filterIndexed
 import org.mechdancer.algebra.implement.vector.toListVector
 import kotlin.math.pow
@@ -39,8 +40,7 @@ private constructor(
 
 	override fun equals(other: Any?) =
 		other is Matrix
-			&& row == other.row
-			&& column == other.column
+			&& checkSameSize(this, other)
 			&& (
 			(other as? NumberMatrix)?.value == value
 				||
@@ -59,6 +59,7 @@ private constructor(
 		private val UnitOrder2 = NumberMatrix(2, 2, 1.0)
 		private val UnitOrder3 = NumberMatrix(3, 3, 1.0)
 
+		@JvmStatic
 		operator fun get(dim: Int, value: Number) =
 			value.toDouble()
 				.let {
@@ -74,11 +75,12 @@ private constructor(
 					}
 				}
 
-		operator fun get(m: Int, n: Int, value: Double) =
+		@JvmStatic
+		operator fun get(m: Int, n: Int, value: Number) =
 			when {
 				m == n      -> get(m, value)
 				value == .0 -> ZeroMatrix[m, n]
-				else        -> NumberMatrix(m, n, value)
+				else        -> NumberMatrix(m, n, value.toDouble())
 			}
 	}
 }
