@@ -1,14 +1,14 @@
 package org.mechdancer.algebra.implement.matrix
 
-import org.mechdancer.algebra.alwaysTrue
+import org.mechdancer.algebra.contentEquals
 import org.mechdancer.algebra.core.Determinant
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
-import org.mechdancer.algebra.doubleEquals
 import org.mechdancer.algebra.function.matrix.checkElementsEquals
 import org.mechdancer.algebra.function.matrix.checkSameSize
 import org.mechdancer.algebra.function.matrix.determinantValue
 import org.mechdancer.algebra.function.matrix.rankDestructive
+import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.vector.toListVector
 
 /**
@@ -106,15 +106,16 @@ class ArrayMatrix(override val column: Int, val data: DoubleArray)
 	}
 
 	override fun equals(other: Any?) =
-		other is Matrix
+		this === other
+			|| (other is Matrix
 			&& checkSameSize(this, other)
 			&& when (other) {
-			is ListMatrix  -> data.zip(other.data, ::doubleEquals).alwaysTrue()
-			is ArrayMatrix -> data.zip(other.data, ::doubleEquals).alwaysTrue()
+			is ListMatrix  -> data contentEquals other.data
+			is ArrayMatrix -> data contentEquals other.data
 			else           -> checkElementsEquals(this, other)
-		}
+		})
 
-	override fun hashCode() = (column shl 4) or data.hashCode()
+	override fun hashCode() = hash(column, data)
 	override fun toString() = matrixView("$row x $column Matrix")
 	override fun clone() = ArrayMatrix(column, data)
 }

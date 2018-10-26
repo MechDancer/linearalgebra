@@ -4,6 +4,7 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.checkElementsEquals
 import org.mechdancer.algebra.function.matrix.checkSameSize
+import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.vector.toListVector
 import kotlin.math.min
 import kotlin.math.pow
@@ -41,13 +42,12 @@ private constructor(
 		} else elements.firstOrNull() ?: .0
 
 	override fun equals(other: Any?) =
-		other is Matrix
+		this === other
+			|| (other is Matrix
 			&& checkSameSize(this, other)
-			&& checkElementsEquals(this, other)
+			&& checkElementsEquals(this, other))
 
-	override fun hashCode() =
-		(row shl 8) or (column shl 4) or elements.hashCode()
-
+	override fun hashCode() = hash(row, column, elements)
 	override fun toString() = matrixView("$row x $column Vandermonde matrix")
 
 	companion object {

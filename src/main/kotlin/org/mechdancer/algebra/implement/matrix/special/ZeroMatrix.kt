@@ -3,6 +3,7 @@ package org.mechdancer.algebra.implement.matrix.special
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.toSet
+import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.uniqueValue
 
@@ -33,7 +34,7 @@ private constructor(
 			&& column == other.column
 			&& (other is ZeroMatrix || other.toSet().uniqueValue() == .0)
 
-	override fun hashCode() = row shl 4 or column
+	override fun hashCode() = hash(row, column)
 
 	override fun toString() = matrixView()
 

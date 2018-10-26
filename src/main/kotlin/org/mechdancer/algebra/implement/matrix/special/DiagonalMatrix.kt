@@ -34,18 +34,18 @@ class DiagonalMatrix(
 	}
 
 	override fun equals(other: Any?) =
-		other is Matrix
+		this === other
+			|| (other is Matrix
 			&& checkSameSize(this, other)
-			&& (
-			(other as? DiagonalMatrix)
-				?.diagonal
-				?.zip(other.diagonal, ::doubleEquals)
-				?.all { it } == true
-				||
-				other.filterIndexed { r, c, it ->
-					it != if (r == c) diagonal[r] else .0
-				}.isEmpty()
-			)
+			&& ((other as? DiagonalMatrix)
+			?.diagonal
+			?.zip(other.diagonal, ::doubleEquals)
+			?.all { it } == true
+			||
+			other.filterIndexed { r, c, it ->
+				it != if (r == c) diagonal[r] else .0
+			}.isEmpty()
+			))
 
 	override fun hashCode() = diagonal.hashCode()
 

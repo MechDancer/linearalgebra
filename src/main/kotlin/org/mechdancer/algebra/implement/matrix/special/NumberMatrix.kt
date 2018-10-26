@@ -4,6 +4,7 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.checkSameSize
 import org.mechdancer.algebra.function.matrix.filterIndexed
+import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.vector.toListVector
 import kotlin.math.pow
 
@@ -39,18 +40,14 @@ private constructor(
 	override val det = if (meaningful) value.pow(row) else .0
 
 	override fun equals(other: Any?) =
-		other is Matrix
+		this === other
+			|| (other is Matrix
 			&& checkSameSize(this, other)
-			&& (
-			(other as? NumberMatrix)?.value == value
-				||
-				other.filterIndexed { r, c, it ->
-					it != if (r == c) value else .0
-				}.isEmpty()
-			)
+			&& ((other as? NumberMatrix)?.value == value
+			|| other.filterIndexed { r, c, it -> it != if (r == c) value else .0 }.isEmpty()
+			))
 
-	override fun hashCode() =
-		row shl 8 or (column shl 4) or value.hashCode()
+	override fun hashCode() = hash(row, column, value)
 
 	override fun toString() = matrixView()
 

@@ -1,8 +1,8 @@
 package org.mechdancer.algebra.implement.vector
 
+import org.mechdancer.algebra.contentEquals
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.core.columnView
-import org.mechdancer.algebra.doubleEquals
 import kotlin.math.sqrt
 
 /**
@@ -16,7 +16,10 @@ class ListVector(val data: List<Double>) : Vector {
 	override fun toList() = data
 
 	override fun equals(other: Any?) =
-		other is Vector && data.zip(other.toList(), ::doubleEquals).all { it }
+		this === other
+			|| (other is Vector
+			&& other.dim == dim
+			&& data contentEquals other.toList())
 
 	override fun hashCode() = data.hashCode()
 	override fun toString() = columnView()

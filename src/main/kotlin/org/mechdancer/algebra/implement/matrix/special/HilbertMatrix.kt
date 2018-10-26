@@ -3,6 +3,7 @@ package org.mechdancer.algebra.implement.matrix.special
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.*
+import org.mechdancer.algebra.hash
 import kotlin.math.min
 
 /**
@@ -25,12 +26,13 @@ private constructor(
 	override val det by lazy { determinantValue() }
 
 	override fun equals(other: Any?) =
-		other is Matrix
+		this === other
+			|| (other is Matrix
 			&& checkSameSize(this, other)
-			&& (other is HilbertMatrix || checkElementsEquals(this, other))
+			&& (other is HilbertMatrix
+			|| checkElementsEquals(this, other)))
 
-	override fun hashCode() =
-		(row shl 8) or (column shl 4) or javaClass.name.hashCode()
+	override fun hashCode() = hash(row, column)
 
 	override fun toString() = matrixView("$row x $column Hilbert matrix")
 

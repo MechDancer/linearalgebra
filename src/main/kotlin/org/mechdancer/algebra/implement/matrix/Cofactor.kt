@@ -37,9 +37,10 @@ class Cofactor(
 	override val det = determinantValue()
 
 	override fun equals(other: Any?) =
-		other is Matrix
+		this === other
+			|| (other is Matrix
 			&& checkSameSize(this, other)
-			&& checkElementsEquals(this, other)
+			&& checkElementsEquals(this, other))
 
 	override fun hashCode() = Triple(origin, pr, pc).hashCode()
 	override fun toString() = matrixView("$row x $column Matrix")
