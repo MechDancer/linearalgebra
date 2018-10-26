@@ -63,20 +63,7 @@ fun <T> Iterable<T>.uniqueValue(): T? =
 infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? =
 	map(block).uniqueValue()
 
-data class X(val x: DoubleArray) {
-	override fun equals(other: Any?): Boolean {
-		if (this === other) return true
-		if (javaClass != other?.javaClass) return false
-
-		other as X
-
-		if (!x.contentEquals(other.x)) return false
-
-		return true
-	}
-
-	override fun hashCode(): Int {
-		return x.contentHashCode()
-	}
-
-}
+internal fun timer(block: () -> Any?): Long =
+	System.nanoTime()
+		.also { block() }
+		.let { System.nanoTime() - it }

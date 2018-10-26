@@ -12,13 +12,10 @@ import kotlin.math.min
  * 获取矩阵内数据
  */
 fun Matrix.toList(): List<Double> =
-	(this as? ListMatrix)?.data
+	(this as? ZeroMatrix)?.let { List(row * column) { .0 } }
+		?: (this as? ListMatrix)?.data
 		?: (this as? ArrayMatrix)?.data?.toList()
-		?: mutableListOf<Double>().apply {
-			for (r in 0 until row)
-				for (c in 0 until column)
-					add(get(r, c))
-		}
+		?: List(row * column) { get(it / column, it % column) }
 
 /**
  * Put all elements in the matrix in a set of double
@@ -36,8 +33,8 @@ fun Matrix.toSet(): Set<Double> =
 		}
 
 /**
- * Get the dimension of this square, for non-square matrix the dim will be -1
- * 获取方阵的维数，非方阵的维数定义为-1
+ * Get the dimension of this square, for non-square matrix it will be -1
+ * 获取方阵的维数，非方阵的维数定义为 -1
  */
 val Matrix.dim get() = if (row == column) row else -1
 
@@ -70,12 +67,13 @@ val Matrix.lastColumn get() = column(column - 1)
  * 获取矩阵主对角线
  */
 val Matrix.diagonal
-	get() =
-		List(min(row, column)) { i ->
-			(this as? ZeroMatrix)?.let { .0 }
-				?: (this as? NumberMatrix)?.let { value }
-				?: get(i, i)
+	get() = List(min(row, column)) { i ->
+		when (this) {
+			is ZeroMatrix   -> .0
+			is NumberMatrix -> value
+			else            -> get(i, i)
 		}
+	}
 
 /**
  * Filter elements with index on rows and columns

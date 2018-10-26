@@ -10,7 +10,7 @@ import org.mechdancer.algebra.uniqueValue
  * 对角阵
  */
 class DiagonalMatrix(
-	val daigonal: List<Double>
+	val diagonal: List<Double>
 ) : Matrix {
 	val dim = diagonal.size
 
@@ -25,7 +25,7 @@ class DiagonalMatrix(
 	override val rows get() = getRows()
 	override val columns get() = getColumns()
 
-	override val rank by lazy { daigonal.filter { it != .0 }.size }
+	override val rank by lazy { diagonal.filter { it != .0 }.size }
 
 	override val det by lazy {
 		if (rank == diagonal.size)

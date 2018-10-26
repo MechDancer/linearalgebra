@@ -3,7 +3,11 @@ package org.mechdancer.algebra.core
 /**
  * Determinant
  * 行列式
- * 利用行列式初等变换的性质优化可变类的行列式计算性能
+ *
+ * Using the properties of determinant elementary transformation
+ *     to improve the performance of determinant computation
+ *     in value mutable matrix
+ * 利用行列式初等变换的性质优化值可变矩阵的行列式值计算性能
  */
 abstract class Determinant : ValueMutableMatrix {
 	@Volatile

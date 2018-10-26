@@ -23,7 +23,7 @@ private fun timesStub(m: Matrix, k: Double): Matrix =
 	when (m) {
 		is ZeroMatrix     -> m
 		is NumberMatrix   -> NumberMatrix[m.row, m.column, m.value * k]
-		is DiagonalMatrix -> DiagonalMatrix[m.daigonal.map { it * k }]
+		is DiagonalMatrix -> DiagonalMatrix[m.diagonal.map { it * k }]
 		else              -> m.toList().map { it * k }.foldToRows(m.row)
 	}
 
