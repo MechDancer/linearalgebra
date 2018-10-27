@@ -1,7 +1,50 @@
 # Kotlin 线性代数库
+[ ![Download](https://api.bintray.com/packages/mechdancer/maven/linearalgebra/images/download.svg) ](https://bintray.com/mechdancer/maven/linearalgebra/_latestVersion)
 [![Build Status](https://www.travis-ci.org/MechDancer/linearalgebra.svg?branch=master)](https://www.travis-ci.org/MechDancer/linearalgebra)
 
 支持线性代数各类常用判定和计算，以及线性空间内的一些解析几何计算问题。
+
+## 开始使用
+
+* Gradle
+* Maven
+* Bintray
+
+您需要将其添加至  [仓库和依赖](https://docs.gradle.org/current/userguide/declaring_dependencies.html) 中。
+
+### Gradle
+
+```groovy
+repositories {
+    jcenter()
+}
+dependencies {
+    compile 'org.mechdancer:linearalgebra:0.2.4-rc-3'
+}
+```
+
+### Maven
+
+```xml
+<repositories>
+   <repository>
+     <id>jcenter</id>
+     <name>JCenter</name>
+     <url>https://jcenter.bintray.com/</url>
+   </repository>
+</repositories>
+
+<dependency>
+  <groupId>org.mechdancer</groupId>
+  <artifactId>linearalgebra</artifactId>
+  <version>0.2.4-rc-3</version>
+  <type>pom</type>
+</dependency>
+```
+
+### Bintray
+
+您总可以从 bintray 直接下载 jar：[ ![Download](https://api.bintray.com/packages/mechdancer/maven/linearalgebra/images/download.svg) ](https://bintray.com/mechdancer/maven/linearalgebra/_latestVersion)
 
 ## 算法支持概览
 
