@@ -58,12 +58,3 @@ fun <T> Iterable<T>.uniqueValue(): T? = toSet().singleOrNull()
  * 总结一个可迭代集中所有元素的某项特征
  */
 infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
-
-/**
- * 计时
- * 用于性能测试
- */
-internal fun timer(block: () -> Any?): Long =
-	System.nanoTime()
-		.also { block() }
-		.let { System.nanoTime() - it }

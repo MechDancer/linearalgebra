@@ -20,8 +20,8 @@ abstract class Determinant : ValueMutableMatrix {
 
 	/**
 	 * Changing values directly will invalid the determinant value
-	 * Then the value must be calculated again
-	 * Invoke this method to mark the value invalid
+	 *     Then the value must be calculated again
+	 *     Invoke this method to mark the value invalid
 	 * 直接赋值操作将导致秩和行列式值无效化，需要重新计算
 	 * 进行此类操作需调用此方法进行标记
 	 */
@@ -47,7 +47,7 @@ abstract class Determinant : ValueMutableMatrix {
 	}
 
 	override fun exchangeRow(r0: Int, r1: Int) {
-		if (detAvailable) det *= -1
+		if (detAvailable) det = -det
 	}
 
 	override fun timesColumn(c: Int, k: Double) {
@@ -55,7 +55,7 @@ abstract class Determinant : ValueMutableMatrix {
 	}
 
 	override fun exchangeColumn(c0: Int, c1: Int) {
-		if (detAvailable) det *= -1
+		if (detAvailable) det = -det
 	}
 
 	final override var rank = 0

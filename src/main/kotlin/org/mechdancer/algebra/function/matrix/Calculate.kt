@@ -23,7 +23,7 @@ private fun timesStub(m: Matrix, k: Double): Matrix =
 	when (m) {
 		is ZeroMatrix     -> m
 		is NumberMatrix   -> NumberMatrix[m.row, m.column, m.value * k]
-		is DiagonalMatrix -> DiagonalMatrix[m.diagonal.map { it * k }]
+		is DiagonalMatrix -> DiagonalMatrix(m.diagonal.map { it * k })
 		else              -> m.toList().map { it * k }.foldToRows(m.row)
 	}
 
@@ -74,6 +74,14 @@ operator fun Matrix.times(right: Matrix): Matrix {
 			timesStub(right, value)
 		right is NumberMatrix                     ->
 			timesStub(this, right.value)
+		this is DiagonalMatrix                    -> {
+			if (right is DiagonalMatrix)
+				DiagonalMatrix(diagonal.zip(right.diagonal) { a, b -> a * b })
+			else
+				listMatrixOf(row, right.column) { r, c -> diagonal[r] * right[r, c] }
+		}
+		right is DiagonalMatrix                   ->
+			listMatrixOf(row, right.column) { r, c -> right.diagonal[c] * get(r, c) }
 		else                                      -> {
 			val period = 0 until column
 			listMatrixOf(row, right.column) { r, c ->

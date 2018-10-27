@@ -52,7 +52,7 @@ class DiagonalMatrix(
 	override fun toString() = matrixView("${diagonal.size}d diagonal matrix")
 
 	companion object {
-		operator fun get(elements: Iterable<Number>) =
+		operator fun get(vararg elements: Number) =
 			elements
 				.map(Number::toDouble)
 				.let { diagonal ->

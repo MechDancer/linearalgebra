@@ -10,6 +10,7 @@ import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.system.measureTimeMillis
 
 class TestMatrixCalculate {
 	@Test
@@ -201,20 +202,16 @@ class TestMatrixCalculate {
 
 	@Test
 	fun testEfficiency() {
-		val begin = System.nanoTime()
-		val test = { t: Number ->
-			((System.nanoTime() - begin) * 1E-9)
+		fun test(seconds: Number, block: () -> Unit) {
+			measureTimeMillis(block)
+				.div(1000.0)
 				.also(::println)
-				.also { Assert.assertTrue(it < t.toDouble()) }
+				.also { Assert.assertTrue(it < seconds.toDouble()) }
 		}
 
-		HilbertMatrix[40]
-			.also { test(.1) }
-			.also { it.inverse() }
-			.also { test(.3) }
-			.also { it.transpose() * it }
-			.also { test(.5) }
-			.also { println(it.norm()) }
-			.also { test(30) }
+		HilbertMatrix[45]
+			.also { test(.1) { it.inverse() } }
+			.also { test(.1) { it.transpose() * it } }
+			.also { test(30) { println(it.norm()) } }
 	}
 }
