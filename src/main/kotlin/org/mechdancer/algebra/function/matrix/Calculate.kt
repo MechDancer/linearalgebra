@@ -34,7 +34,7 @@ operator fun Matrix.div(k: Number) = timesStub(this, k.toDouble())
 // calculate between same size matrix
 
 //逐项应用某种操作
-private fun Matrix.zipAssign(
+private inline fun Matrix.zipAssign(
 	other: Matrix,
 	block: (Double, Double) -> Double
 ): Matrix {

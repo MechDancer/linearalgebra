@@ -6,7 +6,7 @@ import org.mechdancer.algebra.function.equation.isAvailable
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
 import org.mechdancer.algebra.implement.vector.toListVector
 
-private fun <T, T1, U, U1> Iterable<Pair<T, U>>.splitCollect(
+private inline fun <T, T1, U, U1> Iterable<Pair<T, U>>.splitCollect(
 	block1: (List<T>) -> T1,
 	block2: (List<U>) -> U1) =
 	block1(map { it.first }) to block2(map { it.second })
@@ -27,5 +27,5 @@ fun EquationSet.toMatrixForm(): AugmentedMatrix {
 /**
  * 用 Dsl 方式构造方程组
  */
-fun equations(block: EquationSetBuilder.() -> Unit): EquationSet =
+inline fun equations(block: EquationSetBuilder.() -> Unit): EquationSet =
 	EquationSetBuilder().apply(block).equationSet

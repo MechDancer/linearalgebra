@@ -16,12 +16,12 @@ operator fun Vector2D.div(k: Number) = k.toDouble().let { Vector2D(x / it, y / i
 private fun differentDimException(a: Vector, b: Vector) =
 	IllegalArgumentException("operate two vector of different dim (${a.dim} and ${b.dim})")
 
-private fun Vector.zip(other: Vector, block: (Double, Double) -> Double) =
+private inline fun Vector.zip(other: Vector, block: (Double, Double) -> Double) =
 	takeIf { dim == other.dim }
 		?.let { toList().zip(other.toList(), block) }
 		?: throw differentDimException(this, other)
 
-private fun Vector.zipToNew(other: Vector, block: (Double, Double) -> Double) =
+private inline fun Vector.zipToNew(other: Vector, block: (Double, Double) -> Double) =
 	zip(other, block).let(::ListVector)
 
 operator fun Vector.plus(other: Vector) = zipToNew(other) { a, b -> a + b }

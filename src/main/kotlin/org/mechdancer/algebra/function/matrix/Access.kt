@@ -80,7 +80,7 @@ val Matrix.diagonal get() = List(min(row, column)) { get(it, it) }
  * Filter elements with index on rows and columns
  * 带二维序号过滤
  */
-fun Matrix.filterIndexed(block: (Int, Int, Double) -> Boolean) =
+inline fun Matrix.filterIndexed(block: (Int, Int, Double) -> Boolean) =
 	(0 until row).flatMap { r ->
 		(0 until column).map { c ->
 			get(r, c).takeIf { block(r, c, it) }?.let { r to c to it }
@@ -91,7 +91,7 @@ fun Matrix.filterIndexed(block: (Int, Int, Double) -> Boolean) =
  * Map elements with index on rows and columns
  * 带二维序号展开
  */
-fun <T> Matrix.mapIndexed(block: (Int, Int, Double) -> T) =
+inline fun <T> Matrix.mapIndexed(block: (Int, Int, Double) -> T) =
 	(0 until row).flatMap { r ->
 		(0 until column).map { c ->
 			block(r, c, get(r, c))

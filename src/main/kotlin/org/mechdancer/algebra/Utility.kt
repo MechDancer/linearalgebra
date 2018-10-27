@@ -47,7 +47,7 @@ fun <T> Iterable<T>.isUnique() = toSet().size == 1
 /**
  * 判断一个可迭代集中所有元素存在某种相等关系
  */
-infix fun <T, U> Iterable<T>.uniqueOn(block: (T) -> U) = map(block).isUnique()
+inline infix fun <T, U> Iterable<T>.uniqueOn(block: (T) -> U) = map(block).isUnique()
 
 /**
  * 总结一个可迭代集中所有元素的特征
@@ -57,4 +57,4 @@ fun <T> Iterable<T>.uniqueValue(): T? = toSet().singleOrNull()
 /**
  * 总结一个可迭代集中所有元素的某项特征
  */
-infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
+inline infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()

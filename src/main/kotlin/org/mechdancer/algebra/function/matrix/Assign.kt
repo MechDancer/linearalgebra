@@ -5,7 +5,7 @@ import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 
 // 对矩阵各项原地操作
-private fun ValueMutableMatrix.forEachAssign(block: (Double) -> Double) =
+private inline fun ValueMutableMatrix.forEachAssign(block: (Double) -> Double) =
 	(this as? ArrayMatrix)
 		?.data
 		?.let { it.forEachIndexed { i, value -> it[i] = block(value) } }

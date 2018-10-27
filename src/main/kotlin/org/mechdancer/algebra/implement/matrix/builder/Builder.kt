@@ -17,10 +17,10 @@ fun Vector.toArrayMatrixRow() = ArrayMatrix(dim, toList().toDoubleArray())
 
 // Function -> Matrix
 
-fun listMatrixOf(row: Int, column: Int, block: (Int, Int) -> Number): ListMatrix =
+inline fun listMatrixOf(row: Int, column: Int, block: (Int, Int) -> Number): ListMatrix =
 	ListMatrix(column, List(row * column) { block(it / column, it % column).toDouble() })
 
-fun arrayMatrixOf(row: Int, column: Int, block: (Int, Int) -> Number): ArrayMatrix =
+inline fun arrayMatrixOf(row: Int, column: Int, block: (Int, Int) -> Number): ArrayMatrix =
 	ArrayMatrix(column, DoubleArray(row * column) { block(it / column, it % column).toDouble() })
 
 // List -> Matrix
