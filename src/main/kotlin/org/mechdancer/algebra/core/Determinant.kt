@@ -40,22 +40,22 @@ abstract class Determinant : ValueMutableMatrix {
 	 * Invoke this method to update the determinant value
 	 * 行列式值通过此方法进行更新，需要子类实现
 	 */
-	protected abstract fun updateDet(): Double
+	protected abstract fun updateDet(): Double?
 
 	override fun timesRow(r: Int, k: Double) {
-		if (detAvailable) det *= k
+		if (detAvailable) det = k * det!!
 	}
 
 	override fun exchangeRow(r0: Int, r1: Int) {
-		if (detAvailable) det = -det
+		if (detAvailable) det = -det!!
 	}
 
 	override fun timesColumn(c: Int, k: Double) {
-		if (detAvailable) det *= k
+		if (detAvailable) det = k * det!!
 	}
 
 	override fun exchangeColumn(c0: Int, c1: Int) {
-		if (detAvailable) det = -det
+		if (detAvailable) det = -det!!
 	}
 
 	final override var rank = 0
@@ -68,9 +68,9 @@ abstract class Determinant : ValueMutableMatrix {
 		}
 		private set
 
-	final override var det = .0
+	final override var det = .0.takeIf { row == column }
 		get() {
-			if (!detAvailable) {
+			if (row == column && !detAvailable) {
 				field = updateDet()
 				detAvailable = true
 			}

@@ -15,11 +15,10 @@ import kotlin.math.pow
 class VandermondeMatrix
 private constructor(
 	override val row: Int,
-	override val column: Int,
 	private val elements: List<Double>
 ) : Matrix {
-	override fun get(r: Int, c: Int) =
-		elements[c].pow(r)
+	override val column = elements.size
+	override fun get(r: Int, c: Int) = elements[c].pow(r)
 
 	override val rows get() = List(row, ::row)
 	override val columns get() = List(column, ::column)
@@ -30,16 +29,19 @@ private constructor(
 	override fun column(c: Int) =
 		List(row) { r -> get(r, c) }.toListVector()
 
-	override val rank get() = min(row, column)
+	override val rank by lazy { min(row, elements.toSet().size) }
 
-	override val det: Double =
-		if (elements.size >= 2) {
-			elements.indices.reversed().fold(1.0) { acc, i ->
+	override val det =
+		when {
+			row != column -> null
+			row != rank   -> .0
+			row == 1      -> elements.first()
+			else          -> elements.indices.reversed().fold(1.0) { acc, i ->
 				acc * (i - 1 downTo 0).fold(1.0) { sum, j ->
 					sum * (elements[i] - (elements.getOrNull(j) ?: .0))
 				}
 			}
-		} else elements.firstOrNull() ?: .0
+		}
 
 	override fun equals(other: Any?) =
 		this === other
@@ -47,16 +49,16 @@ private constructor(
 			&& checkSameSize(this, other)
 			&& checkElementsEquals(this, other))
 
-	override fun hashCode() = hash(row, column, elements)
+	override fun hashCode() = hash(row, elements)
 	override fun toString() = matrixView("$row x $column Vandermonde matrix")
 
 	companion object {
-		operator fun get(m: Int, n: Int, elements: Iterable<Number>) =
+		operator fun get(row: Int, elements: Iterable<Number>) =
 			elements
 				.map(Number::toDouble)
 				.let {
-					if (it.all { x -> x == .0 }) ZeroMatrix[m, n]
-					else VandermondeMatrix(m, n, it)
+					if (it.all { x -> x == .0 }) ZeroMatrix[row, it.size]
+					else VandermondeMatrix(row, it)
 				}
 	}
 }

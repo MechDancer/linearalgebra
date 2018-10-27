@@ -43,8 +43,8 @@ fun rotationOnPlane(order: Int, theta: Double, i: Int, j: Int): Matrix {
 		override val rows get() = getRows()
 		override val columns get() = getColumns()
 
-		override val rank get() = order
-		override val det get() = 1.0
+		override val rank = order
+		override val det = 1.0
 
 		override fun equals(other: Any?) =
 			other is Matrix

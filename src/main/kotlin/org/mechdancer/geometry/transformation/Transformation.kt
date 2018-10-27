@@ -36,7 +36,7 @@ data class Transformation(
 	 * 判断变换是不是手性的
 	 * 左手系到右手系的变换或右手系到左手系的变换定义为“手性的”
 	 */
-	fun isChiral() = matrix.det < 0
+	fun isChiral() = matrix.det ?: .0 < 0
 
 	override fun toString() = tie(matrix, vector)
 }

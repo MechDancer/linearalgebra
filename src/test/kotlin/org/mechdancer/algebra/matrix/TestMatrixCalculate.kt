@@ -209,7 +209,7 @@ class TestMatrixCalculate {
 				.also { Assert.assertTrue(it < seconds.toDouble()) }
 		}
 
-		HilbertMatrix[45]
+		HilbertMatrix[40]
 			.also { test(.1) { it.inverse() } }
 			.also { test(.1) { it.transpose() * it } }
 			.also { test(30) { println(it.norm()) } }

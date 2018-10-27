@@ -57,7 +57,7 @@ interface Matrix {
 	 * Calculate the det of this matrix
 	 * 获取矩阵对应行列式的值
 	 */
-	val det: Double
+	val det: Double?
 
 	override fun equals(other: Any?): Boolean
 	override fun hashCode(): Int

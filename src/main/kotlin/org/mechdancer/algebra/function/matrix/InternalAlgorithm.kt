@@ -41,25 +41,21 @@ internal fun Matrix.getRows() = List(row, ::getRow)
 internal fun Matrix.getColumns() = List(column, ::getColumn)
 
 // 求代数余子式
-internal fun Matrix.algebraCofactorOf(r: Int, c: Int): Double =
-	(if ((r + c) % 2 == 0) 1 else -1) * cofactorOf(r, c).determinantValue()
+internal fun Matrix.algebraCofactorOf(r: Int, c: Int): Double? =
+	if (row != column) null
+	else cofactorOf(r, c).determinantValue()!! * if ((r + c) % 2 == 0) 1 else -1
 
 // 计算矩阵的行列式值
 internal fun Matrix.determinantValue() =
-	if (row != column) .0
+	if (row != column) null
 	else when (row) {
 		1    -> get(0, 0)
 		2    -> get(0, 0) * get(1, 1) - get(0, 1) * get(1, 0)
 		rank -> (0 until column).sumByDouble { c ->
 			get(0, c)
 				.takeIf { it !in DOUBLE_EQUALS_RANGE }
-				?.times(algebraCofactorOf(0, c))
+				?.times(algebraCofactorOf(0, c)!!)
 				?: .0
 		}
 		else -> .0
 	}
-
-fun main(args: Array<String>) {
-	val temp = DoubleArray(100)
-	temp.single()
-}

@@ -165,7 +165,8 @@ fun Matrix.companion() = companionOrNull() ?: throw NotSquareException
  * 用空表示伴随矩阵不存在
  */
 fun Matrix.companionOrNull() =
-	takeIf { isSquare() }?.let { listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r) } }
+	if (row != column) null
+	else listMatrixOf(row, column) { r, c -> algebraCofactorOf(c, r)!! }
 
 /**
  * 求不可变矩阵的逆矩阵
