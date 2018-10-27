@@ -3,10 +3,10 @@ package org.mechdancer.algebra
 /**
  * 双精度浮点的精度
  */
-const val DOUBLE_PRECISION = 5E-15
+internal const val DOUBLE_PRECISION = 5E-15
 
 // 精度范围
-private val DOUBLE_EQUALS_RANGE = -DOUBLE_PRECISION..DOUBLE_PRECISION
+internal val DOUBLE_EQUALS_RANGE = -DOUBLE_PRECISION..DOUBLE_PRECISION
 
 /**
  * 宽条件判断浮点相等
@@ -42,27 +42,27 @@ fun hash(vararg elements: Any?) =
 /**
  * 判断一个可迭代集中所有元素存在相等关系
  */
-fun <T> Iterable<T>.isUnique() = distinct().size == 1
+fun <T> Iterable<T>.isUnique() = toSet().size == 1
 
 /**
  * 判断一个可迭代集中所有元素存在某种相等关系
  */
-infix fun <T, U> Iterable<T>.equalsOn(block: (T) -> U) = map(block).isUnique()
+infix fun <T, U> Iterable<T>.uniqueOn(block: (T) -> U) = map(block).isUnique()
 
 /**
  * 总结一个可迭代集中所有元素的特征
  */
-fun <T> Iterable<T>.uniqueValue(): T? =
-	distinct()
-		.takeIf { it.size == 1 }
-		?.firstOrNull()
+fun <T> Iterable<T>.uniqueValue(): T? = toSet().singleOrNull()
 
 /**
  * 总结一个可迭代集中所有元素的某项特征
  */
-infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? =
-	map(block).uniqueValue()
+infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
 
+/**
+ * 计时
+ * 用于性能测试
+ */
 internal fun timer(block: () -> Any?): Long =
 	System.nanoTime()
 		.also { block() }

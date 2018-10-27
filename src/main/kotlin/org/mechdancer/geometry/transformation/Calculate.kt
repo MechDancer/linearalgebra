@@ -7,20 +7,18 @@ import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.algebra.implement.vector.toListVector
 import org.mechdancer.algebra.implement.vector.vector2DOf
+import org.mechdancer.algebra.uniqueValue
 
 /**
  * 最小二乘法从点对集推算空间变换子
  * 任意维无约束
  */
 fun PointMap.toTransformation(): Transformation? {
-	val dims =
-		keys.map { it.dim }
-			.toMutableSet()
-			.apply { addAll(values.map { it.dim }) }
-
-	assert(dims.size == 1)
-
-	val dim = dims.first()
+	val dim = keys
+		.map { it.dim }
+		.union(values.map { it.dim })
+		.uniqueValue()
+		?: throw IllegalArgumentException("points not in same dim")
 	val square = dim * dim
 	val temp = DoubleArray(square + dim)
 

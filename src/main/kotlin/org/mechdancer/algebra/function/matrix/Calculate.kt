@@ -200,6 +200,11 @@ object D {
 	operator fun invoke(matrix: Matrix) = matrix.det
 }
 
+object Det {
+	@JvmStatic
+	operator fun invoke(matrix: Matrix) = matrix.det
+}
+
 object R {
 	@JvmStatic
 	operator fun invoke(matrix: Matrix) = matrix.rank

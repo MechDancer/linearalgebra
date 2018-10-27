@@ -3,34 +3,40 @@ package org.mechdancer.algebra.function.matrix
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.implement.matrix.ArrayMatrix
 import org.mechdancer.algebra.implement.matrix.ListMatrix
+import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
+import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
 import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import kotlin.math.min
 
-/**
- * Put all elements in the matrix in a list of double
- * 获取矩阵内数据
- */
-fun Matrix.toList(): List<Double> =
-	(this as? ZeroMatrix)?.let { List(row * column) { .0 } }
-		?: (this as? ListMatrix)?.data
-		?: (this as? ArrayMatrix)?.data?.toList()
-		?: List(row * column) { get(it / column, it % column) }
+// Matrix.toList()
+// Put all elements in the matrix in a list of double
+// 获取矩阵内数据
 
-/**
- * Put all elements in the matrix in a set of double
- * 获取矩阵内所有不同的数据
- */
+fun ZeroMatrix.toList() = List(row * column) { .0 }
+fun ListMatrix.toList() = data
+fun ArrayMatrix.toList() = data.toList()
+fun Matrix.toList() = List(row * column) { get(it / column, it % column) }
+
+// Matrix.toSet()
+// Put all elements in the matrix in a set of double
+// 获取矩阵内所有不同的数据
+
+fun ZeroMatrix.toSet() = setOf(.0)
+fun NumberMatrix.toSet() = setOf(value)
+fun HilbertMatrix.toSet() = List(row + column) { 1.0 / (it + 1) }.toSet()
+fun ListMatrix.toSet() = data.toSet()
+fun ArrayMatrix.toSet() = data.toSet()
+
+fun DiagonalMatrix.toSet(): Set<Double> =
+	diagonal.toMutableSet().apply { add(.0) }
+
 fun Matrix.toSet(): Set<Double> =
-	(this as? ZeroMatrix)?.let { setOf(.0) }
-		?: (this as? NumberMatrix)?.let { setOf(value) }
-		?: (this as? ListMatrix)?.data?.toSet()
-		?: (this as? ArrayMatrix)?.data?.toSet()
-		?: mutableSetOf<Double>().apply {
-			for (r in 0 until row)
-				for (c in 0 until column)
-					add(get(r, c))
-		}
+	mutableSetOf<Double>().apply {
+		for (r in 0 until row)
+			for (c in 0 until column)
+				add(get(r, c))
+	}
 
 /**
  * Get the dimension of this square, for non-square matrix it will be -1
@@ -62,18 +68,13 @@ val Matrix.firstColumn get() = column(0)
  */
 val Matrix.lastColumn get() = column(column - 1)
 
-/**
- * Get the main diagonal of a matrix
- * 获取矩阵主对角线
- */
-val Matrix.diagonal
-	get() = List(min(row, column)) { i ->
-		when (this) {
-			is ZeroMatrix   -> .0
-			is NumberMatrix -> value
-			else            -> get(i, i)
-		}
-	}
+// Matrix.diagonal
+// Get the main diagonal of a matrix
+// 获取矩阵主对角线
+
+val ZeroMatrix.diagonal get() = List(min(row, column)) { .0 }
+val NumberMatrix.diagonal get() = List(dim) { value }
+val Matrix.diagonal get() = List(min(row, column)) { get(it, it) }
 
 /**
  * Filter elements with index on rows and columns
