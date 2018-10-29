@@ -86,7 +86,14 @@ dependencies {
 * 适定：直接解算
 * 超定：最小二乘
 
+### Jama依赖
 
+现在库直接依赖于 Jama，并包含两个简单的函数与 Jama 互操作，你可以随时转入 Jama 以获取高度优化的性能。
+
+```kotlin
+matrix.toJamaMatrix()     // 转入 Jama
+buildFromJama(jamaMatrix) // 转出 Jama
+```
 
 ## 路线图
 

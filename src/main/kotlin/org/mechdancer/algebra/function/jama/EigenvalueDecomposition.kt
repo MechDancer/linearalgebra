@@ -2,11 +2,14 @@ package org.mechdancer.algebra.function.jama
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.function.matrix.isSymmetric
-import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.sqrt
-import kotlin.system.measureTimeMillis
+
+/**
+ * 试图重构 jama
+ * 只是试试而已
+ */
 
 private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArray>> {
 	val dim = matrix.column
@@ -228,7 +231,7 @@ private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArra
 	return Triple(realEigenvalues, imagEigenvalues, eigenvectors)
 }
 
-class EigenvalueDecomposition(Arg: Matrix) {
+private class EigenvalueDecomposition(Arg: Matrix) {
 	private val dim = Arg.column
 
 	// The real parts of the eigenvalues
@@ -826,23 +829,4 @@ class EigenvalueDecomposition(Arg: Matrix) {
 			hqr2()
 		}
 	}
-}
-
-fun main(args: Array<String>) {
-	generateSequence {
-		measureTimeMillis {
-			EigenvalueDecomposition(HilbertMatrix[500])
-		}.also(::println)
-	}
-		.drop(4)
-		.take(20)
-		.average()
-		.also(::println)
-
-	EigenvalueDecomposition(HilbertMatrix[500])
-		.realEigenvalues
-		.toList()
-		.sortedDescending()
-		.take(10)
-		.forEach(::println)
 }
