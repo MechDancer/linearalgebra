@@ -3,39 +3,40 @@ package org.mechdancer.algebra.function.jama
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.function.matrix.isSymmetric
 import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
+import kotlin.math.abs
 import kotlin.math.hypot
+import kotlin.math.sqrt
 import kotlin.system.measureTimeMillis
 
 private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArray>> {
 	val dim = matrix.column
+	// Array for internal storage of eigenvectors
+	val eigenvectors =
+		Array(matrix.row) { r ->
+			DoubleArray(matrix.column) { c ->
+				matrix[r, c]
+			}
+		}
 
 	// The real parts of the eigenvalues
-	val realEigenvalues = DoubleArray(dim)
+	val realEigenvalues = eigenvectors[dim - 1].copyOf()
 	// The imaginary parts of the eigenvalues
 	val imagEigenvalues = DoubleArray(dim)
-	// Array for internal storage of eigenvectors.
-	val eigenvectors = Array(matrix.row) { r -> DoubleArray(matrix.column) { c -> matrix[r, c] } }
 
 	fun tred2() {
-		System.arraycopy(eigenvectors[dim - 1], 0, realEigenvalues, 0, dim)
-
-		// Householder reduction to tridiagonal form.
-
 		for (i in dim - 1 downTo 1) {
 
 			// Scale to avoid under/overflow.
 
-			var scale = 0.0
-			var h = 0.0
-			for (k in 0 until i) {
-				scale += Math.abs(realEigenvalues[k])
-			}
-			if (scale == 0.0) {
+			val scale = realEigenvalues.take(i).sumByDouble(::abs)
+			var h = .0
+
+			if (scale == .0) {
 				imagEigenvalues[i] = realEigenvalues[i - 1]
 				for (j in 0 until i) {
 					realEigenvalues[j] = eigenvectors[i - 1][j]
-					eigenvectors[i][j] = 0.0
-					eigenvectors[j][i] = 0.0
+					eigenvectors[i][j] = .0
+					eigenvectors[j][i] = .0
 				}
 			} else {
 
@@ -45,31 +46,26 @@ private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArra
 					realEigenvalues[k] /= scale
 					h += realEigenvalues[k] * realEigenvalues[k]
 				}
-				var f = realEigenvalues[i - 1]
-				var g = Math.sqrt(h)
-				if (f > 0) {
-					g = -g
-				}
-				imagEigenvalues[i] = scale * g
-				h -= f * g
-				realEigenvalues[i - 1] = f - g
-				for (j in 0 until i) {
-					imagEigenvalues[j] = 0.0
-				}
+				val temp1 = realEigenvalues[i - 1]
+				val temp2 = if (temp1 > 0) -sqrt(h) else sqrt(h)
+				imagEigenvalues[i] = scale * temp2
+				h -= temp1 * temp2
+				realEigenvalues[i - 1] = temp1 - temp2
+				imagEigenvalues.fill(.0, 0, i)
 
 				// Apply similarity transformation to remaining columns.
 
 				for (j in 0 until i) {
-					f = realEigenvalues[j]
+					val f = realEigenvalues[j]
 					eigenvectors[j][i] = f
-					g = imagEigenvalues[j] + eigenvectors[j][j] * f
+					var g = imagEigenvalues[j] + eigenvectors[j][j] * f
 					for (k in j + 1 until i) {
 						g += eigenvectors[k][j] * realEigenvalues[k]
 						imagEigenvalues[k] += eigenvectors[k][j] * f
 					}
 					imagEigenvalues[j] = g
 				}
-				f = 0.0
+				var f = .0
 				for (j in 0 until i) {
 					imagEigenvalues[j] /= h
 					f += imagEigenvalues[j] * realEigenvalues[j]
@@ -79,30 +75,26 @@ private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArra
 					imagEigenvalues[j] -= hh * realEigenvalues[j]
 				}
 				for (j in 0 until i) {
-					f = realEigenvalues[j]
-					g = imagEigenvalues[j]
+					val f = realEigenvalues[j]
+					val g = imagEigenvalues[j]
 					for (k in j until i) {
 						eigenvectors[k][j] -= f * imagEigenvalues[k] + g * realEigenvalues[k]
 					}
 					realEigenvalues[j] = eigenvectors[i - 1][j]
-					eigenvectors[i][j] = 0.0
+					eigenvectors[i][j] = .0
 				}
 			}
 			realEigenvalues[i] = h
 		}
 
-		// Accumulate transformations.
-
 		for (i in 0 until dim - 1) {
 			eigenvectors[dim - 1][i] = eigenvectors[i][i]
 			eigenvectors[i][i] = 1.0
 			val h = realEigenvalues[i + 1]
-			if (h != 0.0) {
-				for (k in 0..i) {
-					realEigenvalues[k] = eigenvectors[k][i + 1] / h
-				}
+			if (h != .0) {
+				for (k in 0..i) realEigenvalues[k] = eigenvectors[k][i + 1] / h
 				for (j in 0..i) {
-					var g = 0.0
+					var g = .0
 					for (k in 0..i) {
 						g += eigenvectors[k][i + 1] * eigenvectors[k][j]
 					}
@@ -111,32 +103,24 @@ private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArra
 					}
 				}
 			}
-			for (k in 0..i) {
-				eigenvectors[k][i + 1] = 0.0
-			}
+			for (k in 0..i) eigenvectors[k][i + 1] = .0
 		}
 		for (j in 0 until dim) {
 			realEigenvalues[j] = eigenvectors[dim - 1][j]
-			eigenvectors[dim - 1][j] = 0.0
+			eigenvectors[dim - 1][j] = .0
 		}
 		eigenvectors[dim - 1][dim - 1] = 1.0
-		imagEigenvalues[0] = 0.0
+		imagEigenvalues[0] = .0
 	}
 
 	fun tql2() {
-
-		//  This is derived from the Algol procedures tql2, by
-		//  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
-		//  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
-		//  Fortran subroutine in EISPACK.
-
 		for (i in 1 until dim) {
 			imagEigenvalues[i - 1] = imagEigenvalues[i]
 		}
-		imagEigenvalues[dim - 1] = 0.0
+		imagEigenvalues[dim - 1] = .0
 
-		var f = 0.0
-		var tst1 = 0.0
+		var f = .0
+		var tst1 = .0
 		val eps = Math.pow(2.0, -52.0)
 		for (l in 0 until dim) {
 
@@ -183,8 +167,8 @@ private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArra
 					var c2 = c
 					var c3 = c
 					val el1 = imagEigenvalues[l + 1]
-					var s = 0.0
-					var s2 = 0.0
+					var s = .0
+					var s2 = .0
 					for (i in m - 1 downTo l) {
 						c3 = c2
 						c2 = c
@@ -215,11 +199,8 @@ private fun x(matrix: Matrix): Triple<DoubleArray, DoubleArray, Array<DoubleArra
 				} while (Math.abs(imagEigenvalues[l]) > eps * tst1)
 			}
 			realEigenvalues[l] = realEigenvalues[l] + f
-			imagEigenvalues[l] = 0.0
+			imagEigenvalues[l] = .0
 		}
-
-		// Sort eigenvalues and corresponding vectors.
-
 		for (i in 0 until dim - 1) {
 			var k = i
 			var p = realEigenvalues[i]
@@ -280,15 +261,15 @@ class EigenvalueDecomposition(Arg: Matrix) {
 
 			// Scale column.
 
-			var scale = 0.0
+			var scale = .0
 			for (i in m..high) {
 				scale += Math.abs(H[i][m - 1])
 			}
-			if (scale != 0.0) {
+			if (scale != .0) {
 
 				// Compute Householder transformation.
 
-				var h = 0.0
+				var h = .0
 				for (i in high downTo m) {
 					ort[i] = H[i][m - 1] / scale
 					h += ort[i] * ort[i]
@@ -304,7 +285,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 				// H = (I-u*u'/h)*H*(I-u*u')/h)
 
 				for (j in m until dim) {
-					var f = 0.0
+					var f = .0
 					for (i in high downTo m) {
 						f += ort[i] * H[i][j]
 					}
@@ -315,7 +296,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 				}
 
 				for (i in 0..high) {
-					var f = 0.0
+					var f = .0
 					for (j in high downTo m) {
 						f += ort[j] * H[i][j]
 					}
@@ -333,17 +314,17 @@ class EigenvalueDecomposition(Arg: Matrix) {
 
 		for (i in 0 until dim) {
 			for (j in 0 until dim) {
-				V[i][j] = if (i == j) 1.0 else 0.0
+				V[i][j] = if (i == j) 1.0 else .0
 			}
 		}
 
 		for (m in high - 1 downTo low + 1) {
-			if (H[m][m - 1] != 0.0) {
+			if (H[m][m - 1] != .0) {
 				for (i in m + 1..high) {
 					ort[i] = H[i][m - 1]
 				}
 				for (j in m..high) {
-					var g = 0.0
+					var g = .0
 					for (i in m..high) {
 						g += ort[i] * V[i][j]
 					}
@@ -387,12 +368,12 @@ class EigenvalueDecomposition(Arg: Matrix) {
 		val low = 0
 		val high = nn - 1
 		val eps = Math.pow(2.0, -52.0)
-		var exshift = 0.0
-		var p = 0.0
-		var q = 0.0
-		var r = 0.0
-		var s = 0.0
-		var z = 0.0
+		var exshift = .0
+		var p = .0
+		var q = .0
+		var r = .0
+		var s = .0
+		var z = .0
 		var t: Double
 		var w: Double
 		var x: Double
@@ -400,11 +381,11 @@ class EigenvalueDecomposition(Arg: Matrix) {
 
 		// Store roots isolated by balanc and compute matrix norm
 
-		var norm = 0.0
+		var norm = .0
 		for (i in 0 until nn) {
 			if ((i < low) or (i > high)) {
 				realEigenvalues[i] = H[i][i]
-				imagEigenvalues[i] = 0.0
+				imagEigenvalues[i] = .0
 			}
 			for (j in Math.max(i - 1, 0) until nn) {
 				norm += Math.abs(H[i][j])
@@ -421,7 +402,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 			var l = n
 			while (l > low) {
 				s = Math.abs(H[l - 1][l - 1]) + Math.abs(H[l][l])
-				if (s == 0.0) {
+				if (s == .0) {
 					s = norm
 				}
 				if (Math.abs(H[l][l - 1]) < eps * s) {
@@ -436,7 +417,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 			if (l == n) {
 				H[n][n] = H[n][n] + exshift
 				realEigenvalues[n] = H[n][n]
-				imagEigenvalues[n] = 0.0
+				imagEigenvalues[n] = .0
 				n--
 				iter = 0
 
@@ -461,11 +442,11 @@ class EigenvalueDecomposition(Arg: Matrix) {
 					}
 					realEigenvalues[n - 1] = x + z
 					realEigenvalues[n] = realEigenvalues[n - 1]
-					if (z != 0.0) {
+					if (z != .0) {
 						realEigenvalues[n] = x - w / z
 					}
-					imagEigenvalues[n - 1] = 0.0
-					imagEigenvalues[n] = 0.0
+					imagEigenvalues[n - 1] = .0
+					imagEigenvalues[n] = .0
 					x = H[n][n - 1]
 					s = Math.abs(x) + Math.abs(z)
 					p = x / s
@@ -516,8 +497,8 @@ class EigenvalueDecomposition(Arg: Matrix) {
 				// Form shift
 
 				x = H[n][n]
-				y = 0.0
-				w = 0.0
+				y = .0
+				w = .0
 				if (l < n) {
 					y = H[n - 1][n - 1]
 					w = H[n][n - 1] * H[n - 1][n]
@@ -584,9 +565,9 @@ class EigenvalueDecomposition(Arg: Matrix) {
 				}
 
 				for (i in m + 2..n) {
-					H[i][i - 2] = 0.0
+					H[i][i - 2] = .0
 					if (i > m + 2) {
-						H[i][i - 3] = 0.0
+						H[i][i - 3] = .0
 					}
 				}
 
@@ -597,9 +578,9 @@ class EigenvalueDecomposition(Arg: Matrix) {
 					if (k != m) {
 						p = H[k][k - 1]
 						q = H[k + 1][k - 1]
-						r = if (notlast) H[k + 2][k - 1] else 0.0
+						r = if (notlast) H[k + 2][k - 1] else .0
 						x = Math.abs(p) + Math.abs(q) + Math.abs(r)
-						if (x == 0.0) {
+						if (x == .0) {
 							continue
 						}
 						p /= x
@@ -611,7 +592,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 					if (p < 0) {
 						s = -s
 					}
-					if (s != 0.0) {
+					if (s != .0) {
 						if (k != m) {
 							H[k][k - 1] = -s * x
 						} else if (l != m) {
@@ -666,7 +647,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 
 		// Backsubstitute to find vectors of upper triangular form
 
-		if (norm == 0.0) {
+		if (norm == .0) {
 			return
 		}
 
@@ -677,22 +658,22 @@ class EigenvalueDecomposition(Arg: Matrix) {
 
 			// Real vector
 
-			if (q == 0.0) {
+			if (q == .0) {
 				var l = n
 				H[n][n] = 1.0
 				for (i in n - 1 downTo 0) {
 					w = H[i][i] - p
-					r = 0.0
+					r = .0
 					for (j in l..n) {
 						r += H[i][j] * H[j][n]
 					}
-					if (imagEigenvalues[i] < 0.0) {
+					if (imagEigenvalues[i] < .0) {
 						z = w
 						s = r
 					} else {
 						l = i
-						if (imagEigenvalues[i] == 0.0) {
-							if (w != 0.0) {
+						if (imagEigenvalues[i] == .0) {
+							if (w != .0) {
 								H[i][n] = -r / w
 							} else {
 								H[i][n] = -r / (eps * norm)
@@ -735,15 +716,15 @@ class EigenvalueDecomposition(Arg: Matrix) {
 					H[n - 1][n - 1] = q / H[n][n - 1]
 					H[n - 1][n] = -(H[n][n] - p) / H[n][n - 1]
 				} else {
-					cdiv(0.0, -H[n - 1][n], H[n - 1][n - 1] - p, q)
+					cdiv(.0, -H[n - 1][n], H[n - 1][n - 1] - p, q)
 					H[n - 1][n - 1] = cdivr
 					H[n - 1][n] = cdivi
 				}
-				H[n][n - 1] = 0.0
+				H[n][n - 1] = .0
 				H[n][n] = 1.0
 				for (i in n - 2 downTo 0) {
-					var ra = 0.0
-					var sa = 0.0
+					var ra = .0
+					var sa = .0
 					var vr: Double
 					val vi: Double
 					for (j in l..n) {
@@ -752,13 +733,13 @@ class EigenvalueDecomposition(Arg: Matrix) {
 					}
 					w = H[i][i] - p
 
-					if (imagEigenvalues[i] < 0.0) {
+					if (imagEigenvalues[i] < .0) {
 						z = w
 						r = ra
 						s = sa
 					} else {
 						l = i
-						if (imagEigenvalues[i] == 0.0) {
+						if (imagEigenvalues[i] == .0) {
 							cdiv(-ra, -sa, w, q)
 							H[i][n - 1] = cdivr
 							H[i][n] = cdivi
@@ -770,7 +751,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 							y = H[i + 1][i]
 							vr = (realEigenvalues[i] - p) * (realEigenvalues[i] - p) + imagEigenvalues[i] * imagEigenvalues[i] - q * q
 							vi = (realEigenvalues[i] - p) * 2.0 * q
-							if ((vr == 0.0) and (vi == 0.0)) {
+							if ((vr == .0) and (vi == .0)) {
 								vr = eps * norm * (Math.abs(w) + Math.abs(q) +
 									Math.abs(x) + Math.abs(y) + Math.abs(z))
 							}
@@ -816,7 +797,7 @@ class EigenvalueDecomposition(Arg: Matrix) {
 
 		for (j in nn - 1 downTo low) {
 			for (i in low..high) {
-				z = 0.0
+				z = .0
 				for (k in low..Math.min(j, high)) {
 					z += V[i][k] * H[k][j]
 				}
@@ -857,4 +838,11 @@ fun main(args: Array<String>) {
 		.take(20)
 		.average()
 		.also(::println)
+
+	EigenvalueDecomposition(HilbertMatrix[500])
+		.realEigenvalues
+		.toList()
+		.sortedDescending()
+		.take(10)
+		.forEach(::println)
 }
