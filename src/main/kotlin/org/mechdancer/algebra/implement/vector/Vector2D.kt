@@ -5,7 +5,7 @@ import org.mechdancer.algebra.core.columnView
 import org.mechdancer.algebra.function.vector.x
 import org.mechdancer.algebra.function.vector.y
 import org.mechdancer.algebra.hash
-import kotlin.math.sqrt
+import kotlin.math.hypot
 
 class Vector2D(val x: Double, val y: Double) : Vector {
 	override val dim = 2
@@ -17,7 +17,7 @@ class Vector2D(val x: Double, val y: Double) : Vector {
 			else -> throw IllegalArgumentException()
 		}
 
-	override val length by lazy { sqrt(x * x + y * y) }
+	override val length by lazy { hypot(x, y) }
 
 	override fun toList() = listOf(x, y)
 

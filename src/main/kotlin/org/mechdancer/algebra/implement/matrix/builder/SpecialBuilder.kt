@@ -8,9 +8,9 @@ import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 
 typealias O = ZeroMatrix
 typealias N = NumberMatrix
-typealias I = UnitMatrix
+typealias I = IdentityMatrix
 
-object UnitMatrix {
+object IdentityMatrix {
 	@JvmStatic
 	operator fun get(n: Int) = N[n, 1.0]
 }
