@@ -200,9 +200,9 @@ fun Matrix.inverseOrNull() =
 	}
 
 /**
- * 求实对称矩阵的迹（所有特征值的和）
+ * 求矩阵的迹（主对角线元素的和）
  */
-fun Matrix.trace() = jacobiLevelUp()?.sumByDouble { it.first }
+fun Matrix.trace() = (0..min(row, column)).sumByDouble { get(it, it) }
 
 object D {
 	@JvmStatic
@@ -219,7 +219,7 @@ object R {
 	operator fun invoke(matrix: Matrix) = matrix.rank
 }
 
-object T {
+object Tr {
 	@JvmStatic
 	operator fun invoke(matrix: Matrix) = matrix.trace()
 }

@@ -102,3 +102,7 @@ fun blockMatrix(
 	mode: BuilderMode = Immutable,
 	block: BlockMatrixBuilder.() -> Unit
 ) = BlockMatrixBuilder().apply(block).build(mode)
+
+// Random matrix
+
+fun random(row: Int, column: Int) = listMatrixOf(row, column) { _, _ -> Math.random() }
