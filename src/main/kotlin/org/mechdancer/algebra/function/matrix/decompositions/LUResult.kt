@@ -2,7 +2,6 @@ package org.mechdancer.algebra.function.matrix.decompositions
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
-import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -31,9 +30,6 @@ private constructor(
 				else   -> .0
 			}
 		}
-
-	val d
-		get() = DiagonalMatrix(pivot.map(Number::toDouble))
 
 	val l
 		get() = listMatrixOf(m, n) { r, c ->
@@ -84,23 +80,27 @@ private constructor(
 				}
 
 				// Find pivot and exchange if necessary.
-				// 找到主轴
+				// 找到主轴并修改排序
 				// 我甚至不知道主轴是什么东西
+				// 线索：经测试，主轴表示了行的顺序
+				//      正常情况下分解后 A = L * U
+				//      但按此算法分解后需要将 L * U 的积矩阵按主轴指示的顺序重排才能得到原矩阵
+				//      恐怕这是算法性能优势的一大原因
 				val p = (j until m).maxBy { abs(jCol[it]) } ?: 0
 				if (p != j) {
 					// 交换 LU 缓存的 p行 和 j行
 					// 再交换主轴的 p项 和 j项
 					// 并给主轴符号取反
 
-					for (k in 0 until n) {
-						val temp = lu[p][k]
-						lu[p][k] = lu[j][k]
-						lu[j][k] = temp
+					lu[p].let {
+						lu[p] = lu[j]
+						lu[j] = it
 					}
 
-					val temp = pivot[p]
-					pivot[p] = pivot[j]
-					pivot[j] = temp
+					pivot[p].let {
+						pivot[p] = pivot[j]
+						pivot[j] = it
+					}
 
 					pivotSign = -pivotSign
 				}
