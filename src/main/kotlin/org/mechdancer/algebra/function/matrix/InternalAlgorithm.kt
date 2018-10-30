@@ -2,7 +2,7 @@ package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.doubleEquals
-import org.mechdancer.algebra.function.matrix.decompositions.LUResult
+import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
 
 // 开发者注意：
@@ -46,5 +46,10 @@ internal fun Matrix.algebraCofactorOf(r: Int, c: Int): Double? =
 	else cofactorOf(r, c).determinantValue()!! * if ((r + c) % 2 == 0) 1 else -1
 
 // 计算矩阵的行列式值
-internal fun Matrix.determinantValue() =
-	if (row != column) null else LUResult(this).det
+internal fun Matrix.determinantValue(): Double? {
+	if (row != column) return null
+	val temp = toArrayMatrix()
+	val scale = temp.rowEchelonAssign()
+	return scale * (0 until dim).fold(1.0) { acc, i -> acc * temp[i, i] }
+}
+

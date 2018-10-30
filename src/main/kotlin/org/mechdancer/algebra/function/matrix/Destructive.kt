@@ -2,14 +2,15 @@ package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.ValueMutableMatrix
 import org.mechdancer.algebra.function.vector.isNotZero
-import org.mechdancer.algebra.function.vector.isZero
 import org.mechdancer.algebra.implement.matrix.builder.arrayMatrixOfUnit
 
 /**
  * 计算矩阵的秩，将破坏原矩阵
  */
-fun ValueMutableMatrix.rankDestructive() =
-	rowEchelonAssign().rows.dropLastWhile { it.isZero() }.size
+fun ValueMutableMatrix.rankDestructive(): Int {
+	rowEchelonAssign()
+	return (column - 1 downTo 0).first { row(it).isNotZero() }
+}
 
 /**
  * 计算矩阵的逆，将破坏原矩阵

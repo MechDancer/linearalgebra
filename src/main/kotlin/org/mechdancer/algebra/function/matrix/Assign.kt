@@ -70,86 +70,96 @@ fun ValueMutableMatrix.transposeAssign() {
 
 /**
  * 原地通过行初等变换变为行阶梯型阵
+ * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.rowEchelonAssignWith(
 	other: Iterable<ValueMutableMatrix>
-) = apply {
-	//固定行数
+): Double {
+	// 记录交换次数
+	var sum = 0
+	// 固定行数
 	var fixed = 0
-	//按列化简
+	// 按列化简
 	for (c in 0 until column) {
-		//在此列所有未固定的行中
-		(fixed until row)
-			//找到第一个非零元素
-			.firstOrNull { r -> get(r, c) != .0 }
-			//将其所在行交换到未固定的首行
-			?.let { r ->
-				exchangeRow(r, fixed)
-				other.forEach { it.exchangeRow(r, fixed) }
-			}
-		//全为零则直接查找下一列
-			?: continue
+		// 从此列所有未固定的行中找到第一个非零元素，全为零则直接查找下一列
+		val i = (fixed until row).firstOrNull { r -> get(r, c) != .0 } ?: continue
+		// 将其所在行交换到未固定的首行
+		if (i != fixed) {
+			++sum
+			exchangeRow(i, fixed)
+			other.forEach { it.exchangeRow(i, fixed) }
+		}
 
-		//取出这一行的首元
+		// 取出这一行的首元
 		val head = get(fixed, c)
-		//用首元将此列未固定的其他元素化为零
+		// 用首元将此列未固定的其他元素化为零
 		for (r in fixed + 1 until row) {
 			val k = -get(r, c) / head
 			plusToRow(k, fixed, r)
 			other.forEach { it.plusToRow(k, fixed, r) }
-			//强保证化为零有效
+			// 强保证化为零有效
 			set(r, c, .0)
 		}
 
-		//固定行数加一
+		// 固定行数加一
 		++fixed
 	}
+	return if (sum % 2 == 0) 1.0 else -1.0
 }
 
 /**
  * 原地通过行初等变换变为最简行阶梯型阵
+ * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.simplifyAssignWith(
 	other: Iterable<ValueMutableMatrix>
-) = rowEchelonAssignWith(other)
-	.apply {
-		var c = column
-		//清零上三角区
-		for (r in (0 until row).reversed()) {
-			//找到本行最后一个非零元素
-			var tail: Double
-			do {
-				tail = get(r, --c)
-			} while (c >= 0 && tail == .0)
+): Double {
+	var scale = rowEchelonAssignWith(other)
 
-			//有全零行，不再继续化简
-			if (c < 0) break
+	var c = column
+	// 清零上三角区
+	for (r in (0 until row).reversed()) {
+		// 找到本行最后一个非零元素
+		var tail: Double
+		do {
+			tail = get(r, --c)
+		} while (c >= 0 && tail == .0)
 
-			//用首元将此列未固定的其他元素化为零
-			for (t in (0 until r)) {
-				val k = -get(t, c) / tail
-				plusToRow(k, r, t)
-				other.forEach { it.plusToRow(k, r, t) }
-				//强保证化为零有效
-				set(t, c, .0)
-			}
+		// 有全零行，不再继续化简
+		if (c < 0) break
+
+		// 用首元将此列未固定的其他元素化为零
+		for (t in (0 until r)) {
+			val k = -get(t, c) / tail
+			plusToRow(k, r, t)
+			other.forEach { it.plusToRow(k, r, t) }
+			// 强保证化为零有效
+			set(t, c, .0)
+		}
+	}
+
+	c = 0
+	// 主对角线归一化
+	for (r in 0 until row)
+		while (c < column) {
+			get(r, c++)
+				.takeIf { it != .0 }
+				?.let { 1 / it }
+				?.let { k ->
+					scale *= k
+					timesRow(r, k)
+					other.forEach { it.timesRow(r, k) }
+				}
+				?: continue
+			break
 		}
 
-		c = 0
-		//主对角线归一化
-		for (r in 0 until row)
-			while (c < column) {
-				val temp = get(r, c++)
-				if (temp != .0) {
-					timesRow(r, 1 / temp)
-					other.forEach { it.timesRow(r, 1 / temp) }
-					break
-				}
-			}
-	}
+	return scale
+}
 
 /**
  * 原地通过行初等变换变为行阶梯型阵
+ * @return 变换导致行列式值的符号变化
  */
 fun ValueMutableMatrix.rowEchelonAssignWith(
 	vararg other: ValueMutableMatrix
@@ -157,6 +167,7 @@ fun ValueMutableMatrix.rowEchelonAssignWith(
 
 /**
  * 原地通过行初等变换变为最简行阶梯型阵
+ * @return 变换导致行列式值的符号变化
  */
 fun ValueMutableMatrix.simplifyAssignWith(
 	vararg other: ValueMutableMatrix
@@ -164,6 +175,7 @@ fun ValueMutableMatrix.simplifyAssignWith(
 
 /**
  * 原地通过行初等变换变为行阶梯型阵
+ * @return 变换导致行列式值的符号变化
  */
 fun ValueMutableMatrix.rowEchelonAssign() = rowEchelonAssignWith()
 
