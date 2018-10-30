@@ -13,6 +13,13 @@ import kotlin.system.measureTimeMillis
 
 fun Matrix.lu() = LUResult(this)
 
+fun testPerformanceMillis(block: () -> Any?) =
+	generateSequence {
+		measureTimeMillis {
+			block()
+		}.also(::println)
+	}.drop(3).take(10).average()
+
 object Test1 {
 	@JvmStatic
 	fun main(args: Array<String>) {
@@ -42,30 +49,15 @@ object Test2 {
 		val matrix = random(1500, 1500)
 		val jama = matrix.toJamaMatrix()
 
-		fun Sequence<Long>.test() =
-			drop(3).take(10).average().let(::println)
-
-		generateSequence {
-			measureTimeMillis {
-				matrix.rowEchelon()
-			}.also(::println)
-		}.test()
+		testPerformanceMillis { matrix.rowEchelon() }.let(::println)
 
 		println()
 
-		generateSequence {
-			measureTimeMillis {
-				LUDecomposition(jama)
-			}.also(::println)
-		}.test()
+		testPerformanceMillis { LUDecomposition(jama) }.let(::println)
 
 		println()
 
-		generateSequence {
-			measureTimeMillis {
-				matrix.lu()
-			}.also(::println)
-		}.test()
+		testPerformanceMillis { matrix.lu() }.let(::println)
 	}
 }
 
@@ -75,15 +67,10 @@ object Test3 {
 		val matrix = random(1000, 1000)
 		val jama = matrix.toJamaMatrix()
 
-		fun test(block: () -> Any?) =
-			generateSequence {
-				measureTimeMillis {
-					block()
-				}.also(::println)
-			}.drop(3).take(10).average().let(::println)
+		testPerformanceMillis { matrix.determinantValue() }.let(::println)
 
-		test { matrix.determinantValue() }
 		println()
-		test { LUDecomposition(jama).det() }
+
+		testPerformanceMillis { LUDecomposition(jama).det() }.let(::println)
 	}
 }
