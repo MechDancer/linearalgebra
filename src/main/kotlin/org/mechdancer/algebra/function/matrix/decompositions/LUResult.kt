@@ -52,10 +52,12 @@ private constructor(
 	companion object {
 		/**
 		 * This function is refactor from Jama.
+		 *
+		 * Use a "left-looking", dot-product, Crout/Doolittle algorithm.
 		 */
 		operator fun invoke(matrix: Matrix): LUResult {
-			@Suppress("LocalVariableName")
-			val LU = Array(matrix.row) { r ->
+			// 存储数值到二维数组
+			val lu = Array(matrix.row) { r ->
 				DoubleArray(matrix.column) { c -> matrix[r, c] }
 			}
 
@@ -65,60 +67,54 @@ private constructor(
 			val pivot = IntArray(m) { it }
 			var pivotSign = 1
 
-			// Use a "left-looking", dot-product, Crout/Doolittle algorithm.
-			// From Jama
-
+			// 开辟空间以存储一列
 			val jCol = DoubleArray(m)
 
-			// Outer loop.
-			// 主循环
-
+			// 对每一列变换
 			for (j in 0 until n) {
-
-				// Make a copy of the j-th column to localize references.
 				// 创建第 j 列的副本以加快访问速度
-				for (i in 0 until m) jCol[i] = LU[i][j]
-
-				// Apply previous transformations.
-				// 进行预变换
-
-				LU.forEachIndexed { i, iRow ->
+				for (i in 0 until m) jCol[i] = lu[i][j]
+				// 对每一行变换
+				lu.forEachIndexed { i, iRow ->
 					// Most of the time is spent in the following dot product.
 					// 这个点乘是最耗时的操作
+					// 也是完全无法理解的操作
 					jCol[i] -= (0 until min(i, j)).sumByDouble { k -> iRow[k] * jCol[k] }
 					iRow[j] = jCol[i]
 				}
 
 				// Find pivot and exchange if necessary.
 				// 找到主轴
-
+				// 我甚至不知道主轴是什么东西
 				val p = (j until m).maxBy { abs(jCol[it]) } ?: 0
 				if (p != j) {
 					// 交换 LU 缓存的 p行 和 j行
 					// 再交换主轴的 p项 和 j项
+					// 并给主轴符号取反
 
 					for (k in 0 until n) {
-						val temp = LU[p][k]
-						LU[p][k] = LU[j][k]
-						LU[j][k] = temp
+						val temp = lu[p][k]
+						lu[p][k] = lu[j][k]
+						lu[j][k] = temp
 					}
 
-					// 交换
 					val temp = pivot[p]
 					pivot[p] = pivot[j]
 					pivot[j] = temp
+
 					pivotSign = -pivotSign
 				}
 
 				// Compute multipliers.
-
-				val scale = LU[j][j]
+				// ……
+				// 因为不知道在干嘛而无法翻译
+				val scale = lu[j][j]
 				if (j < m && scale != .0)
 					for (i in j + 1 until m)
-						LU[i][j] /= scale
+						lu[i][j] /= scale
 			}
 
-			return LUResult(LU, pivot.toList(), pivotSign.toByte())
+			return LUResult(lu, pivot.toList(), pivotSign.toByte())
 		}
 	}
 }
