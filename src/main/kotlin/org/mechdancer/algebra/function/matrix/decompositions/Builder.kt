@@ -38,18 +38,17 @@ object Test1 {
 object Test2 {
 	@JvmStatic
 	fun main(args: Array<String>) {
-		val matrix = random(1000, 1000)
+		val matrix = random(1500, 1500)
 		val jama = matrix.toJamaMatrix()
+
+		fun Sequence<Long>.test() =
+			drop(3).take(10).average().let(::println)
 
 		generateSequence {
 			measureTimeMillis {
 				matrix.rowEchelon()
 			}.also(::println)
-		}
-			.drop(5)
-			.take(10)
-			.average()
-			.let(::println)
+		}.test()
 
 		println()
 
@@ -57,11 +56,7 @@ object Test2 {
 			measureTimeMillis {
 				LUDecomposition(jama)
 			}.also(::println)
-		}
-			.drop(5)
-			.take(10)
-			.average()
-			.let(::println)
+		}.test()
 
 		println()
 
@@ -69,10 +64,6 @@ object Test2 {
 			measureTimeMillis {
 				matrix.lu()
 			}.also(::println)
-		}
-			.drop(5)
-			.take(10)
-			.average()
-			.let(::println)
+		}.test()
 	}
 }
