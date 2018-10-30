@@ -1,8 +1,8 @@
 package org.mechdancer.algebra.function.matrix
 
-import org.mechdancer.algebra.DOUBLE_EQUALS_RANGE
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.doubleEquals
+import org.mechdancer.algebra.function.matrix.decompositions.LUResult
 import org.mechdancer.algebra.implement.vector.toListVector
 
 // 开发者注意：
@@ -47,15 +47,4 @@ internal fun Matrix.algebraCofactorOf(r: Int, c: Int): Double? =
 
 // 计算矩阵的行列式值
 internal fun Matrix.determinantValue() =
-	if (row != column) null
-	else when (row) {
-		1    -> get(0, 0)
-		2    -> get(0, 0) * get(1, 1) - get(0, 1) * get(1, 0)
-		rank -> (0 until column).sumByDouble { c ->
-			get(0, c)
-				.takeIf { it !in DOUBLE_EQUALS_RANGE }
-				?.times(algebraCofactorOf(0, c)!!)
-				?: .0
-		}
-		else -> .0
-	}
+	if (row != column) null else LUResult(this).det
