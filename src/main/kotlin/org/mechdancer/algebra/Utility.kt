@@ -58,3 +58,6 @@ fun <T> Iterable<T>.uniqueValue(): T? = toSet().singleOrNull()
  * 总结一个可迭代集中所有元素的某项特征
  */
 inline infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
+
+internal inline fun <T, U> List<T>.zipFast(other: List<T>, block: (T, T) -> U) =
+	List(kotlin.math.min(size, other.size)) { block(this[it], other[it]) }

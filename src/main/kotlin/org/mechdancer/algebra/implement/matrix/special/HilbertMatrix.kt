@@ -24,6 +24,7 @@ private constructor(
 
 	override val rank get() = min(row, column)
 	override val det by lazy { determinantValue() }
+	override val trace by lazy { traceValue() }
 
 	override fun equals(other: Any?) =
 		this === other
@@ -33,7 +34,6 @@ private constructor(
 			|| checkElementsEquals(this, other)))
 
 	override fun hashCode() = hash(row, column)
-
 	override fun toString() = matrixView("$row x $column Hilbert matrix")
 
 	companion object {

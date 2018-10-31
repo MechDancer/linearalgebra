@@ -33,6 +33,8 @@ class DiagonalMatrix(
 		else .0
 	}
 
+	override val trace by lazy { diagonal.sum() }
+
 	override fun equals(other: Any?) =
 		this === other
 			|| (other is Matrix

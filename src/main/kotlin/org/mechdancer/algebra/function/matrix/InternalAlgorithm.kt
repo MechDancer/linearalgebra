@@ -4,6 +4,7 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.doubleEquals
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
+import kotlin.math.min
 
 // 开发者注意：
 // 此文件中的函数用于实现无特殊实现的矩阵，因此应谨慎使用可能被重写的属性，以免发生意外的递归
@@ -44,6 +45,9 @@ internal fun Matrix.getColumns() = List(column, ::getColumn)
 internal fun Matrix.algebraCofactorOf(r: Int, c: Int): Double? =
 	if (row != column) null
 	else cofactorOf(r, c).determinantValue()!! * if ((r + c) % 2 == 0) 1 else -1
+
+// 求矩阵的迹（主对角线元素的和）
+internal fun Matrix.traceValue() = (0..min(row, column)).sumByDouble { get(it, it) }
 
 // 计算矩阵的行列式值
 internal fun Matrix.determinantValue(): Double? {

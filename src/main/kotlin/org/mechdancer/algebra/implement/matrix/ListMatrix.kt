@@ -3,10 +3,7 @@ package org.mechdancer.algebra.implement.matrix
 import org.mechdancer.algebra.contentEquals
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
-import org.mechdancer.algebra.function.matrix.checkElementsEquals
-import org.mechdancer.algebra.function.matrix.checkSameSize
-import org.mechdancer.algebra.function.matrix.determinantValue
-import org.mechdancer.algebra.function.matrix.rankDestructive
+import org.mechdancer.algebra.function.matrix.*
 import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
@@ -42,6 +39,8 @@ class ListMatrix(
 	override val rank by lazy { toArrayMatrix().rankDestructive() }
 
 	override val det by lazy { determinantValue() }
+
+	override val trace by lazy { traceValue() }
 
 	override fun equals(other: Any?) =
 		this === other

@@ -5,6 +5,7 @@ import org.mechdancer.algebra.implement.vector.ListVector
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.uniqueValue
+import org.mechdancer.algebra.zipFast
 import kotlin.math.abs
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
@@ -18,7 +19,7 @@ private fun differentDimException(a: Vector, b: Vector) =
 
 private inline fun Vector.zip(other: Vector, block: (Double, Double) -> Double) =
 	takeIf { dim == other.dim }
-		?.let { toList().zip(other.toList(), block) }
+		?.let { toList().zipFast(other.toList(), block) }
 		?: throw differentDimException(this, other)
 
 private inline fun Vector.zipToNew(other: Vector, block: (Double, Double) -> Double) =

@@ -45,6 +45,7 @@ fun rotationOnPlane(order: Int, theta: Double, i: Int, j: Int): Matrix {
 
 		override val rank = order
 		override val det = 1.0
+		override val trace = order - 2 + 2 * cos
 
 		override fun equals(other: Any?) =
 			other is Matrix

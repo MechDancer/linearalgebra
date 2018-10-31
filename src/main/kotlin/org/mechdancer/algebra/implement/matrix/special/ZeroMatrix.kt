@@ -27,6 +27,7 @@ private constructor(
 
 	override val rank = 0
 	override val det = .0
+	override val trace = .0
 
 	override fun equals(other: Any?) =
 		other is Matrix

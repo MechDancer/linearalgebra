@@ -1,5 +1,7 @@
 package org.mechdancer.algebra.core
 
+import org.mechdancer.algebra.function.matrix.traceValue
+
 /**
  * Matrix with mutable value and fixed size
  * 值可变，规格不可变的矩阵
@@ -52,6 +54,8 @@ interface ValueMutableMatrix : Matrix, Cloneable {
 	 * 初等列变换：[c0]和[c1]交换
 	 */
 	fun exchangeColumn(c0: Int, c1: Int)
+
+	override val trace get() = traceValue()
 
 	public override fun clone(): ValueMutableMatrix
 }

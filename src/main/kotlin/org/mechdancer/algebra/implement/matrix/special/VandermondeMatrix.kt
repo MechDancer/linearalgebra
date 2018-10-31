@@ -4,6 +4,7 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.checkElementsEquals
 import org.mechdancer.algebra.function.matrix.checkSameSize
+import org.mechdancer.algebra.function.matrix.traceValue
 import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.vector.toListVector
 import kotlin.math.min
@@ -31,7 +32,7 @@ private constructor(
 
 	override val rank by lazy { min(row, elements.toSet().size) }
 
-	override val det =
+	override val det by lazy {
 		when {
 			row != column -> null
 			row != rank   -> .0
@@ -42,6 +43,9 @@ private constructor(
 				}
 			}
 		}
+	}
+
+	override val trace by lazy { traceValue() }
 
 	override fun equals(other: Any?) =
 		this === other

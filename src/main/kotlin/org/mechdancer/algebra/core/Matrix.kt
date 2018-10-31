@@ -48,14 +48,20 @@ interface Matrix {
 	fun column(c: Int): Vector
 
 	/**
-	 * Get the rank of this matrix
-	 * 获取矩阵的秩
+	 * Rank of this matrix
+	 * 矩阵的秩
 	 */
 	val rank: Int
 
 	/**
-	 * Calculate the det of this matrix
-	 * 获取矩阵对应行列式的值
+	 * Trace of this matrix
+	 * 矩阵的迹
+	 */
+	val trace: Double
+
+	/**
+	 * Determinant value of this matrix
+	 * 矩阵对应行列式的值
 	 */
 	val det: Double?
 

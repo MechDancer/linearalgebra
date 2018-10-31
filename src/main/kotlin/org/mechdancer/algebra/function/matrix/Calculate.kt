@@ -12,6 +12,7 @@ import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
 import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.implement.vector.toListVector
+import org.mechdancer.algebra.zipFast
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -22,7 +23,7 @@ import kotlin.math.sqrt
 private fun timesStub(m: Matrix, k: Double): Matrix =
 	when (m) {
 		is ZeroMatrix     -> m
-		is NumberMatrix   -> NumberMatrix[m.row, m.column, m.value * k]
+		is NumberMatrix   -> NumberMatrix[m.dim, m.value * k]
 		is DiagonalMatrix -> DiagonalMatrix(m.diagonal.map { it * k })
 		else              -> m.toList().map { it * k }.foldToRows(m.row)
 	}
@@ -34,16 +35,16 @@ operator fun Matrix.div(k: Number) = timesStub(this, k.toDouble())
 // calculate between same size matrix
 
 //逐项应用某种操作
-private inline fun Matrix.zipAssign(
+private inline fun Matrix.zip(
 	other: Matrix,
 	block: (Double, Double) -> Double
 ): Matrix {
 	assertSameSize(this, other)
-	return ListMatrix(column, toList().zip(other.toList(), block))
+	return ListMatrix(column, toList().zipFast(other.toList(), block))
 }
 
-operator fun Matrix.plus(other: Matrix) = zipAssign(other) { a, b -> a + b }
-operator fun Matrix.minus(other: Matrix) = zipAssign(other) { a, b -> a - b }
+operator fun Matrix.plus(other: Matrix) = zip(other) { a, b -> a + b }
+operator fun Matrix.minus(other: Matrix) = zip(other) { a, b -> a - b }
 
 // times another linear algebra type
 
@@ -76,7 +77,7 @@ operator fun Matrix.times(right: Matrix): Matrix {
 			timesStub(this, right.value)
 		this is DiagonalMatrix                    -> {
 			if (right is DiagonalMatrix)
-				DiagonalMatrix(diagonal.zip(right.diagonal) { a, b -> a * b })
+				DiagonalMatrix(diagonal.zipFast(right.diagonal) { a, b -> a * b })
 			else
 				listMatrixOf(row, right.column) { r, c -> diagonal[r] * right[r, c] }
 		}
@@ -199,11 +200,6 @@ fun Matrix.inverseOrNull() =
 				.inverseDestructive()
 	}
 
-/**
- * 求矩阵的迹（主对角线元素的和）
- */
-fun Matrix.trace() = (0..min(row, column)).sumByDouble { get(it, it) }
-
 object D {
 	@JvmStatic
 	operator fun invoke(matrix: Matrix) = matrix.det
@@ -221,5 +217,5 @@ object R {
 
 object Tr {
 	@JvmStatic
-	operator fun invoke(matrix: Matrix) = matrix.trace()
+	operator fun invoke(matrix: Matrix) = matrix.trace
 }

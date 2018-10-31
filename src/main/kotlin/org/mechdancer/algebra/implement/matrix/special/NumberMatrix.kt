@@ -10,14 +10,12 @@ import kotlin.math.pow
 
 /**
  * 不可变数值矩阵特化实现
- * @param row    行数
- * @param column 列数
- * @param value  数值
+ * @param dim   维数
+ * @param value 数值
  */
 class NumberMatrix
 private constructor(
-	override val row: Int,
-	override val column: Int,
+	val dim: Int,
 	val value: Double
 ) : Matrix {
 	init {
@@ -25,8 +23,8 @@ private constructor(
 		assert(column > 0)
 	}
 
-	// 是否有意义
-	private val meaningful = row == column && value != .0
+	override val row get() = dim
+	override val column get() = dim
 
 	override fun get(r: Int, c: Int) = if (r == c) value else .0
 
@@ -36,8 +34,9 @@ private constructor(
 	override fun row(r: Int) = List(column) { c -> get(r, c) }.toListVector()
 	override fun column(c: Int) = List(row) { r -> get(r, c) }.toListVector()
 
-	override val rank = if (meaningful) row else 0
-	override val det = if (meaningful) value.pow(row) else .0
+	override val rank = if (value != .0) row else 0
+	override val det = value.pow(dim)
+	override val trace = value * dim
 
 	override fun equals(other: Any?) =
 		this === other
@@ -52,9 +51,9 @@ private constructor(
 	override fun toString() = matrixView()
 
 	companion object {
-		private val UnitOrder1 = NumberMatrix(1, 1, 1.0)
-		private val UnitOrder2 = NumberMatrix(2, 2, 1.0)
-		private val UnitOrder3 = NumberMatrix(3, 3, 1.0)
+		private val UnitOrder1 = NumberMatrix(1, 1.0)
+		private val UnitOrder2 = NumberMatrix(2, 1.0)
+		private val UnitOrder3 = NumberMatrix(3, 1.0)
 
 		@JvmStatic
 		operator fun get(dim: Int, value: Number) =
@@ -66,18 +65,10 @@ private constructor(
 							1    -> UnitOrder1
 							2    -> UnitOrder2
 							3    -> UnitOrder3
-							else -> NumberMatrix(dim, dim, 1.0)
+							else -> NumberMatrix(dim, 1.0)
 						}
-						else -> NumberMatrix(dim, dim, it)
+						else -> NumberMatrix(dim, it)
 					}
 				}
-
-		@JvmStatic
-		operator fun get(m: Int, n: Int, value: Number) =
-			when {
-				m == n      -> get(m, value)
-				value == .0 -> ZeroMatrix[m, n]
-				else        -> NumberMatrix(m, n, value.toDouble())
-			}
 	}
 }
