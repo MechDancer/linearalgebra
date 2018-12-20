@@ -31,4 +31,14 @@ val PointPair.target get() = first
 /**
  * 定义出发点在后
  */
-val PointPair.origin get() = second
+val PointPair.source get() = second
+
+/**
+ * 定义目标点在前
+ */
+val PointMap.targets get() = keys
+
+/**
+ * 定义出发点在后
+ */
+val PointMap.sources get() = values

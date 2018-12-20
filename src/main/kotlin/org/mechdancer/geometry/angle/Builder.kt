@@ -48,7 +48,7 @@ fun Vector.toCos(index: Int) = get(index) / length
 /**
  * 求方向角
  */
-fun Vector.toAngel() = toList().map { acos(it / length).toRad() }
+fun Vector.toAngels() = toList().map { acos(it / length).toRad() }
 
 /**
  * 求特定维度的方向角

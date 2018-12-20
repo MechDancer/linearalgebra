@@ -15,15 +15,15 @@ operator fun Vector2D.times(k: Number) = k.toDouble().let { Vector2D(x * it, y *
 operator fun Vector2D.div(k: Number) = k.toDouble().let { Vector2D(x / it, y / it) }
 
 private fun differentDimException(a: Vector, b: Vector) =
-	IllegalArgumentException("operate two vector of different dim (${a.dim} and ${b.dim})")
+    IllegalArgumentException("operate two vector of different dim (${a.dim} and ${b.dim})")
 
 private inline fun Vector.zip(other: Vector, block: (Double, Double) -> Double) =
-	takeIf { dim == other.dim }
-		?.let { toList().zipFast(other.toList(), block) }
-		?: throw differentDimException(this, other)
+    takeIf { dim == other.dim }
+        ?.let { toList().zipFast(other.toList(), block) }
+        ?: throw differentDimException(this, other)
 
 private inline fun Vector.zipToNew(other: Vector, block: (Double, Double) -> Double) =
-	zip(other, block).let(::ListVector)
+    zip(other, block).let(::ListVector)
 
 operator fun Vector.plus(other: Vector) = zipToNew(other) { a, b -> a + b }
 operator fun Vector.minus(other: Vector) = zipToNew(other) { a, b -> a - b }
@@ -44,24 +44,26 @@ operator fun Vector2D.unaryMinus() = Vector2D(-x, -y)
 fun Vector.reversed() = -this
 fun Vector.normalize() = div(length)
 
-/**
- * 求向量表示的点集的“重心”
- */
+/** 求向量表示的点集的“重心” */
 fun Collection<Vector>.centre() =
-	uniqueValue(Vector::dim)
-		?.let(::listVectorOfZero)
-		?.let { fold(it) { sum, v -> sum + v } }
-		?.div(size)
-		?: throw UnsupportedOperationException("vector dimensions are different")
+    uniqueValue(Vector::dim)
+        ?.let(::listVectorOfZero)
+        ?.let { fold(it) { sum, v -> sum + v } }
+        ?.div(size)
+        ?: throw UnsupportedOperationException("vector dimensions are different")
 
-/**
- * 范数
- * @param n 阶数
- */
+/** 求二维向量表示的点集的“重心” */
+fun Collection<Vector2D>.centre() =
+    Vector2D(
+        map(Vector2D::x).average(),
+        map(Vector2D::y).average()
+    )
+
+/** [n]范数 */
 fun Vector.norm(n: Int = 2) =
-	when (n) {
-		-1   -> toList().map(::abs).max()
-		1    -> toList().sumByDouble(::abs)
-		2    -> length
-		else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
-	} ?: .0
+    when (n) {
+        -1   -> toList().map(::abs).max()
+        1    -> toList().sumByDouble(::abs)
+        2    -> length
+        else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
+    } ?: .0
