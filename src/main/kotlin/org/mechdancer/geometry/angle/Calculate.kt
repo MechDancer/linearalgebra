@@ -14,38 +14,41 @@ import kotlin.math.sign
  * 调整弧度到[-PI, +PI]
  */
 fun Angle.adjust(): Angle {
-	var temp = value
-	while (temp > +PI) temp -= twicePI
-	while (temp < -PI) temp += twicePI
-	return Angle(temp)
+    var temp = value
+    while (temp > +PI) temp -= twicePI
+    while (temp < -PI) temp += twicePI
+    return Angle(temp)
 }
 
 infix fun Angle.rotate(angle: Angle) =
-	Angle(value + angle.value)
+    Angle(value + angle.value)
+
+operator fun Angle.unaryMinus() =
+    Angle(-value)
+
+operator fun Angle.times(k: Number) =
+    Angle(value * k.toDouble())
 
 infix fun Vector2D.rotate(angle: Angle) =
-	toAngle().rotate(angle).toVectorOf(length)
+    toAngle().rotate(angle).toVectorOf(length)
 
 fun Vector2D.rotate(angle: Angle, centre: Vector2D) =
-	minus(centre).rotate(angle).plus(centre)
+    minus(centre).rotate(angle).plus(centre)
 
 fun Angle.complementary(): Angle {
-	val abs = abs(value)
-	assert(abs in .0..halfPI)
-	return Angle(value.sign * (halfPI - abs))
+    val abs = abs(value)
+    assert(abs in .0..halfPI)
+    return Angle(value.sign * (halfPI - abs))
 }
 
 fun Angle.supplementary(): Angle {
-	val abs = abs(value)
-	assert(abs in .0..PI)
-	return Angle(value.sign * (PI - abs))
+    val abs = abs(value)
+    assert(abs in .0..PI)
+    return Angle(value.sign * (PI - abs))
 }
 
 fun Vector2D.complementary() =
-	toAngle().complementary().toVectorOf(length)
+    toAngle().complementary().toVectorOf(length)
 
 fun Vector2D.supplementary() =
-	toAngle().supplementary().toVectorOf(length)
-
-operator fun Angle.minus(other: Angle) =
-	Angle(value - other.value).adjust()
+    toAngle().supplementary().toVectorOf(length)
