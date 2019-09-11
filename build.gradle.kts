@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.40"
+    kotlin("jvm") version "1.3.50"
     id("org.jetbrains.dokka") version "0.9.17"
     `build-scan`
 }
@@ -23,12 +22,10 @@ allprojects {
         jcenter()
     }
     dependencies {
-        val kotlinVersion = getKotlinPluginVersion()
+        implementation(kotlin("stdlib-jdk8"))
 
-        "implementation"("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion)
-
-        "testImplementation"("junit:junit:4.12")
-        "testImplementation"("org.jetbrains.kotlin", "kotlin-test-junit", kotlinVersion)
+        testImplementation("junit", "junit", "+")
+        testImplementation(kotlin("test-junit"))
     }
     tasks.withType<KotlinCompile> {
         kotlinOptions {
