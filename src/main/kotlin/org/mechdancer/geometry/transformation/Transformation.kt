@@ -55,6 +55,12 @@ class Transformation(matrix: Matrix) {
 
     override fun toString() = matrix.matrixView()
 
+    override fun equals(other: Any?) = other is Transformation
+                                       && other.dim == dim
+                                       && other.matrix == matrix
+
+    override fun hashCode() = matrix.hashCode()
+
     companion object {
         /**
          * 生成 [dim] 维单位变换
@@ -73,13 +79,13 @@ class Transformation(matrix: Matrix) {
             require(dim == move.dim)
             return listMatrixOf(dim + 1, dim + 1) { r, c ->
                 when (r) {
-                    dim - 1 -> when (c) {
-                        dim - 1 -> 1.0
-                        else    -> 0.0
+                    dim  -> when (c) {
+                        dim  -> 1.0
+                        else -> 0.0
                     }
-                    else    -> when (c) {
-                        dim - 1 -> move[r]
-                        else    -> linear[r, c]
+                    else -> when (c) {
+                        dim  -> move[r]
+                        else -> linear[r, c]
                     }
                 }
             }.let(::Transformation)

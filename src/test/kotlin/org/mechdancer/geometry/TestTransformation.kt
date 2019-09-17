@@ -17,6 +17,7 @@ class TestTransformation {
             listVectorOf(1, 1) to listVectorOf(+1, -1)
         ).toTransformation().also(::println)!!
         Assert.assertTrue(transformation.isChiral)
+        val temp = transformation(vector2DOf(4, 2)).to2D()
         Assert.assertEquals(vector2DOf(4, -2), transformation(vector2DOf(4, 2)).to2D())
         Assert.assertEquals(vector2DOf(4, +2), (-transformation)(vector2DOf(4, -2)))
     }
@@ -46,6 +47,8 @@ class TestTransformation {
             vector2DOf(0, 1) to vector2DOf(-1, +0)
         ).toTransformationOrthotropic(false)
 
+        println(t0)
+        println(t1)
         Assert.assertEquals(t0, t1)
 
         val t2 = mapOf(
