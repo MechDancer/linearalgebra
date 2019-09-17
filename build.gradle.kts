@@ -12,7 +12,7 @@ buildScan {
     publishAlways()
 }
 
-version = "0.2.5-dev-2"
+version = "0.2.5-dev-3"
 
 allprojects {
     apply(plugin = "kotlin")

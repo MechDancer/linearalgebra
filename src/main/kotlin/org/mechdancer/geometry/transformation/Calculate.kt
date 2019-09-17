@@ -49,7 +49,7 @@ fun PointMap.toTransformation(): Transformation? {
         ?.solve()
         ?.toList()
         ?.foldToRows(dim)
-        ?.let { Transformation(it, ct - it * cs) }
+        ?.let { Transformation.fromInhomogeneous(it, ct - it * cs) }
 }
 
 // 最小二乘法构造矩阵
@@ -73,7 +73,7 @@ private fun Point2DMap.toTransformation(
         .equationSet
         .solve()
         ?.let(buildMatrix)
-        ?.let { Transformation(it, ct - it * cs) }
+        ?.let { Transformation.fromInhomogeneous(it, ct - it * cs) }
 }
 
 /**
