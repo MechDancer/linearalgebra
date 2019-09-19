@@ -76,10 +76,8 @@ fun ValueMutableMatrix.transposeAssign() {
 fun ValueMutableMatrix.rowEchelonAssignWith(
     other: Iterable<ValueMutableMatrix>
 ): Double {
-    for (r in 0 until row)
-        for (c in 0 until column)
-            if (doubleEquals(get(r, c), .0))
-                set(r, c, .0)
+    // 对接近零的数字规范化
+    forEachAssign { if (doubleEquals(it, .0)) .0 else it }
     // 记录交换次数
     var sum = 0
     // 固定行数
@@ -130,6 +128,14 @@ fun ValueMutableMatrix.simplifyAssignWith(
             tail = get(r, --c)
         } while (c >= 0 && tail == .0)
 
+// 在此进行 0 约化会导致 40 阶希尔伯特矩阵求逆的测试无法通过
+//      do {
+//          tail = get(r, --c)
+//          if (!doubleEquals(tail, .0)) break
+//          // 接近 0 视作 0
+//          set(r, c, .0)
+//      } while (c >= 0)
+
         // 有全零行，不再继续化简
         if (c < 0) break
 
@@ -147,15 +153,16 @@ fun ValueMutableMatrix.simplifyAssignWith(
     // 主对角线归一化
     for (r in 0 until row)
         while (c < column) {
-            get(r, c++)
-                .takeIf { it != .0 }
-                ?.let { 1 / it }
-                ?.let { k ->
-                    scale *= k
-                    timesRow(r, k)
-                    other.forEach { it.timesRow(r, k) }
-                }
-            ?: continue
+            val item = get(r, c++)
+            if (doubleEquals(item, .0)) {
+                set(r, c - 1, .0)
+                continue
+            }
+
+            val k = 1 / item
+            scale *= k
+            timesRow(r, k)
+            other.forEach { it.timesRow(r, k) }
             break
         }
 
