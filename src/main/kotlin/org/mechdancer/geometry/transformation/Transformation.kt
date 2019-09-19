@@ -11,15 +11,13 @@ import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.builder.arrayMatrixOfUnit
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
 import org.mechdancer.algebra.implement.matrix.builder.matrix
-import org.mechdancer.algebra.implement.matrix.builder.toListMatrix
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.toListVector
 import org.mechdancer.geometry.angle.Angle
 import org.mechdancer.geometry.angle.toVector
 
 /** 用齐次变换矩阵 [matrix] 存储的变换关系 */
-class Transformation(matrix: Matrix) {
-    private val matrix = matrix.toListMatrix()
+class Transformation(val matrix: Matrix) {
     /** 变换的维数 */
     val dim = matrix
                   .dim
