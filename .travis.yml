@@ -6,12 +6,10 @@ jdk:
 sudo: true
 
 before_install:
-  # 赋予执行权限
   - chmod a+x gradlew
 
 script:
-  # 清理、生成、测试、文档
-  - ./gradlew clean build dokka
+  - ./gradlew check allJars
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -28,15 +26,6 @@ deploy:
     file_glob:    true
     file:         "build/libs/*"
     api_key:      $GitHubToken
-    on:
-      tags:       true
-      branch:     version2
-  # 发布到 Bintray （布星）
-  - provider:     bintray
-    skip_cleanup: true
-    file:         "deploy.json"
-    user:         $BintrayUser
-    key:          $BintrayAPIKey
     on:
       tags:       true
       branch:     version2

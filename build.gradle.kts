@@ -1,8 +1,10 @@
+import org.jetbrains.dokka.gradle.LinkMapping
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.50"
-    id("org.jetbrains.dokka") version "0.9.17"
+    kotlin("jvm") version "1.3.50" apply (true)
+    id("org.jetbrains.dokka") version "0.9.18"
+    id("com.jfrog.bintray") version "1.8.4"
     `build-scan`
 }
 
@@ -12,43 +14,70 @@ buildScan {
     publishAlways()
 }
 
+group = "org.mechdancer"
 version = "0.2.5-dev-3"
 
-allprojects {
-    apply(plugin = "kotlin")
-    group = "org.mechdancer"
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        implementation(kotlin("stdlib-jdk8"))
 
-        testImplementation("junit", "junit", "+")
-        testImplementation(kotlin("test-junit"))
-    }
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
+repositories {
+    mavenCentral()
+    jcenter()
+}
+dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+
+    testImplementation("junit", "junit", "+")
+    testImplementation(kotlin("test-junit"))
+}
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
+
 
 tasks.dokka {
     outputFormat = "html"
     outputDirectory = "$buildDir/javadoc"
+    linkMappings.add(LinkMapping().apply {
+        dir = "src"
+        url = "https://github.com/MechDancer/linearalgebra/tree/master/src"
+        suffix = "#L"
+    })
 }
 
-val dokkaJar by tasks.creating(Jar::class) {
+val doc = tasks.register<Jar>("javadocJar") {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
     archiveClassifier.set("javadoc")
     from(tasks.dokka)
 }
 
-val packJars by tasks.creating(Jar::class) {
+val sources = tasks.register<Jar>("sourcesJar") {
     group = JavaBasePlugin.BUILD_TASK_NAME
-    description = "pack all jars"
-    from(tasks.jar)
-    from(dokkaJar)
+    description = "Creates sources jar"
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+val fat = tasks.register<Jar>("fatJar") {
+    group = JavaBasePlugin.BUILD_TASK_NAME
+    description = "Packs binary output with dependencies"
+    archiveClassifier.set("all")
+    from(sourceSets.main.get().output)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}
+
+tasks.register("allJars") {
+    group = JavaBasePlugin.BUILD_TASK_NAME
+    description = "Assembles all jars in one task"
+    dependsOn(doc, sources, fat, tasks.jar)
+}
+
+artifacts {
+    add("archives", tasks.jar)
+    add("archives", fat)
+    add("archives", sources)
+    add("archives", doc)
 }
