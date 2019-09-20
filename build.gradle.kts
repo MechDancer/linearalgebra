@@ -81,3 +81,26 @@ artifacts {
     add("archives", sources)
     add("archives", doc)
 }
+
+bintray {
+    user = "mechdancer"
+    key = System.getenv("BintrayToken")
+    setConfigurations("archives")
+    val v = version.toString()
+    val url = "https://github.com/MechDancer/linearalgebra"
+    pkg.apply {
+        name = project.name
+        desc = "linearalgebra kotlin utilities"
+        repo = "maven"
+        githubRepo = "MechDancer/linearalgebra"
+        vcsUrl = "$url.git"
+        issueTrackerUrl = "$url/issues"
+        publicDownloadNumbers = true
+        setLicenses("WTFPL")
+        version.apply {
+            name = v
+            vcsTag = v
+            websiteUrl = "$url/releases/tag/$v"
+        }
+    }
+}

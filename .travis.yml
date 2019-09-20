@@ -20,7 +20,6 @@ cache:
     - $HOME/.gradle/wrapper/
 
 deploy:
-  # 发布到 GitHub Release
   - provider:     releases
     skip_cleanup: true
     file_glob:    true
@@ -29,6 +28,11 @@ deploy:
     on:
       tags:       true
       branch:     version2
+  - provider: script
+    script: ./gradlew bintrayUpload
+    on:
+      tags:       true
+      branch: master
 
 notifications:
   webhooks: https://oapi.dingtalk.com/robot/send?access_token=4b59c5ece57fc88af8fda28cc07573c4caf525aa69afc0cc888ccf3ce6dbe41b
