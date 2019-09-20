@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm") version "1.3.50" apply (true)
     id("org.jetbrains.dokka") version "0.9.18"
     id("com.jfrog.bintray") version "1.8.4"
+    `maven-publish`
     `build-scan`
 }
 
@@ -75,15 +76,12 @@ tasks.register("allJars") {
     dependsOn(doc, sources, fat, tasks.jar)
 }
 
-artifacts {
-    add("archives", tasks.jar)
-    add("archives", fat)
-    add("archives", sources)
-    add("archives", doc)
+tasks.bintrayUpload.configure {
+    dependsOn(tasks.publishToMavenLocal)
 }
 
 bintray {
-    user = "mechdancer"
+    user = "berberman"
     key = System.getenv("BintrayToken")
     setConfigurations("archives")
     val v = version.toString()
@@ -92,6 +90,7 @@ bintray {
         name = project.name
         desc = "linearalgebra kotlin utilities"
         repo = "maven"
+        userOrg = "mechdancer"
         githubRepo = "MechDancer/linearalgebra"
         vcsUrl = "$url.git"
         issueTrackerUrl = "$url/issues"
@@ -103,4 +102,33 @@ bintray {
             websiteUrl = "$url/releases/tag/$v"
         }
     }
+}
+
+publishing {
+    repositories {
+        maven("$buildDir/repo")
+    }
+
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
+
+artifacts {
+    add("archives", tasks.jar)
+    add("archives", fat)
+    add("archives", sources)
+    add("archives", doc)
+    add("archives", pomFile())
+
+}
+
+fun pomFile(): File {
+    val path = "${buildDir.absolutePath}/publications/maven/"
+    val old = File(path + "pom-default.xml")
+    val f = File("$path${project.name}-$version.pom")
+    old.renameTo(f)
+    return f
 }
