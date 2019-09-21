@@ -37,13 +37,8 @@ tasks.withType<KotlinCompile> {
 
 
 tasks.dokka {
-    outputFormat = "html"
+    outputFormat = "javadoc"
     outputDirectory = "$buildDir/javadoc"
-    linkMappings.add(LinkMapping().apply {
-        dir = "src"
-        url = "https://github.com/MechDancer/linearalgebra/tree/master/src"
-        suffix = "#L"
-    })
 }
 
 val doc = tasks.register<Jar>("javadocJar") {
@@ -76,8 +71,18 @@ tasks.register("allJars") {
     dependsOn(doc, sources, fat, tasks.jar)
 }
 
-tasks.bintrayUpload.configure {
+val rename = tasks.register("renamePomFile") {
     dependsOn(tasks.publishToMavenLocal)
+    doLast {
+        val path = "${buildDir.absolutePath}/publications/maven/"
+        val old = File(path + "pom-default.xml")
+        val f = File("$path${project.name}-$version.pom")
+        old.renameTo(f)
+    }
+}
+
+tasks.bintrayUpload.configure {
+    dependsOn(rename)
 }
 
 bintray {
@@ -121,14 +126,6 @@ artifacts {
     add("archives", fat)
     add("archives", sources)
     add("archives", doc)
-    add("archives", pomFile())
+    add("archives", File("${buildDir.absolutePath}/publications/maven/${project.name}-$version.pom"))
 
-}
-
-fun pomFile(): File {
-    val path = "${buildDir.absolutePath}/publications/maven/"
-    val old = File(path + "pom-default.xml")
-    val f = File("$path${project.name}-$version.pom")
-    old.renameTo(f)
-    return f
 }
