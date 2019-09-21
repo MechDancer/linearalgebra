@@ -1,4 +1,3 @@
-import org.jetbrains.dokka.gradle.LinkMapping
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -91,6 +90,7 @@ bintray {
     setConfigurations("archives")
     val v = version.toString()
     val url = "https://github.com/MechDancer/linearalgebra"
+    publish = true
     pkg.apply {
         name = project.name
         desc = "linearalgebra kotlin utilities"
