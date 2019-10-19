@@ -18,8 +18,8 @@ interface Matrix {
 	val column: Int
 
 	/**
-	 * Get an element of this matrix
-	 * 获取[r]行[c]列处的元素
+	 * Get an element of row [r] column [c]
+	 * 获取 [r] 行 [c] 列处的元素
 	 */
 	operator fun get(r: Int, c: Int): Double
 
@@ -37,13 +37,13 @@ interface Matrix {
 
 	/**
 	 * Get one row vector of this matrix
-	 * 获取第[r]行的向量
+	 * 获取第 [r] 行的向量
 	 */
 	fun row(r: Int): Vector
 
 	/**
 	 * Get one column vector of this matrix
-	 * 获取第[c]列的向量
+	 * 获取第 [c] 列的向量
 	 */
 	fun column(c: Int): Vector
 

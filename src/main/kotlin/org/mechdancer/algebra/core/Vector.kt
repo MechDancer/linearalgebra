@@ -12,7 +12,7 @@ interface Vector {
 	val dim: Int
 
 	/**
-	 * Get item on the [i] dim
+	 * Get item of the [i] dim
 	 * 获取指定维度上的值
 	 */
 	operator fun get(i: Int): Double

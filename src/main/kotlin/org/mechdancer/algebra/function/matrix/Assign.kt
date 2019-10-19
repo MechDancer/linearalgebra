@@ -17,6 +17,7 @@ private inline fun ValueMutableMatrix.forEachAssign(block: (Double) -> Double) =
     }
 
 /**
+ * Multiply [k] with all elements
  * 原地数乘
  */
 operator fun ValueMutableMatrix.timesAssign(k: Number) {
@@ -25,6 +26,7 @@ operator fun ValueMutableMatrix.timesAssign(k: Number) {
 }
 
 /**
+ * Divide all elements by [k]
  * 原地除以数
  */
 operator fun ValueMutableMatrix.divAssign(k: Number) {
@@ -44,18 +46,21 @@ private fun ValueMutableMatrix.zipAssign(
 }
 
 /**
+ * Plus a matrix [other]
  * 原地加上另一个矩阵
  */
 operator fun ValueMutableMatrix.plusAssign(other: Matrix) =
     zipAssign(other) { a, b -> a + b }
 
 /**
+ * Minus a matrix [other]
  * 原地减去另一个矩阵
  */
 operator fun ValueMutableMatrix.minusAssign(other: Matrix) =
     zipAssign(other) { a, b -> a - b }
 
 /**
+ * Transpose (Square only)
  * 原地转置
  * 只适用于方阵
  */
@@ -70,7 +75,12 @@ fun ValueMutableMatrix.transposeAssign() {
 }
 
 /**
+ * Transform to row echelon matrix using elementary transformation,
+ * and apply this transformation to [other]
+ * @return impact on its determinate value
+ *
  * 原地通过行初等变换变为行阶梯型阵
+ * 对 [other] 应用同样变换
  * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.rowEchelonAssignWith(
@@ -111,7 +121,12 @@ fun ValueMutableMatrix.rowEchelonAssignWith(
 }
 
 /**
+ * Transform to the simplest row echelon matrix using elementary transformation,
+ * and apply this transformation to [other]
+ * @return impact on its determinate value
+ *
  * 原地通过行初等变换变为最简行阶梯型阵
+ * 对 [other] 应用同样变换
  * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.simplifyAssignWith(
@@ -170,28 +185,45 @@ fun ValueMutableMatrix.simplifyAssignWith(
 }
 
 /**
+ * Transform to row echelon matrix using elementary transformation,
+ * and apply this transformation to [other]
+ * @return impact on its determinate value
+ *
  * 原地通过行初等变换变为行阶梯型阵
- * @return 变换导致行列式值的符号变化
+ * 对 [other] 应用同样变换
+ * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.rowEchelonAssignWith(
     vararg other: ValueMutableMatrix
 ) = rowEchelonAssignWith(other.toList())
 
 /**
+ * Transform to the simplest row echelon matrix using elementary transformation,
+ * and apply this transformation to [other]
+ * @return impact on its determinate value
+ *
  * 原地通过行初等变换变为最简行阶梯型阵
- * @return 变换导致行列式值的符号变化
+ * 对 [other] 应用同样变换
+ * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.simplifyAssignWith(
     vararg other: ValueMutableMatrix
 ) = simplifyAssignWith(other.toList())
 
 /**
+ * Transform to row echelon matrix using elementary transformation
+ * @return impact on its determinate value
+ *
  * 原地通过行初等变换变为行阶梯型阵
- * @return 变换导致行列式值的符号变化
+ * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.rowEchelonAssign() = rowEchelonAssignWith()
 
 /**
+ * Transform to the simplest row echelon matrix using elementary transformation
+ * @return impact on its determinate value
+ *
  * 原地通过行初等变换变为最简行阶梯型阵
+ * @return 变换导致行列式值的变化的倍数
  */
 fun ValueMutableMatrix.simplifyAssign() = simplifyAssignWith()

@@ -61,7 +61,7 @@ fun Vector.rowView() =
 	"${dim}D Vector [${toList().joinToString(" ") { format(it) }}]"
 
 /**
- * Convert the matrix to string
+ * Pretty print a matrix
  * 将矩阵显示成字符串
  */
 fun Matrix.matrixView(
@@ -132,13 +132,13 @@ fun tie(vararg items: Any?): String {
 }
 
 /**
- * A equation will be display as an augmented matrix
+ * Display a equation set as an augmented matrix
  * 方程组显示为增广矩阵
  */
 fun EquationSet.matrixView() = toMatrixForm().matrixView()
 
 /**
- * A equation will be display as an augmented matrix
+ *  Display an augmented matrix
  * 方程组显示为增广矩阵
  */
 fun AugmentedMatrix.matrixView() =
