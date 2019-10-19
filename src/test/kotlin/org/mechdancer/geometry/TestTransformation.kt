@@ -18,7 +18,7 @@ class TestTransformation {
         ).toTransformation().also(::println)!!
         Assert.assertTrue(transformation.isChiral)
         Assert.assertEquals(vector2DOf(4, -2), transformation(vector2DOf(4, 2)).to2D())
-        Assert.assertEquals(vector2DOf(4, +2), (-transformation)(vector2DOf(4, -2)))
+        Assert.assertEquals(vector2DOf(4, +2), (transformation.inverse())(vector2DOf(4, -2)))
     }
 
     @Test

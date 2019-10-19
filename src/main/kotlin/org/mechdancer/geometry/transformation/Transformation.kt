@@ -42,7 +42,7 @@ class Transformation(val matrix: Matrix) {
         Transformation(matrix * others.matrix)
 
     /** 求逆变换 */
-    operator fun unaryMinus() =
+    fun inverse() =
         Transformation(matrix.inverse())
 
     /**

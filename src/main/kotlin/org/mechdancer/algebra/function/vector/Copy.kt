@@ -3,6 +3,7 @@ package org.mechdancer.algebra.function.vector
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.implement.vector.ListVector
 import org.mechdancer.algebra.implement.vector.Vector2D
+import org.mechdancer.algebra.implement.vector.Vector3D
 
 /**
  * Copy a 2-dimension vector
@@ -12,7 +13,18 @@ import org.mechdancer.algebra.implement.vector.Vector2D
  * @param y the 2nd dimension
  */
 fun Vector2D.copy(x: Number? = null, y: Number? = null) =
-	Vector2D(x?.toDouble() ?: this.x, y?.toDouble() ?: this.y)
+    Vector2D(x?.toDouble() ?: this.x, y?.toDouble() ?: this.y)
+
+/**
+ * Copy a 3-dimension vector
+ * 复制一个二维向量
+ *
+ * @param x the 1st dimension
+ * @param y the 2nd dimension
+ * @param z the 3rd dimension
+ */
+fun Vector3D.copy(x: Number? = null, y: Number? = null, z: Number? = null) =
+    Vector3D(x?.toDouble() ?: this.x, y?.toDouble() ?: this.y, z?.toDouble() ?: this.z)
 
 /**
  * Copy a vector and change value of the first 3 dimension by their name
@@ -23,11 +35,11 @@ fun Vector2D.copy(x: Number? = null, y: Number? = null) =
  * @param z the 3rd dimension
  */
 fun Vector.copy(x: Number? = null, y: Number? = null, z: Number? = null): Vector {
-	val map = mutableMapOf<Int, Double>()
-	x?.toDouble()?.also { map += 0 to it }
-	y?.toDouble()?.also { map += 1 to it }
-	z?.toDouble()?.also { map += 2 to it }
-	return List(dim) { map[it] ?: get(it) }.let(::ListVector)
+    val map = mutableMapOf<Int, Double>()
+    x?.toDouble()?.also { map += 0 to it }
+    y?.toDouble()?.also { map += 1 to it }
+    z?.toDouble()?.also { map += 2 to it }
+    return List(dim) { map[it] ?: get(it) }.let(::ListVector)
 }
 
 /**
@@ -41,8 +53,8 @@ fun Vector.copy(x: Number? = null, y: Number? = null, z: Number? = null): Vector
  * @param change pair of index and the new value
  */
 fun Vector.copy(vararg change: Pair<Int, Number>): Vector {
-	val map = change.associate { it }
-	return List(dim) { map[it]?.toDouble() ?: get(it) }.let(::ListVector)
+    val map = change.associate { it }
+    return List(dim) { map[it]?.toDouble() ?: get(it) }.let(::ListVector)
 }
 
 /**
@@ -50,11 +62,11 @@ fun Vector.copy(vararg change: Pair<Int, Number>): Vector {
  * 从向量选取指定的维度组成新的向量
  */
 fun Vector.select(vararg indexes: Int): Vector =
-	toList().filterIndexed { i, _ -> i in indexes }.let(::ListVector)
+    toList().filterIndexed { i, _ -> i in indexes }.let(::ListVector)
 
 /**
  * Select a range of index of the dimensions, then copy them to a new vector
  * 从向量选取指定的维度组成新的向量
  */
 fun Vector.select(range: IntRange): Vector =
-	toList().drop(range.first).take(range.last - range.first + 1).let(::ListVector)
+    toList().drop(range.first).take(range.last - range.first + 1).let(::ListVector)
