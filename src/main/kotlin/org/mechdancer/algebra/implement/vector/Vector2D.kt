@@ -8,8 +8,10 @@ import org.mechdancer.algebra.function.vector.y
 import org.mechdancer.algebra.hash
 import kotlin.math.hypot
 
-class Vector2D(val x: Double, val y: Double) : Vector {
+data class Vector2D(val x: Double, val y: Double) : Vector {
     override val dim = 2
+
+    override val length by lazy { hypot(x, y) }
 
     override fun get(i: Int) =
         when (i) {
@@ -18,13 +20,11 @@ class Vector2D(val x: Double, val y: Double) : Vector {
             else -> throw IllegalArgumentException()
         }
 
-    override val length by lazy { hypot(x, y) }
-
     override fun toList() = listOf(x, y)
 
     override fun equals(other: Any?) =
         this === other
-            || (other is Vector
+        || (other is Vector
             && other.dim == 2
             && doubleEquals(other.x, x)
             && doubleEquals(other.y, y))

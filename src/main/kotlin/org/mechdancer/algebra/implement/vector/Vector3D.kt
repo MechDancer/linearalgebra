@@ -9,21 +9,10 @@ import org.mechdancer.algebra.function.vector.z
 import org.mechdancer.algebra.hash
 import kotlin.math.sqrt
 
-class Vector3D(val x: Double, val y: Double, val z: Double) : Vector {
-
+data class Vector3D(val x: Double, val y: Double, val z: Double) : Vector {
     override val dim: Int = 3
 
     override val length: Double by lazy { sqrt(x * x + y * y + z * z) }
-
-    override fun equals(other: Any?): Boolean =
-        this === other
-            || (other is Vector
-            && other.dim == 3
-            && doubleEquals(other.x, x)
-            && doubleEquals(other.y, y)
-            && doubleEquals(other.z, z)
-            )
-
 
     override fun get(i: Int): Double = when (i) {
         0    -> x
@@ -32,10 +21,17 @@ class Vector3D(val x: Double, val y: Double, val z: Double) : Vector {
         else -> throw IllegalArgumentException()
     }
 
-    override fun hashCode(): Int = hash(x, y, z)
-
     override fun toList(): List<Double> = listOf(x, y, z)
 
-    override fun toString(): String = columnView()
+    override fun equals(other: Any?): Boolean =
+        this === other
+        || (other is Vector
+            && other.dim == 3
+            && doubleEquals(other.x, x)
+            && doubleEquals(other.y, y)
+            && doubleEquals(other.z, z))
 
+    override fun hashCode(): Int = hash(x, y, z)
+
+    override fun toString(): String = columnView()
 }
