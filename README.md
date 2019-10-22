@@ -19,7 +19,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'org.mechdancer:linearalgebra:0.2.5-dev-3'
+    implementation 'org.mechdancer:linearalgebra:${latest_version}'
 }
 ```
 
@@ -37,7 +37,7 @@ dependencies {
 <dependency>
   <groupId>org.mechdancer</groupId>
   <artifactId>linearalgebra</artifactId>
-  <version>0.2.5-dev-3</version>
+  <version>latest_version</version>
   <type>pom</type>
 </dependency>
 ```

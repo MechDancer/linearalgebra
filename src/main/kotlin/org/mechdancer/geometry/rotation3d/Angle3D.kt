@@ -131,24 +131,24 @@ sealed class Angle3D(val first: Angle, val second: Angle, val third: Angle, val 
                             firstAngle = .0  /*  arbitrary  */
                             /*  matrix.get(2, 1) == sin(firstAngle + thirdAngle)  */
                             /*  matrix.get(1, 1) == cos(firstAngle + thirdAngle)  */
-                            thirdAngle = (atan2(matrix.get(2, 1), matrix.get(1, 1)) - firstAngle)
+                            thirdAngle = (atan2(matrix[2, 1], matrix[1, 1]) - firstAngle)
                         }
                         doubleEquals(test, -1.0) -> {
                             secondAngle = PI
                             firstAngle = .0  /*  arbitrary  */
                             /*  matrix.get(1, 2) == -sin(firstAngle - thirdAngle)  */
                             /*  matrix.get(1, 1) == cos(firstAngle - thirdAngle)  */
-                            thirdAngle = (firstAngle - atan2(-matrix.get(1, 2), matrix.get(1, 1)))
+                            thirdAngle = (firstAngle - atan2(-matrix[1, 2], matrix[1, 1]))
                         }
                         else                     -> {
                             /*  matrix.get(0, 0) == cos(secondAngle)  */
-                            secondAngle = (if (neg) acos(matrix.get(0, 0)) else -acos(matrix.get(0, 0)))
+                            secondAngle = (if (neg) acos(matrix[0, 0]) else -acos(matrix[0, 0]))
                             /*  matrix.get(0, 1) == sin(firstAngle) * sin(secondAngle)  */
                             /*  matrix.get(0, 2) == cos(firstAngle) * sin(secondAngle)  */
-                            firstAngle = atan2(matrix.get(0, 1) / sin(secondAngle), matrix.get(0, 2) / sin(secondAngle))
+                            firstAngle = atan2(matrix[0, 1] / sin(secondAngle), matrix[0, 2] / sin(secondAngle))
                             /*  matrix.get(1, 0) == sin(secondAngle) * sin(thirdAngle)  */
                             /*  matrix.get(2, 0) == -(cos(thirdAngle) * sin(secondAngle))  */
-                            thirdAngle = atan2(matrix.get(1, 0) / sin(secondAngle), -matrix.get(2, 0) / sin(secondAngle))
+                            thirdAngle = atan2(matrix[1, 0] / sin(secondAngle), -matrix[2, 0] / sin(secondAngle))
                         }
                     }
                 }
