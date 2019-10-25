@@ -108,9 +108,19 @@ bintray {
 }
 
 publishing {
+
     repositories {
         maven("$buildDir/repo")
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/MechDancer/linearalgebra")
+            credentials {
+                username = "MechDancerProject"
+                password = System.getenv("GitHubToken")
+            }
+        }
     }
+
 
     publications {
         create<MavenPublication>("maven") {
