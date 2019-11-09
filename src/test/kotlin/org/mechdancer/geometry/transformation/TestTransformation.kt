@@ -1,12 +1,10 @@
-package org.mechdancer.geometry
+package org.mechdancer.geometry.transformation
 
 import org.junit.Assert
 import org.junit.Test
 import org.mechdancer.algebra.implement.vector.listVectorOf
 import org.mechdancer.algebra.implement.vector.to2D
 import org.mechdancer.algebra.implement.vector.vector2DOf
-import org.mechdancer.geometry.transformation.toTransformation
-import org.mechdancer.geometry.transformation.toTransformationOrthotropic
 
 class TestTransformation {
     @Test
