@@ -15,7 +15,7 @@ buildScan {
 }
 
 group = "org.mechdancer"
-version = "0.2.6-dev-1"
+version = "0.2.6-dev-2"
 
 repositories {
     mavenCentral()
