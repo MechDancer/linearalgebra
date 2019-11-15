@@ -36,13 +36,6 @@ data class Angle3D(val first: Angle, val second: Angle, val third: Angle, val ax
         }
     }
 
-    /**
-     * 转为内旋
-     *
-     * Intrinsic
-     */
-    fun toEuler() = copy(axesOrder = axesOrder.reverse())
-
     companion object {
         /**
          * 绕 X 轴逆时针旋转 [angle]
