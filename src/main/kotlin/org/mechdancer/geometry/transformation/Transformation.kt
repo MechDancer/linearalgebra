@@ -10,11 +10,7 @@ import org.mechdancer.algebra.function.vector.select
 import org.mechdancer.algebra.implement.matrix.Cofactor
 import org.mechdancer.algebra.implement.matrix.builder.arrayMatrixOfUnit
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
-import org.mechdancer.algebra.implement.matrix.builder.matrix
-import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.toListVector
-import org.mechdancer.geometry.angle.Angle
-import org.mechdancer.geometry.angle.toVector
 
 /** 用齐次变换矩阵 [matrix] 存储的变换关系 */
 class Transformation(val matrix: Matrix) {
@@ -53,9 +49,10 @@ class Transformation(val matrix: Matrix) {
 
     override fun toString() = matrix.matrixView()
 
-    override fun equals(other: Any?) = other is Transformation
-                                       && other.dim == dim
-                                       && other.matrix == matrix
+    override fun equals(other: Any?) =
+        other is Transformation
+        && other.dim == dim
+        && other.matrix == matrix
 
     override fun hashCode() = matrix.hashCode()
 
@@ -88,21 +85,5 @@ class Transformation(val matrix: Matrix) {
                 }
             }.let(::Transformation)
         }
-
-        /**
-         * 将位姿转化为位姿上坐标系的变换
-         */
-        fun fromPose(
-            p: Vector2D,
-            d: Angle
-        ) = d.toVector()
-            .let {
-                matrix {
-                    row(+it.x, -it.y, +p.x)
-                    row(+it.y, +it.x, +p.y)
-                    row(0, 0, 1)
-                }
-            }
-            .let(::Transformation)
     }
 }

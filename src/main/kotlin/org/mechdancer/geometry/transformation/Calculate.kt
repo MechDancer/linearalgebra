@@ -12,11 +12,37 @@ import org.mechdancer.algebra.implement.equation.builder.EquationSetBuilder
 import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.algebra.implement.vector.Vector2D
+import org.mechdancer.algebra.implement.vector.to2D
 import org.mechdancer.algebra.implement.vector.toListVector
+import org.mechdancer.algebra.implement.vector.vector2DOfZero
 import org.mechdancer.algebra.uniqueValue
+import org.mechdancer.geometry.angle.toAngle
+import org.mechdancer.geometry.angle.toRad
+import org.mechdancer.geometry.angle.toVector
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.math.abs
+
+fun Transformation.toPose2D(): Pose2D {
+    require(dim == 2) { "pose is a 2d transformation" }
+    val p = invoke(vector2DOfZero()).to2D()
+    val d = invokeLinear(.0.toRad().toVector()).to2D().toAngle()
+    return Pose2D(p, d)
+}
+
+fun Pose2D.toTransformation(): Transformation {
+    val (x, y) = p
+    val (cos, sin) = d.toVector()
+    return Transformation(
+        matrix {
+            row(+cos, -sin, x)
+            row(+sin, +cos, y)
+            row(0, 0, 1)
+        })
+}
+
+fun Transformation.transform(pose: Pose2D) =
+    Pose2D(invoke(pose.p).to2D(), invokeLinear(pose.d.toVector()).to2D().toAngle())
 
 /**
  * 最小二乘法从点对集推算空间变换子
@@ -24,10 +50,10 @@ import kotlin.math.abs
  */
 fun PointMap.toTransformation(): Transformation? {
     val dim = sources
-        .map { it.dim }
-        .union(targets.map { it.dim })
-        .uniqueValue()
-        ?: throw IllegalArgumentException("points not in same dim")
+                  .map { it.dim }
+                  .union(targets.map { it.dim })
+                  .uniqueValue()
+              ?: throw IllegalArgumentException("points not in same dim")
     val temp = DoubleArray(dim * dim)
 
     val ct = targets.centre()
@@ -83,9 +109,9 @@ private fun Point2DMap.toTransformation(
 fun Point2DMap.toTransformationOrthotropic(chiral: Boolean) =
     if (!chiral)
         toTransformation({ a, b ->
-            this[+b.x, -b.y] = a.x
-            this[+b.y, +b.x] = a.y
-        }) {
+                             this[+b.x, -b.y] = a.x
+                             this[+b.y, +b.x] = a.y
+                         }) {
             matrix {
                 row(+it[0], -it[1])
                 row(+it[1], +it[0])
@@ -93,9 +119,9 @@ fun Point2DMap.toTransformationOrthotropic(chiral: Boolean) =
         }
     else
         toTransformation({ a, b ->
-            this[+b.x, +b.y] = a.x
-            this[-b.y, +b.x] = a.y
-        }) {
+                             this[+b.x, +b.y] = a.x
+                             this[-b.y, +b.x] = a.y
+                         }) {
             matrix {
                 row(+it[0], +it[1])
                 row(+it[1], -it[0])

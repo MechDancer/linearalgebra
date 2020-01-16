@@ -2,16 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.61" apply (true)
-    id("org.jetbrains.dokka") version "0.10.0"
+//    id("org.jetbrains.dokka") version "0.10.0"
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
-    `build-scan`
-}
-
-buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
-    publishAlways()
 }
 
 group = "org.mechdancer"
@@ -33,16 +26,16 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.dokka {
-    outputFormat = "javadoc"
-    outputDirectory = "$buildDir/javadoc"
-}
+//tasks.dokka {
+//    outputFormat = "javadoc"
+//    outputDirectory = "$buildDir/javadoc"
+//}
 
 val doc = tasks.register<Jar>("javadocJar") {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+//    from(tasks.dokka)
 }
 
 val sources = tasks.register<Jar>("sourcesJar") {
@@ -57,9 +50,7 @@ val fat = tasks.register<Jar>("fatJar") {
     description = "Packs binary output with dependencies"
     archiveClassifier.set("all")
     from(sourceSets.main.get().output)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
+    from({ configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) } })
 }
 
 tasks.register("allJars") {
@@ -108,7 +99,6 @@ bintray {
 }
 
 publishing {
-
     repositories {
         maven("$buildDir/repo")
         maven {
@@ -120,7 +110,6 @@ publishing {
             }
         }
     }
-
 
     publications {
         create<MavenPublication>("maven") {
