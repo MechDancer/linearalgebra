@@ -4,10 +4,7 @@ import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.equation.solve
 import org.mechdancer.algebra.function.matrix.times
-import org.mechdancer.algebra.function.vector.DistanceType
-import org.mechdancer.algebra.function.vector.centre
-import org.mechdancer.algebra.function.vector.div
-import org.mechdancer.algebra.function.vector.minus
+import org.mechdancer.algebra.function.vector.*
 import org.mechdancer.algebra.implement.equation.builder.EquationSetBuilder
 import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
@@ -22,6 +19,11 @@ import org.mechdancer.geometry.angle.toVector
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
+
+fun Transformation.transform(pose: Pose2D) =
+    Pose2D(invoke(pose.p).to2D(), invokeLinear(pose.d.toVector()).to2D().toAngle())
 
 fun Transformation.toPose2D(): Pose2D {
     require(dim == 2) { "pose is a 2d transformation" }
@@ -41,8 +43,31 @@ fun Pose2D.toTransformation(): Transformation {
         })
 }
 
-fun Transformation.transform(pose: Pose2D) =
-    Pose2D(invoke(pose.p).to2D(), invokeLinear(pose.d.toVector()).to2D().toAngle())
+fun Pose3D.toTransformation(): Transformation {
+    val (x, y, z) = p
+    val half = theta.asRadian() / 2
+    val a = cos(half)
+    val (b, c, d) = u * sin(half)
+
+    val ab = a * b
+    val ac = a * c
+    val ad = a * d
+    val bc = b * c
+    val bd = b * d
+    val cd = c * d
+
+    val b2 = b * b
+    val c2 = c * c
+    val d2 = d * d
+
+    return Transformation(
+        matrix {
+            row(1 - 2 * c2 - 2 * d2, 2 * bc - 2 * ad, 2 * ac + 2 * bd, x)
+            row(2 * bc + 2 * ad, 1 - 2 * b2 - 2 * d2, 2 * cd - 2 * ab, y)
+            row(2 * bd - 2 * ac, 2 * ab + 2 * cd, 1 - 2 * b2 - 2 * c2, z)
+            row(0, 0, 0, 1)
+        })
+}
 
 /**
  * 最小二乘法从点对集推算空间变换子

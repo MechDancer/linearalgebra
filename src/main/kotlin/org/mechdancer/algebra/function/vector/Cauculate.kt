@@ -1,10 +1,8 @@
 package org.mechdancer.algebra.function.vector
 
 import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.implement.vector.ListVector
-import org.mechdancer.algebra.implement.vector.Vector2D
-import org.mechdancer.algebra.implement.vector.Vector3D
-import org.mechdancer.algebra.implement.vector.listVectorOfZero
+import org.mechdancer.algebra.doubleEquals
+import org.mechdancer.algebra.implement.vector.*
 import org.mechdancer.algebra.uniqueValue
 import org.mechdancer.algebra.zipFast
 import kotlin.math.abs
@@ -15,13 +13,16 @@ operator fun Vector.div(k: Number) = toList().map { it / k.toDouble() }.let(::Li
 operator fun Vector2D.times(k: Number) = k.toDouble().let { Vector2D(x * it, y * it) }
 operator fun Vector2D.div(k: Number) = k.toDouble().let { Vector2D(x / it, y / it) }
 
+operator fun Vector3D.times(k: Number) = k.toDouble().let { Vector3D(x * it, y * it, z * it) }
+operator fun Vector3D.div(k: Number) = k.toDouble().let { Vector3D(x / it, y / it, z / it) }
+
 private fun differentDimException(a: Vector, b: Vector) =
     IllegalArgumentException("operate two vector of different dim (${a.dim} and ${b.dim})")
 
 private inline fun Vector.zip(other: Vector, block: (Double, Double) -> Double) =
     takeIf { dim == other.dim }
         ?.let { toList().zipFast(other.toList(), block) }
-        ?: throw differentDimException(this, other)
+    ?: throw differentDimException(this, other)
 
 private inline fun Vector.zipToNew(other: Vector, block: (Double, Double) -> Double) =
     zip(other, block).let(::ListVector)
@@ -49,13 +50,27 @@ infix fun Vector3D.cross(other: Vector3D) = Vector3D(
     x * other.y - y * other.x
 )
 
-operator fun Vector.unaryPlus() = this
 operator fun Vector.unaryMinus() = toList().map { -it }.let(::ListVector)
 operator fun Vector2D.unaryMinus() = Vector2D(-x, -y)
 operator fun Vector3D.unaryMinus() = Vector3D(-x, -y, -z)
 
-fun Vector.reversed() = -this
-fun Vector.normalize() = div(length)
+fun Vector.normalize() =
+    if (doubleEquals(length, .0))
+        listVectorOfZero(dim)
+    else
+        div(length)
+
+fun Vector2D.normalize() =
+    if (doubleEquals(length, .0))
+        vector2DOfZero()
+    else
+        div(length)
+
+fun Vector3D.normalize() =
+    if (doubleEquals(length, .0))
+        vector3DOfZero()
+    else
+        div(length)
 
 /** 求向量表示的点集的“重心” */
 fun Collection<Vector>.centre() =
@@ -63,7 +78,7 @@ fun Collection<Vector>.centre() =
         ?.let(::listVectorOfZero)
         ?.let { fold(it) { sum, v -> sum + v } }
         ?.div(size)
-        ?: throw UnsupportedOperationException("vector dimensions are different")
+    ?: throw UnsupportedOperationException("vector dimensions are different")
 
 /** 求二维向量表示的点集的“重心” */
 fun Collection<Vector2D>.centre() =

@@ -8,12 +8,15 @@ import org.mechdancer.algebra.function.vector.y
 import org.mechdancer.algebra.hash
 import kotlin.math.hypot
 
+/**
+ * 二维向量
+ */
 data class Vector2D(val x: Double, val y: Double) : Vector {
-    override val dim = 2
+    override val dim: Int get() = 2
 
-    override val length by lazy { hypot(x, y) }
+    override val length: Double by lazy { hypot(x, y) }
 
-    override fun get(i: Int) =
+    override fun get(i: Int): Double =
         when (i) {
             0    -> x
             1    -> y

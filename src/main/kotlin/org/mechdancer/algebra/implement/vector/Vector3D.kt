@@ -9,17 +9,21 @@ import org.mechdancer.algebra.function.vector.z
 import org.mechdancer.algebra.hash
 import kotlin.math.sqrt
 
+/**
+ * 三维向量
+ */
 data class Vector3D(val x: Double, val y: Double, val z: Double) : Vector {
-    override val dim: Int = 3
+    override val dim: Int get() = 3
 
     override val length: Double by lazy { sqrt(x * x + y * y + z * z) }
 
-    override fun get(i: Int): Double = when (i) {
-        0    -> x
-        1    -> y
-        2    -> z
-        else -> throw IllegalArgumentException()
-    }
+    override fun get(i: Int): Double =
+        when (i) {
+            0    -> x
+            1    -> y
+            2    -> z
+            else -> throw IllegalArgumentException()
+        }
 
     override fun toList(): List<Double> = listOf(x, y, z)
 

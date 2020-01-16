@@ -7,7 +7,7 @@ import org.mechdancer.algebra.implement.vector.vector2DOf
 import org.mechdancer.geometry.angle.*
 
 /**
- * 里程计
+ * 二维位姿（二维里程）
  * @param p 位置
  * @param d 方向
  */
