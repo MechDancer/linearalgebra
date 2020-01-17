@@ -37,7 +37,7 @@ data class Pose3D(
     infix fun plusDelta(delta: Pose3D): Pose3D {
         val (v0, q0) = toQuaternions()
         val (v1, q1) = delta.toQuaternions()
-        return pose3D(v0 + q0 * v1 * q0.conjugate,
+        return Pose3D(v0 + q0 * v1 * q0.conjugate,
                       q1 * q0)
     }
 
@@ -46,32 +46,32 @@ data class Pose3D(
         val (v0, q0) = toQuaternions()
         val (v1, q1) = delta.toQuaternions()
         val qi = q1.conjugate * q0
-        return pose3D(v0 - qi * v1 * qi.conjugate, qi)
+        return Pose3D(v0 - qi * v1 * qi.conjugate, qi)
     }
 
     /** 计算里程从标记 [mark] 到当前状态的增量 */
     infix fun minusState(mark: Pose3D): Pose3D {
         val (v0, q0) = mark.toQuaternions()
         val (v1, q1) = toQuaternions()
-        return pose3D(q0.conjugate * (v1 - v0) * q0,
+        return Pose3D(q0.conjugate * (v1 - v0) * q0,
                       q1 * q0.conjugate)
     }
 
     override fun toString() = "p = ${p.simpleView()}, u = ${u.simpleView()}, θ = $theta"
 
+    private fun toQuaternions(): Pair<Quaternion, Quaternion> {
+        val (x, y, z) = p
+        val a = cos(d.length)
+        val (b, c, d) = d.normalize() * sin(d.length)
+        return Quaternion(.0, x, y, z) to Quaternion(a, b, c, d)
+    }
+
+    private constructor(p: Quaternion, d: Quaternion)
+        : this(p.v, d.v.run { normalize() * atan2(length, d.r) }) {
+        assert(doubleEquals(p.r, .0))
+    }
+
     private companion object {
         fun Vector3D.simpleView() = "($x, $y, $z)"
-
-        fun Pose3D.toQuaternions(): Pair<Quaternion, Quaternion> {
-            val (x, y, z) = p
-            val a = cos(d.length)
-            val (b, c, d) = d.normalize() * sin(d.length)
-            return Quaternion(.0, x, y, z) to Quaternion(a, b, c, d)
-        }
-
-        fun pose3D(p: Quaternion, d: Quaternion): Pose3D {
-            assert(doubleEquals(p.r, .0))
-            return Pose3D(p.v, d.v.run { normalize() * atan2(length, d.r) })
-        }
     }
 }
