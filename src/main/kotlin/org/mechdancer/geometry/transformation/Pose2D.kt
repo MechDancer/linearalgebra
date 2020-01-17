@@ -3,8 +3,10 @@ package org.mechdancer.geometry.transformation
 import org.mechdancer.algebra.function.vector.minus
 import org.mechdancer.algebra.function.vector.plus
 import org.mechdancer.algebra.implement.vector.Vector2D
-import org.mechdancer.algebra.implement.vector.vector2DOf
-import org.mechdancer.geometry.angle.*
+import org.mechdancer.geometry.angle.Angle
+import org.mechdancer.geometry.angle.adjust
+import org.mechdancer.geometry.angle.rotate
+import org.mechdancer.geometry.angle.unaryMinus
 
 /**
  * 二维位姿（二维里程）
@@ -31,12 +33,4 @@ data class Pose2D(
                d.rotate(-mark.d).adjust())
 
     override fun toString() = "(${p.x}, ${p.y})($d)"
-
-    companion object {
-        fun pose(x: Number = 0, y: Number = 0, theta: Number = 0) =
-            Pose2D(vector2DOf(x, y), theta.toRad())
-
-        fun odometry(x: Number = 0, y: Number = 0, theta: Number = 0) =
-            Pose2D(vector2DOf(x, y), theta.toRad())
-    }
 }
