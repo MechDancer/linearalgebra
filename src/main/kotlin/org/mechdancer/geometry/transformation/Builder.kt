@@ -9,11 +9,14 @@ import org.mechdancer.geometry.angle.toVector
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun pose(x: Number = 0, y: Number = 0, theta: Number = 0) =
+fun pose2D(x: Number = 0, y: Number = 0, theta: Number = 0) =
     Pose2D(vector2DOf(x, y), theta.toRad())
 
 fun odometry(x: Number = 0, y: Number = 0, theta: Number = 0) =
     Pose2D(vector2DOf(x, y), theta.toRad())
+
+fun pose3D(x: Number = 0, y: Number = 0, z: Number = 0, d: Vector3D = vector3DOfZero()) =
+    Pose3D(vector3DOf(x, y, z), d)
 
 fun quaternion(a: Number = 0, b: Number = 0, c: Number = 0, d: Number = 0) =
     Quaternion(a.toDouble(), b.toDouble(), c.toDouble(), d.toDouble())
@@ -71,6 +74,6 @@ fun Pose3D.toTransformation(): Transformation {
         })
 }
 
-fun Pose2D.toPose3D(): Pose3D =
+fun Pose2D.to3D(): Pose3D =
     Pose3D(p = vector3DOf(p.x, p.y, 0),
-           d = vector3DOf(0, 0, d.asRadian()))
+           d = vector3DOf(0, 0, d.asRadian() / 2))

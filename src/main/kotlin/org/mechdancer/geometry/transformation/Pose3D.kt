@@ -38,7 +38,23 @@ data class Pose3D(
         val (v0, q0) = toQuaternions()
         val (v1, q1) = delta.toQuaternions()
         return pose3D(v0 + q0 * v1 * q0.conjugate,
-                      q0 * q1)
+                      q1 * q0)
+    }
+
+    /** 里程回滚到增量 [delta] 之前 */
+    infix fun minusDelta(delta: Pose3D): Pose3D {
+        val (v0, q0) = toQuaternions()
+        val (v1, q1) = delta.toQuaternions()
+        val qi = q1.conjugate * q0
+        return pose3D(v0 - qi * v1 * qi.conjugate, qi)
+    }
+
+    /** 计算里程从标记 [mark] 到当前状态的增量 */
+    infix fun minusState(mark: Pose3D): Pose3D {
+        val (v0, q0) = mark.toQuaternions()
+        val (v1, q1) = toQuaternions()
+        return pose3D(q0.conjugate * (v1 - v0) * q0,
+                      q1 * q0.conjugate)
     }
 
     override fun toString() = "p = ${p.simpleString()}, u = ${u.simpleString()}, θ = $theta"

@@ -28,6 +28,9 @@ data class Quaternion(
     /** 求逆 */
     val inverse get() = conjugate / square
 
+    operator fun unaryMinus() =
+        Quaternion(-a, -b, -c, -d)
+
     operator fun plus(others: Quaternion) =
         Quaternion(a + others.a,
                    b + others.b,
