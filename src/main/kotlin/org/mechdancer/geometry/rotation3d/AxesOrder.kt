@@ -27,5 +27,4 @@ enum class AxesOrder(val first: Int, val second: Int, val third: Int) {
             values().find { it.first == f && it.second == s && it.third == t }
                 ?: throw IllegalArgumentException()
     }
-
 }

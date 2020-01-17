@@ -57,10 +57,10 @@ data class Pose3D(
                       q1 * q0.conjugate)
     }
 
-    override fun toString() = "p = ${p.simpleString()}, u = ${u.simpleString()}, θ = $theta"
+    override fun toString() = "p = ${p.simpleView()}, u = ${u.simpleView()}, θ = $theta"
 
     private companion object {
-        fun Vector3D.simpleString() = "($x, $y, $z)"
+        fun Vector3D.simpleView() = "($x, $y, $z)"
 
         fun Pose3D.toQuaternions(): Pair<Quaternion, Quaternion> {
             val (x, y, z) = p
@@ -71,9 +71,7 @@ data class Pose3D(
 
         fun pose3D(p: Quaternion, d: Quaternion): Pose3D {
             assert(doubleEquals(p.r, .0))
-            val u = d.v
-            val half = atan2(u.length, d.r)
-            return Pose3D(p.v, u.normalize() * half)
+            return Pose3D(p.v, d.v.run { normalize() * atan2(length, d.r) })
         }
     }
 }

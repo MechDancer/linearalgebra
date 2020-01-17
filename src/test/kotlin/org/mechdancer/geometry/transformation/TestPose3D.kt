@@ -7,9 +7,7 @@ import org.mechdancer.geometry.angle.toRad
 import kotlin.math.PI
 
 class TestPose3D {
-    /**
-     * 测试里程计算法
-     */
+    /** 测试三维里程算法 */
     @Test
     fun test() {
         val step0 = pose3D()

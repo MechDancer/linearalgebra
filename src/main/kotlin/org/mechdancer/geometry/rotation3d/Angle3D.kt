@@ -461,5 +461,4 @@ data class Angle3D(val first: Angle, val second: Angle, val third: Angle, val ax
 
     override fun equals(other: Any?): Boolean =
         other is Angle3D && other.matrix == matrix
-
 }
