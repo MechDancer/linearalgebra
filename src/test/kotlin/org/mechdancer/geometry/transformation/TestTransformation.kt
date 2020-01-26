@@ -1,64 +1,30 @@
 package org.mechdancer.geometry.transformation
 
-import org.junit.Assert
 import org.junit.Test
-import org.mechdancer.algebra.implement.vector.listVectorOf
-import org.mechdancer.algebra.implement.vector.to2D
-import org.mechdancer.algebra.implement.vector.vector2DOf
+import kotlin.test.assertEquals
 
 class TestTransformation {
     @Test
-    fun testTransformation1() {
-        val transformation = mapOf(
-            listVectorOf(0, 0) to listVectorOf(+0, +0),
-            listVectorOf(4, 2) to listVectorOf(+4, -2),
-            listVectorOf(1, 1) to listVectorOf(+1, -1)
-        ).toTransformation().also(::println)!!
-        Assert.assertTrue(transformation.isChiral)
-        Assert.assertEquals(vector2DOf(4, -2), transformation(vector2DOf(4, 2)).to2D())
-        Assert.assertEquals(vector2DOf(4, +2), (transformation.inverse())(vector2DOf(4, -2)))
+    fun testPose2D() {
+        val a = pose2D(+1, -2, +3)
+        val b = pose2D(-3, +2, -1)
+        val c = a * b
+        assertEquals(pose2D(), a * a.inverse())
+        assertEquals(pose2D(), b * b.inverse())
+
+        assertEquals(a, c * b.inverse())
+        assertEquals(b, a.inverse() * c)
     }
 
     @Test
-    fun testTransformation2() {
-        val transformation = mapOf(
-            vector2DOf(0, 0) to vector2DOf(0, 0),
-            vector2DOf(1, 0) to vector2DOf(+0, +1),
-            vector2DOf(0, 1) to vector2DOf(-1, +0)
-        )
-            .toTransformationOrthotropic(false)
-            .also(::println)!!
-        Assert.assertTrue(!transformation.isChiral)
-    }
+    fun testPose3D() {
+        val a = pose3D(+1, -2, +3, -4/*, +5, -6*/)
+        val b = pose3D(+6, -5, +4/*, -3, +2, -1*/)
+        val c = a * b
+        assertEquals(pose3D(), a * a.inverse())
+        assertEquals(pose3D(), b * b.inverse())
 
-    @Test
-    fun testTransformation3() {
-        val t0 = mapOf(
-            vector2DOf(0, 0) to vector2DOf(0, 0),
-            vector2DOf(1, 0) to vector2DOf(+0, +1),
-            vector2DOf(0, 1) to vector2DOf(-1, +0)
-        ).toTransformation()
-        val t1 = mapOf(
-            vector2DOf(0, 0) to vector2DOf(0, 0),
-            vector2DOf(1, 0) to vector2DOf(+0, +1),
-            vector2DOf(0, 1) to vector2DOf(-1, +0)
-        ).toTransformationOrthotropic(false)
-
-        println(t0)
-        println(t1)
-        Assert.assertEquals(t0, t1)
-
-        val t2 = mapOf(
-            vector2DOf(0, 0) to vector2DOf(0, 0),
-            vector2DOf(1, 0) to vector2DOf(1, 0),
-            vector2DOf(0, 1) to vector2DOf(0, -1)
-        ).toTransformation()
-        val t3 = mapOf(
-            vector2DOf(0, 0) to vector2DOf(0, 0),
-            vector2DOf(1, 0) to vector2DOf(1, 0),
-            vector2DOf(0, 1) to vector2DOf(0, -1)
-        ).toTransformationOrthotropic(true)
-
-        Assert.assertEquals(t2, t3)
+        assert(a equivalentWith c * b.inverse())
+        assert(b equivalentWith a.inverse() * c)
     }
 }

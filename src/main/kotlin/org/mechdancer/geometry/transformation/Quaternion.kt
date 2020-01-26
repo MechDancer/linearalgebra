@@ -1,6 +1,6 @@
 package org.mechdancer.geometry.transformation
 
-import org.mechdancer.algebra.implement.vector.vector3DOf
+import org.mechdancer.algebra.implement.vector.vector3D
 import kotlin.math.sqrt
 
 /** 四元数 */
@@ -14,7 +14,7 @@ data class Quaternion(
     val r get() = a
 
     /** 虚部 */
-    val v get() = vector3DOf(b, c, d)
+    val v get() = vector3D(b, c, d)
 
     /** 平方模长 */
     val square by lazy { a * a + b * b + c * c + d * d }

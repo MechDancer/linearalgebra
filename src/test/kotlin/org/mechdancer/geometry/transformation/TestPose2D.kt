@@ -1,7 +1,7 @@
 package org.mechdancer.geometry.transformation
 
 import org.junit.Test
-import org.mechdancer.algebra.implement.vector.vector2DOf
+import org.mechdancer.algebra.implement.vector.vector2D
 import org.mechdancer.algebra.implement.vector.vector2DOfZero
 import org.mechdancer.geometry.angle.toRad
 import kotlin.math.PI
@@ -17,7 +17,7 @@ class TestPose2D {
             "里程计初始化错误：$step0"
         }
 
-        val delta1 = Pose2D(vector2DOf(3.0, 4.0), (PI / 2).toRad())
+        val delta1 = Pose2D(vector2D(3.0, 4.0), (PI / 2).toRad())
 
         val step1 = step0 plusDelta delta1
         assert(step1 == delta1) {
@@ -29,7 +29,7 @@ class TestPose2D {
             "里程计回滚错误：$step2 ≠ $step0"
         }
 
-        val delta2 = Pose2D(vector2DOf(1.0, 1.0), (-PI / 4).toRad())
+        val delta2 = Pose2D(vector2D(1.0, 1.0), (-PI / 4).toRad())
 
         val step3 = step2 plusDelta delta1
         val step4 = step3 plusDelta delta2 minusState step3

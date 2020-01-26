@@ -21,14 +21,14 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.math.abs
 
-fun Transformation.transform(pose: Pose2D) =
+fun MatrixTransformation.transform(pose: Pose2D) =
     Pose2D(invoke(pose.p).to2D(), invokeLinear(pose.d.toVector()).to2D().toAngle())
 
 /**
  * 最小二乘法从点对集推算空间变换子
  * 任意维无约束
  */
-fun PointMap.toTransformation(): Transformation? {
+fun PointMap.toTransformation(): MatrixTransformation? {
     val dim = sources
                   .map { it.dim }
                   .union(targets.map { it.dim })
@@ -55,7 +55,7 @@ fun PointMap.toTransformation(): Transformation? {
         ?.solve()
         ?.toList()
         ?.foldToRows(dim)
-        ?.let { Transformation.fromInhomogeneous(it, ct - it * cs) }
+        ?.let { MatrixTransformation.fromInhomogeneous(it, ct - it * cs) }
 }
 
 // 最小二乘法构造矩阵
@@ -66,7 +66,7 @@ fun PointMap.toTransformation(): Transformation? {
 private fun Point2DMap.toTransformation(
     buildEquation: EquationSetBuilder.(Vector2D, Vector2D) -> Unit,
     buildMatrix: (Vector) -> Matrix
-): Transformation? {
+): MatrixTransformation? {
     if (size < 2) return null
     val ct = keys.centre()
     val cs = values.centre()
@@ -79,7 +79,7 @@ private fun Point2DMap.toTransformation(
         .equationSet
         .solve()
         ?.let(buildMatrix)
-        ?.let { Transformation.fromInhomogeneous(it, ct - it * cs) }
+        ?.let { MatrixTransformation.fromInhomogeneous(it, ct - it * cs) }
 }
 
 /**
@@ -111,7 +111,7 @@ fun Point2DMap.toTransformationOrthotropic(chiral: Boolean) =
 /**
  * 求点对集在变换下基于某种距离计算的误差
  */
-fun PointMap.errorBy(transformation: Transformation, type: DistanceType) =
+fun PointMap.errorBy(transformation: MatrixTransformation, type: DistanceType) =
     mapValues { transformation(it.value) }
         .toList()
         .sumByDouble(type::between)
