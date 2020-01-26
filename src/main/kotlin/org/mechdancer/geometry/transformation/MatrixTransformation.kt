@@ -27,6 +27,9 @@ data class MatrixTransformation(val matrix: Matrix) : Transformation<MatrixTrans
     override fun inverse(): MatrixTransformation =
         MatrixTransformation(matrix.inverse())
 
+    override fun equivalentWith(others: MatrixTransformation) =
+        matrix == others.matrix
+
     init {
         require(dim > 0) { "transform matrix must be square" }
     }

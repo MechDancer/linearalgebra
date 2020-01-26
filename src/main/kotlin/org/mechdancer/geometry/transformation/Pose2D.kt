@@ -17,7 +17,7 @@ import org.mechdancer.geometry.angle.unaryMinus
  * @param d 方向
  */
 data class Pose2D(val p: Vector2D, val d: Angle) :
-    Transformation<Pose2D>, Odometry<Pose2D> {
+    Transformation<Pose2D> {
     override val dim: Int get() = 2
 
     override fun times(p: Vector): Vector2D {
@@ -31,14 +31,9 @@ data class Pose2D(val p: Vector2D, val d: Angle) :
     override fun inverse(): Pose2D =
         Pose2D(-p rotate -d, -d)
 
-    override fun plusDelta(delta: Pose2D) =
-        this * delta
-
-    override fun minusDelta(delta: Pose2D) =
-        this * delta.inverse()
-
-    override fun minusState(mark: Pose2D) =
-        mark.inverse() * this
+    override fun equivalentWith(others: Pose2D) =
+        this === others
+        || p == others.p && d.adjust() == others.d.adjust()
 
     override fun toString() = "(${p.x}, ${p.y})($d)"
 }

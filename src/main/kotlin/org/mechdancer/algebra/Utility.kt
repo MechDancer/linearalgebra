@@ -3,7 +3,7 @@ package org.mechdancer.algebra
 /**
  * 双精度浮点的精度
  */
-internal const val DOUBLE_PRECISION = 5E-15
+internal const val DOUBLE_PRECISION = 1E-12
 
 // 精度范围
 internal val DOUBLE_EQUALS_RANGE = -DOUBLE_PRECISION..DOUBLE_PRECISION

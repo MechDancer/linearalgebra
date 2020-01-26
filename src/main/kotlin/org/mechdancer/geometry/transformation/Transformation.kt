@@ -40,4 +40,9 @@ interface Transformation<T : Transformation<T>> {
      * @return `A` -> `B`
      */
     fun inverse(): T
+
+    /**
+     * 等价性判断
+     */
+    infix fun equivalentWith(others: T): Boolean
 }

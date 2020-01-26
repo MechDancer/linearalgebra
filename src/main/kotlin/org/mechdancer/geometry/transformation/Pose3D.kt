@@ -18,7 +18,7 @@ import kotlin.math.*
  * @param d 方向
  */
 data class Pose3D(val p: Vector3D, val d: Vector3D)
-    : Transformation<Pose3D>, Odometry<Pose3D> {
+    : Transformation<Pose3D> {
     /*
      存储方案是这样设计的：
      p 表示位置，没什么可说的；
@@ -46,33 +46,13 @@ data class Pose3D(val p: Vector3D, val d: Vector3D)
     override fun inverse(): Pose3D =
         Pose3D(-p rotateVector -d, -d)
 
-    /** 增量 [delta] 累加到里程 */
-    override fun plusDelta(delta: Pose3D) =
-        this * delta
-
-    /** 里程回滚到增量 [delta] 之前 */
-    override fun minusDelta(delta: Pose3D) =
-        this * delta.inverse()
-
-    /** 计算里程从标记 [mark] 到当前状态的增量 */
-    override fun minusState(mark: Pose3D) =
-        mark.inverse() * this
-
     override fun toString() = "p = ${p.simpleView()}, u = ${u.simpleView()}, θ = $theta"
 
-    infix fun equivalentWith(others: Pose3D): Boolean {
-        if (this === others) return true
-        if (p != others.p) return false
-        if (d == others.d) return true
-        val axis0 = d.normalize()
-        val axis1 = others.d.normalize()
-        val delta = abs(when (axis0) {
-                            axis1  -> others.d.length
-                            -axis1 -> others.d.length + PI / 2
-                            else   -> return false
-                        } - d.length)
-        return (delta / PI).let { doubleEquals(it.toInt().toDouble(), it) }
-    }
+    override fun equivalentWith(others: Pose3D): Boolean =
+        this === others
+        || (p == others.p
+            && (d == others.d
+                || d.asAngle() == others.d.asAngle()))
 
     private companion object {
         fun Vector3D.simpleView() = "($x, $y, $z)"
@@ -91,11 +71,13 @@ data class Pose3D(val p: Vector3D, val d: Vector3D)
 
         infix fun Vector3D.rotateVector(d: Vector3D): Vector3D {
             val q = d.asAngle()
-            return (q * asPosition() * q.conjugate).v
+            val result = q * asPosition() * q.conjugate
+            require(doubleEquals(result.r, .0))
+            return result.v
         }
 
         infix fun Vector3D.rotateAngle(d: Vector3D): Vector3D {
-            val q = d.asAngle() * asAngle()
+            val q = asAngle() * d.asAngle()
             val r = q.r
             val v = q.v
             return v.normalize() * atan2(v.length, r)

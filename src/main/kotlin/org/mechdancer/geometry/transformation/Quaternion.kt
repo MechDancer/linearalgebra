@@ -1,5 +1,7 @@
 package org.mechdancer.geometry.transformation
 
+import org.mechdancer.algebra.doubleEquals
+import org.mechdancer.algebra.hash
 import org.mechdancer.algebra.implement.vector.vector3D
 import kotlin.math.sqrt
 
@@ -57,4 +59,15 @@ data class Quaternion(
             c * e + d * f + a * g - b * h,
             d * e - c * f + b * g + a * h)
     }
+
+    override fun equals(other: Any?) =
+        this === other
+        || (other is Quaternion
+            && doubleEquals(a, other.a)
+            && doubleEquals(b, other.b)
+            && doubleEquals(c, other.c)
+            && doubleEquals(d, other.d))
+
+    override fun hashCode() =
+        hash(a, b, c, d)
 }

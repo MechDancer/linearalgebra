@@ -24,6 +24,18 @@ import kotlin.math.abs
 fun MatrixTransformation.transform(pose: Pose2D) =
     Pose2D(invoke(pose.p).to2D(), invokeLinear(pose.d.toVector()).to2D().toAngle())
 
+/** 增量 [delta] 累加到里程 */
+infix fun <T : Transformation<T>> T.plusDelta(delta: T): T =
+    this * delta
+
+/** 里程回滚到增量 [delta] 之前 */
+infix fun <T : Transformation<T>> T.minusDelta(delta: T) =
+    this * delta.inverse()
+
+/** 计算里程从起点 [origin] 到当前状态的增量 */
+infix fun <T : Transformation<T>> T.minusState(origin: T) =
+    origin.inverse() * this
+
 /**
  * 最小二乘法从点对集推算空间变换子
  * 任意维无约束

@@ -18,12 +18,14 @@ class TestTransformation {
 
     @Test
     fun testPose3D() {
-        val a = pose3D(+1, -2, +3, -4/*, +5, -6*/)
-        val b = pose3D(+6, -5, +4/*, -3, +2, -1*/)
+        val a = pose3D(+1, -2, +3, -4, +5, -6)
+        val b = pose3D(+6, -5, +4, -3, +2, -1)
         val c = a * b
         assertEquals(pose3D(), a * a.inverse())
         assertEquals(pose3D(), b * b.inverse())
 
+        println(a)
+        println(c * b.inverse())
         assert(a equivalentWith c * b.inverse())
         assert(b equivalentWith a.inverse() * c)
     }
