@@ -19,5 +19,3 @@ fun Vector2D.isRight() = toAngle().isRight()
 fun Vector2D.isObtuse() = toAngle().isObtuse()
 fun Vector2D.isFlat() = toAngle().isFlat()
 fun Vector2D.isRound() = toAngle().isRound()
-
-operator fun Angle.compareTo(other: Angle) = value.compareTo(other.value)

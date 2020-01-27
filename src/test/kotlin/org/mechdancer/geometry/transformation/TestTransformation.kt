@@ -24,8 +24,6 @@ class TestTransformation {
         assertEquals(pose3D(), a * a.inverse())
         assertEquals(pose3D(), b * b.inverse())
 
-        println(a)
-        println(c * b.inverse())
         assert(a equivalentWith c * b.inverse())
         assert(b equivalentWith a.inverse() * c)
     }

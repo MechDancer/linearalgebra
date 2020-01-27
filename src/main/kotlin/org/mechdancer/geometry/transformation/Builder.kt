@@ -29,6 +29,10 @@ fun quaternion(a: Number = 0, b: Number = 0, c: Number = 0, d: Number = 0) =
 fun quaternion(r: Number = 0, v: Vector3D = vector3DOfZero()) =
     Quaternion(r.toDouble(), v.x, v.y, v.z)
 
+fun Pose2D.to3D(): Pose3D =
+    Pose3D(p = vector3D(p.x, p.y, 0),
+           d = vector3D(0, 0, d.asRadian() / 2))
+
 fun MatrixTransformation.toPose2D(): Pose2D {
     require(dim == 2) { "2d transformation is required" }
     return Pose2D(vector2D(matrix[0, 2], matrix[1, 2]),
@@ -45,7 +49,3 @@ fun Pose2D.toTransformation(): MatrixTransformation {
             row(0, 0, 1)
         })
 }
-
-fun Pose2D.to3D(): Pose3D =
-    Pose3D(p = vector3D(p.x, p.y, 0),
-           d = vector3D(0, 0, d.asRadian() / 2))

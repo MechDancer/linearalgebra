@@ -47,20 +47,16 @@ fun Vector3D.rotateZ(angle: Angle) = (Angle3D.rz(angle) * this).to3D()
 
 fun Vector3D.rotate(angle3D: Angle3D) = (angle3D.matrix * this).to3D()
 
+/** 求余角 */
 fun Angle.complementary(): Angle {
     val abs = abs(value)
     assert(abs in .0..halfPI)
     return Angle(value.sign * (halfPI - abs))
 }
 
+/** 求补角 */
 fun Angle.supplementary(): Angle {
     val abs = abs(value)
     assert(abs in .0..PI)
     return Angle(value.sign * (PI - abs))
 }
-
-fun Vector2D.complementary() =
-    toAngle().complementary().toVectorOf(length)
-
-fun Vector2D.supplementary() =
-    toAngle().supplementary().toVectorOf(length)

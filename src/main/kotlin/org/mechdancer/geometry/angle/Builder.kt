@@ -33,7 +33,7 @@ fun Angle.toVector() = Vector2D(cos(value), sin(value))
  * 弧度转方向向量
  */
 fun Angle.toVectorOf(norm: Number) =
-	norm.toDouble().let { Vector2D(it * cos(value), it * sin(value)) }
+    norm.toDouble().let { Vector2D(it * cos(value), it * sin(value)) }
 
 /**
  * 求方向余弦
