@@ -19,7 +19,7 @@ class ListMatrix(
         require(data.size % column == 0)
     }
 
-    override val row get() = data.size / column
+    override val row = data.size / column
     override fun get(r: Int, c: Int) = data[r * column + c]
 
     override fun row(r: Int) = rows[r]
@@ -34,7 +34,7 @@ class ListMatrix(
         get() = (0 until column).map { c ->
             data.filterIndexed { i, _ -> i % column == c }.toListVector()
         }
-	
+
 
     override val rank by lazy { toArrayMatrix().rankDestructive() }
 
