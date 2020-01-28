@@ -1,4 +1,4 @@
-package org.mechdancer.geometry.rotation3d
+package org.mechdancer.geometry.angle3d
 
 enum class AxesOrder(val first: Int, val second: Int, val third: Int) {
     // Proper Euler angles

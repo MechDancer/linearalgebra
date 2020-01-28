@@ -4,6 +4,8 @@ import org.junit.Assert
 import org.junit.Test
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.geometry.angle.toDegree
+import org.mechdancer.geometry.angle3d.Angle3D
+import org.mechdancer.geometry.angle3d.AxesOrder
 
 class TestAngle3D {
 

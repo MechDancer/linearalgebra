@@ -1,17 +1,14 @@
 package org.mechdancer.geometry.angle
 
 import org.mechdancer.algebra.function.matrix.times
-import org.mechdancer.algebra.function.vector.minus
-import org.mechdancer.algebra.function.vector.plus
+import org.mechdancer.algebra.function.vector.*
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.Vector3D
 import org.mechdancer.algebra.implement.vector.to3D
 import org.mechdancer.geometry.angle.Angle.Companion.halfPI
 import org.mechdancer.geometry.angle.Angle.Companion.twicePI
-import org.mechdancer.geometry.rotation3d.Angle3D
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.sign
+import org.mechdancer.geometry.angle3d.Angle3D
+import kotlin.math.*
 
 /**
  * Adjust radian into [-PI, +PI]
@@ -46,6 +43,11 @@ fun Vector3D.rotateY(angle: Angle) = (Angle3D.ry(angle) * this).to3D()
 fun Vector3D.rotateZ(angle: Angle) = (Angle3D.rz(angle) * this).to3D()
 
 fun Vector3D.rotate(angle3D: Angle3D) = (angle3D.matrix * this).to3D()
+
+fun Vector3D.rotate(angle: Angle, axis: Vector3D) =
+    angle.asRadian().let { theta ->
+        this * cos(theta) + axis * (axis dot this) * (1 - cos(theta)) + (axis cross this) * sin(theta)
+    }
 
 /** 求余角 */
 fun Angle.complementary(): Angle {

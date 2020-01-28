@@ -12,7 +12,8 @@ import org.mechdancer.algebra.uniqueValue
 class DiagonalMatrix(
 	val diagonal: List<Double>
 ) : Matrix {
-	val dim = diagonal.size
+
+	val dim get() = diagonal.size
 
 	override val row get() = dim
 	override val column get() = dim

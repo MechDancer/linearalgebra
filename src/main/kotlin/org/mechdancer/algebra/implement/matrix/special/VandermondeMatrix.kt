@@ -18,7 +18,8 @@ private constructor(
 	override val row: Int,
 	private val elements: List<Double>
 ) : Matrix {
-	override val column = elements.size
+
+	override val column get() =  elements.size
 	override fun get(r: Int, c: Int) = elements[c].pow(r)
 
 	override val rows get() = List(row, ::row)

@@ -12,47 +12,47 @@ import org.mechdancer.algebra.implement.vector.toListVector
  * 基于列表实现的矩阵
  */
 class ListMatrix(
-	override val column: Int,
-	val data: List<Double>
+    override val column: Int,
+    val data: List<Double>
 ) : Matrix {
-	init {
-		assert(data.size % column == 0)
-	}
+    init {
+        require(data.size % column == 0)
+    }
 
-	override val row = data.size / column
-	override fun get(r: Int, c: Int) = data[r * column + c]
+    override val row get() = data.size / column
+    override fun get(r: Int, c: Int) = data[r * column + c]
 
-	override fun row(r: Int) = rows[r]
-	override fun column(c: Int) = columns[c]
+    override fun row(r: Int) = rows[r]
+    override fun column(c: Int) = columns[c]
 
-	override val rows by lazy {
-		(0 until row).map { r ->
-			data.subList(r * column, (r + 1) * column).toListVector()
-		}
-	}
-	override val columns by lazy {
-		(0 until column).map { c ->
-			data.filterIndexed { i, _ -> i % column == c }.toListVector()
-		}
-	}
+    override val rows
+        get() = (0 until row).map { r ->
+            data.subList(r * column, (r + 1) * column).toListVector()
+        }
 
-	override val rank by lazy { toArrayMatrix().rankDestructive() }
+    override val columns
+        get() = (0 until column).map { c ->
+            data.filterIndexed { i, _ -> i % column == c }.toListVector()
+        }
+	
 
-	override val det by lazy { determinantValue() }
+    override val rank by lazy { toArrayMatrix().rankDestructive() }
 
-	override val trace by lazy { traceValue() }
+    override val det by lazy { determinantValue() }
 
-	override fun equals(other: Any?) =
-		this === other
-			|| (other is Matrix
-			&& checkSameSize(this, other)
-			&& when (other) {
-			is ListMatrix  -> other.data contentEquals data // 看似完全相同
-			is ArrayMatrix -> other.data contentEquals data // 其实是重载函数，不可省略
-			else           -> checkElementsEquals(this, other)
-		})
+    override val trace by lazy { traceValue() }
 
-	override fun hashCode() = hash(column, data)
+    override fun equals(other: Any?) =
+        this === other
+            || (other is Matrix
+            && checkSameSize(this, other)
+            && when (other) {
+            is ListMatrix  -> other.data contentEquals data // 看似完全相同
+            is ArrayMatrix -> other.data contentEquals data // 其实是重载函数，不可省略
+            else           -> checkElementsEquals(this, other)
+        })
 
-	override fun toString() = matrixView("$row x $column Matrix")
+    override fun hashCode() = hash(column, data)
+
+    override fun toString() = matrixView("$row x $column Matrix")
 }

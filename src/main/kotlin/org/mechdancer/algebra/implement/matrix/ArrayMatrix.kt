@@ -18,14 +18,15 @@ import org.mechdancer.algebra.implement.vector.toListVector
  */
 class ArrayMatrix(override val column: Int, val data: DoubleArray)
 	: Determinant() {
+
 	override fun updateRank() = clone().rankDestructive()
 	override fun updateDet() = determinantValue()
 
 	init {
-		assert(data.size % column == 0)
+		require(data.size % column == 0)
 	}
 
-	override val row = data.size / column
+	override val row get() = data.size / column
 
 	private fun index(r: Int, c: Int) = r * column + c
 	override operator fun get(r: Int, c: Int) = data[index(r, c)]

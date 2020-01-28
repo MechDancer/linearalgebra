@@ -61,6 +61,7 @@ data class Pose3D(val p: Vector3D, val d: Vector3D)
             quaternion(.0, this)
 
         fun Vector3D.asAngle() =
+            // TODO
             when {
                 length < 0   -> length + PI * (-length / PI).toInt() + PI
                 length >= PI -> length - PI * (+length / PI).toInt()

@@ -19,8 +19,8 @@ private constructor(
 	val value: Double
 ) : Matrix {
 	init {
-		assert(row > 0)
-		assert(column > 0)
+		require(row > 0)
+		require(column > 0)
 	}
 
 	override val row get() = dim

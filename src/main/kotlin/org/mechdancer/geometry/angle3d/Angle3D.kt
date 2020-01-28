@@ -1,4 +1,4 @@
-package org.mechdancer.geometry.rotation3d
+package org.mechdancer.geometry.angle3d
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.doubleEquals
@@ -6,7 +6,7 @@ import org.mechdancer.algebra.function.matrix.times
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.geometry.angle.Angle
 import org.mechdancer.geometry.angle.toRad
-import org.mechdancer.geometry.rotation3d.AxesOrder.*
+import org.mechdancer.geometry.angle3d.AxesOrder.*
 import kotlin.math.*
 
 /**

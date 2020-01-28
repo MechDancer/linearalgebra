@@ -14,7 +14,8 @@ import org.mechdancer.algebra.implement.vector.toListVector
 
 /** 用齐次变换矩阵 [matrix] 存储的变换关系 */
 data class MatrixTransformation(val matrix: Matrix) : Transformation<MatrixTransformation> {
-    override val dim: Int = matrix.dim - 1
+
+    override val dim: Int get() = matrix.dim - 1
 
     override fun times(p: Vector): Vector {
         require(dim == p.dim) { "a ${dim}D transformation cannot transform a ${p.dim}D vector" }

@@ -1,4 +1,4 @@
-package org.mechdancer.geometry.rotation3d
+package org.mechdancer.geometry.angle3d
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.geometry.angle.Angle

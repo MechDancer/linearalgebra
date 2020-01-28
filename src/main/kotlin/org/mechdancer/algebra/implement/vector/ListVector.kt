@@ -10,17 +10,17 @@ import kotlin.math.sqrt
  * 用浮点列表实现的向量
  */
 class ListVector(val data: List<Double>) : Vector {
-	override val dim = data.size
-	override fun get(i: Int) = data[i]
-	override val length by lazy { sqrt(data.sumByDouble { it * it }) }
-	override fun toList() = data
+    override val dim get() = data.size
+    override fun get(i: Int) = data[i]
+    override val length by lazy { sqrt(data.sumByDouble { it * it }) }
+    override fun toList() = data
 
-	override fun equals(other: Any?) =
-		this === other
-			|| (other is Vector
-			&& other.dim == dim
-			&& data contentEquals other.toList())
+    override fun equals(other: Any?) =
+        this === other
+            || (other is Vector
+            && other.dim == dim
+            && data contentEquals other.toList())
 
-	override fun hashCode() = data.hashCode()
-	override fun toString() = columnView()
+    override fun hashCode() = data.hashCode()
+    override fun toString() = columnView()
 }

@@ -14,10 +14,11 @@ import kotlin.math.*
  * @param j     张成旋转二维面的轴序号
  */
 fun rotationOnPlane(order: Int, theta: Double, i: Int, j: Int): Matrix {
-	assert(order >= 2)
-	assert(i != j)
-	assert(i in 0 until order)
-	assert(j in 0 until order)
+
+    require(order >= 2)
+	require(i != j)
+	require(i in 0 until order)
+	require(j in 0 until order)
 
 	return object : Matrix {
 
