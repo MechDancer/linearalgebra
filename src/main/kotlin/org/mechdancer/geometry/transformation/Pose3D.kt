@@ -57,18 +57,15 @@ data class Pose3D(val p: Vector3D, val d: Vector3D)
     private companion object {
         fun Vector3D.simpleView() = "($x, $y, $z)"
 
-        fun Vector3D.asPosition() =
+        fun Vector3D.asPosition(): Quaternion =
             quaternion(.0, this)
 
-        fun Vector3D.asAngle() =
-            // TODO
-            when {
-                length < 0   -> length + PI * (-length / PI).toInt() + PI
-                length >= PI -> length - PI * (+length / PI).toInt()
-                else         -> length
-            }.let { half ->
-                quaternion(cos(half), normalize() * sin(half))
-            }
+        fun Vector3D.asAngle(): Quaternion {
+            val half =
+                if (length < PI) length
+                else length - PI * (length / PI).toInt()
+            return quaternion(cos(half), normalize() * sin(half))
+        }
 
         infix fun Vector3D.rotateVector(d: Vector3D): Vector3D {
             val q = d.asAngle()

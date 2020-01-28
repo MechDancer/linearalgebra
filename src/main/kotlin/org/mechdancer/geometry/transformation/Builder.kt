@@ -10,6 +10,7 @@ import org.mechdancer.algebra.implement.vector.vector3DOfZero
 import org.mechdancer.geometry.angle.Angle
 import org.mechdancer.geometry.angle.toRad
 import org.mechdancer.geometry.angle.toVector
+import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -35,12 +36,12 @@ fun quaternion(r: Number = 0, v: Vector3D = vector3DOfZero()) =
 
 fun Pose2D.to3D(): Pose3D =
     Pose3D(p = vector3D(p.x, p.y, 0),
-        d = vector3D(0, 0, d.asRadian() / 2))
+           d = vector3D(0, 0, d.asRadian() / 2))
 
 fun MatrixTransformation.toPose2D(): Pose2D {
     require(dim == 2) { "2d transformation is required" }
     return Pose2D(vector2D(matrix[0, 2], matrix[1, 2]),
-        atan2(matrix[0, 0], matrix[1, 0]).toRad())
+                  atan2(matrix[0, 0], matrix[1, 0]).toRad())
 }
 
 fun Pose2D.toMatrixTransformation(): MatrixTransformation {
@@ -70,13 +71,19 @@ fun Quaternion.toMatrixR() =
         row(+d, +c, -b, +a)
     }
 
-fun Pose3D.toMatrixTransformation() =
-    quaternion(cos(d.length), d.normalize() * sin(d.length)).run {
-        MatrixTransformation.fromInhomogeneous(
-            matrix {
-                row(1 - 2 * c * c - 2 * d * d, 2 * b * c - 2 * a * d, 2 * a * c + 2 * b * d)
-                row(2 * b * c + 2 * a * d, 1 - 2 * b * b - 2 * d * d, 2 * c * d - 2 * a * b)
-                row(2 * b * d - 2 * a * c, 2 * a * b + 2 * c * d, 1 - 2 * b * b - 2 * c * c)
-            }, p
-        )
-    }
+fun Pose3D.toMatrixTransformation(): MatrixTransformation {
+    val half =
+        if (d.length < PI) d.length
+        else d.length - PI * (d.length / PI).toInt()
+    val a = cos(half)
+    val (b, c, d) = d.normalize() * sin(half)
+    val (x, y, z) = p
+    return MatrixTransformation(
+        matrix {
+            row(1 - 2 * c * c - 2 * d * d, 2 * b * c - 2 * a * d, 2 * a * c + 2 * b * d, x)
+            row(2 * b * c + 2 * a * d, 1 - 2 * b * b - 2 * d * d, 2 * c * d - 2 * a * b, y)
+            row(2 * b * d - 2 * a * c, 2 * a * b + 2 * c * d, 1 - 2 * b * b - 2 * c * c, z)
+            row(0, 0, 0, 1)
+        }
+    )
+}
