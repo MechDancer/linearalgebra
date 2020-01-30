@@ -20,25 +20,45 @@ import kotlin.math.min
  * Get the data of a [ZeroMatrix]
  * 获取 [ZeroMatrix] 数据
  */
-fun ZeroMatrix.toList() = List(row * column) { .0 }
+fun ZeroMatrix.toList(): List<Double> =
+    object : AbstractList<Double>() {
+        override val size = row * column
+        override fun get(index: Int): Double {
+            require(index in 0 until size)
+            return .0
+        }
+    }
+
+/**
+ * Get the data of a [NumberMatrix]
+ * 获取 [NumberMatrix] 数据
+ */
+fun NumberMatrix.toList(): List<Double> =
+    object : AbstractList<Double>() {
+        override val size = row * column
+        override fun get(index: Int): Double {
+            require(index in 0 until size)
+            return value
+        }
+    }
 
 /**
  * Get the data of a [ListMatrix]
  * 获取 [ListMatrix] 数据
  */
-fun ListMatrix.toList() = data
+fun ListMatrix.toList(): List<Double> = data
 
 /**
  * Get the data of a [ArrayMatrix]
  * 获取 [ArrayMatrix] 数据
  */
-fun ArrayMatrix.toList() = data.toList()
+fun ArrayMatrix.toList(): List<Double> = data.asList()
 
 /**
  * Get the data of an unspecific [Matrix]
  * 获取非特定 [Matrix] 数据
  */
-fun Matrix.toList() = List(row * column) { get(it / column, it % column) }
+fun Matrix.toList(): List<Double> = List(row * column) { get(it / column, it % column) }
 
 /**
  * Matrix.toSet()
@@ -46,7 +66,6 @@ fun Matrix.toList() = List(row * column) { get(it / column, it % column) }
  * Put all elements in the matrix in a set of double
  * 获取矩阵内所有不同的数据
  */
-
 
 /**
  * Get all the different data of a [ZeroMatrix]

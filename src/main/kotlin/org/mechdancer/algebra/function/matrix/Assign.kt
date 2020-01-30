@@ -143,13 +143,13 @@ fun ValueMutableMatrix.simplifyAssignWith(
             tail = get(r, --c)
         } while (c >= 0 && tail == .0)
 
-// 在此进行 0 约化会导致 40 阶希尔伯特矩阵求逆的测试无法通过
-//      do {
-//          tail = get(r, --c)
-//          if (!doubleEquals(tail, .0)) break
-//          // 接近 0 视作 0
-//          set(r, c, .0)
-//      } while (c >= 0)
+        // 在此进行 0 约化会导致 40 阶希尔伯特矩阵求逆的测试无法通过
+        // do {
+        //     tail = get(r, --c)
+        //     if (!doubleEquals(tail, .0)) break
+        //     // 接近 0 视作 0
+        //     set(r, c, .0)
+        // } while (c >= 0)
 
         // 有全零行，不再继续化简
         if (c < 0) break
