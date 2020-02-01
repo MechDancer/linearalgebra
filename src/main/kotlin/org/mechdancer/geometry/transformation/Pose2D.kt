@@ -1,7 +1,7 @@
 package org.mechdancer.geometry.transformation
 
 import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.function.vector.minus
+import org.mechdancer.algebra.doubleEquals
 import org.mechdancer.algebra.function.vector.plus
 import org.mechdancer.algebra.function.vector.unaryMinus
 import org.mechdancer.algebra.implement.vector.Vector2D
@@ -33,7 +33,7 @@ data class Pose2D(val p: Vector2D, val d: Angle) :
 
     override fun equivalentWith(others: Pose2D) =
         this === others
-        || p == others.p && d.adjust() == others.d.adjust()
+        || p == others.p && doubleEquals(d.adjust().rad, others.d.adjust().rad)
 
     override fun toString() = "(${p.x}, ${p.y})($d)"
 }

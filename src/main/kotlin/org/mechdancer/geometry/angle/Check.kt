@@ -6,12 +6,12 @@ import org.mechdancer.geometry.angle.Angle.Companion.twicePI
 import kotlin.math.PI
 import kotlin.math.abs
 
-fun Angle.isZero() = 0.0 == value
-fun Angle.isAcute() = -halfPI < value && value < halfPI
-fun Angle.isRight() = halfPI == abs(value)
-fun Angle.isObtuse() = abs(value).let { halfPI < it && it < PI }
-fun Angle.isFlat() = PI == abs(value)
-fun Angle.isRound() = twicePI == abs(value)
+fun Angle.isZero() = 0.0 == rad
+fun Angle.isAcute() = -halfPI < rad && rad < halfPI
+fun Angle.isRight() = halfPI == abs(rad)
+fun Angle.isObtuse() = abs(rad).let { halfPI < it && it < PI }
+fun Angle.isFlat() = PI == abs(rad)
+fun Angle.isRound() = twicePI == abs(rad)
 
 fun Vector2D.isZeroAngle() = toAngle().isZero()
 fun Vector2D.isAcute() = toAngle().isAcute()

@@ -8,6 +8,7 @@ import org.mechdancer.algebra.implement.vector.vector2D
 import org.mechdancer.algebra.implement.vector.vector3D
 import org.mechdancer.algebra.implement.vector.vector3DOfZero
 import org.mechdancer.geometry.angle.Angle
+import org.mechdancer.geometry.angle.adjustRight
 import org.mechdancer.geometry.angle.toRad
 import org.mechdancer.geometry.angle.toVector
 import kotlin.math.PI
@@ -36,7 +37,7 @@ fun quaternion(r: Number = 0, v: Vector3D = vector3DOfZero()) =
 
 fun Pose2D.to3D(): Pose3D =
     Pose3D(p = vector3D(p.x, p.y, 0),
-           d = vector3D(0, 0, d.asRadian() / 2))
+           d = vector3D(0, 0, d.rad / 2))
 
 fun MatrixTransformation.toPose2D(): Pose2D {
     require(dim == 2) { "2d transformation is required" }
@@ -72,9 +73,7 @@ fun Quaternion.toMatrixR() =
     }
 
 fun Pose3D.toMatrixTransformation(): MatrixTransformation {
-    val half =
-        if (d.length < PI) d.length
-        else d.length - PI * (d.length / PI).toInt()
+    val half = d.length.adjustRight(PI, PI)
     val a = cos(half)
     val (b, c, d) = d.normalize() * sin(half)
     val (x, y, z) = p

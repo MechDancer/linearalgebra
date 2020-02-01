@@ -9,6 +9,7 @@ import org.mechdancer.algebra.implement.vector.vector3D
 import org.mechdancer.algebra.implement.vector.vector3DOfZero
 import org.mechdancer.geometry.angle.Angle
 import org.mechdancer.geometry.angle.adjust
+import org.mechdancer.geometry.angle.adjustRight
 import org.mechdancer.geometry.angle.toRad
 import kotlin.math.*
 
@@ -61,9 +62,7 @@ data class Pose3D(val p: Vector3D, val d: Vector3D)
             quaternion(.0, this)
 
         fun Vector3D.asAngle(): Quaternion {
-            val half =
-                if (length < PI) length
-                else length - PI * (length / PI).toInt()
+            val half = length.adjustRight(PI, PI)
             return quaternion(cos(half), normalize() * sin(half))
         }
 

@@ -26,14 +26,14 @@ fun Vector2D.toAngle() = Angle(atan2(y, x))
  * Calculate the direction vector of a radian
  * 弧度转方向向量
  */
-fun Angle.toVector() = Vector2D(cos(value), sin(value))
+fun Angle.toVector() = Vector2D(cos(rad), sin(rad))
 
 /**
  * Calculate the direction vector of a radian
  * 弧度转方向向量
  */
 fun Angle.toVectorOf(norm: Number) =
-    norm.toDouble().let { Vector2D(it * cos(value), it * sin(value)) }
+    norm.toDouble().let { Vector2D(it * cos(rad), it * sin(rad)) }
 
 /**
  * 求方向余弦

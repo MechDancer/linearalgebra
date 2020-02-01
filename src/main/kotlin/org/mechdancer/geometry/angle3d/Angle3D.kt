@@ -40,7 +40,7 @@ data class Angle3D(val first: Angle, val second: Angle, val third: Angle, val ax
         /**
          * 绕 X 轴逆时针旋转 [angle]
          */
-        fun rx(angle: Angle) = angle.asRadian().let { a ->
+        fun rx(angle: Angle) = angle.rad.let { a ->
             matrix {
                 row(1, 0, 0)
                 row(0, cos(a), -sin(a))
@@ -51,7 +51,7 @@ data class Angle3D(val first: Angle, val second: Angle, val third: Angle, val ax
         /**
          * 绕 Y 轴逆时针旋转 [angle]
          */
-        fun ry(angle: Angle) = angle.asRadian().let { a ->
+        fun ry(angle: Angle) = angle.rad.let { a ->
             matrix {
                 row(cos(a), 0, sin(a))
                 row(0, 1, 0)
@@ -62,7 +62,7 @@ data class Angle3D(val first: Angle, val second: Angle, val third: Angle, val ax
         /**
          * 绕 Z 轴逆时针旋转 [angle]
          */
-        fun rz(angle: Angle) = angle.asRadian().let { a ->
+        fun rz(angle: Angle) = angle.rad.let { a ->
             matrix {
                 row(cos(a), -sin(a), 0)
                 row(sin(a), cos(a), 0)
@@ -82,13 +82,8 @@ data class Angle3D(val first: Angle, val second: Angle, val third: Angle, val ax
             val r1 = solve(matrix, axesOrder, false)
             val r2 = solve(matrix, axesOrder, true)
 
-            fun Angle3D.mag() = sqrt(
-                first.asRadian() * first.asRadian()
-                    + second.asRadian() * second.asRadian()
-                    + third.asRadian() * third.asRadian())
-            return if (r1.mag() <= r2.mag())
-                r1
-            else r2
+            fun Angle3D.mag() = sqrt(first.rad * first.rad + second.rad * second.rad + third.rad * third.rad)
+            return if (r1.mag() <= r2.mag()) r1 else r2
         }
 
         private fun solve(matrix: Matrix, axesOrder: AxesOrder, secondAngleScope: Boolean): Angle3D {
