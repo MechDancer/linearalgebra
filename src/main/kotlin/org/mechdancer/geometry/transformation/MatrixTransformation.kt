@@ -2,14 +2,13 @@ package org.mechdancer.geometry.transformation
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
-import org.mechdancer.algebra.core.matrixView
 import org.mechdancer.algebra.function.matrix.dim
 import org.mechdancer.algebra.function.matrix.inverse
 import org.mechdancer.algebra.function.matrix.times
 import org.mechdancer.algebra.function.vector.select
 import org.mechdancer.algebra.implement.matrix.Cofactor
-import org.mechdancer.algebra.implement.matrix.builder.arrayMatrixOfUnit
 import org.mechdancer.algebra.implement.matrix.builder.listMatrixOf
+import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
 import org.mechdancer.algebra.implement.vector.toListVector
 
 /** 用齐次变换矩阵 [matrix] 存储的变换关系 */
@@ -56,7 +55,7 @@ data class MatrixTransformation(val matrix: Matrix) : Transformation<MatrixTrans
          * 生成 [dim] 维单位变换
          */
         fun unit(dim: Int) =
-            MatrixTransformation(arrayMatrixOfUnit(dim + 1))
+            MatrixTransformation(NumberMatrix[dim + 1, 1.0])
 
         /**
          * 非齐次形式转化为齐次形式
