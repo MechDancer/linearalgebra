@@ -23,41 +23,31 @@ fun Iterable<Boolean>.alwaysTrue() = all { it }
  * 最好先判断维数相同
  */
 infix fun Iterable<Double>.contentEquals(other: Iterable<Double>) =
-	zip(other, ::doubleEquals).alwaysTrue()
+    zip(other, ::doubleEquals).alwaysTrue()
 
 /**
  * 判断两个浮点列表相同
  * 最好先判断维数相同
  */
 infix fun DoubleArray.contentEquals(other: List<Double>) =
-	zip(other, ::doubleEquals).alwaysTrue()
+    zip(other, ::doubleEquals).alwaysTrue()
 
 /**
  * 计算许多元素的哈希值
  * 慎用！有递归风险！
  */
 fun hash(vararg elements: Any?) =
-	elements.fold(0) { code, it -> code.hashCode() * 31 + (it?.hashCode() ?: 0) }
+    elements.fold(0) { code, it -> code.hashCode() * 31 + (it?.hashCode() ?: 0) }
 
-/**
- * 判断一个可迭代集中所有元素存在相等关系
- */
 fun <T> Iterable<T>.isUnique() = toSet().size == 1
-
-/**
- * 判断一个可迭代集中所有元素存在某种相等关系
- */
-inline infix fun <T, U> Iterable<T>.uniqueOn(block: (T) -> U) = map(block).isUnique()
-
-/**
- * 总结一个可迭代集中所有元素的特征
- */
 fun <T> Iterable<T>.uniqueValue(): T? = toSet().singleOrNull()
+inline fun <T, U> Iterable<T>.uniqueOn(block: (T) -> U) = map(block).isUnique()
+inline fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
 
-/**
- * 总结一个可迭代集中所有元素的某项特征
- */
-inline infix fun <T, U> Iterable<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
+fun <T> Sequence<T>.isUnique() = toSet().size == 1
+fun <T> Sequence<T>.uniqueValue(): T? = toSet().singleOrNull()
+fun <T, U> Sequence<T>.uniqueOn(block: (T) -> U) = map(block).isUnique()
+fun <T, U> Sequence<T>.uniqueValue(block: (T) -> U): U? = map(block).uniqueValue()
 
 internal inline fun <T, U> List<T>.zipFast(other: List<T>, block: (T, T) -> U) =
-	List(kotlin.math.min(size, other.size)) { block(this[it], other[it]) }
+    List(kotlin.math.min(size, other.size)) { block(this[it], other[it]) }

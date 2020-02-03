@@ -6,6 +6,7 @@ import org.mechdancer.algebra.implement.vector.*
 import org.mechdancer.algebra.uniqueValue
 import org.mechdancer.algebra.zipFast
 import kotlin.math.abs
+import kotlin.math.pow
 
 operator fun Vector.times(k: Number) = toList().map { it * k.toDouble() }.let(::ListVector)
 operator fun Vector.div(k: Number) = toList().map { it / k.toDouble() }.let(::ListVector)
@@ -72,26 +73,27 @@ fun Vector3D.normalize() =
     else
         div(length)
 
-/** 求向量表示的点集的“重心” */
-fun Collection<Vector>.centre() =
+fun Sequence<Vector>.sum() =
     uniqueValue(Vector::dim)
         ?.let(::listVectorOfZero)
         ?.let { fold(it) { sum, v -> sum + v } }
-        ?.div(size)
     ?: throw UnsupportedOperationException("vector dimensions are different")
 
-/** 求二维向量表示的点集的“重心” */
-fun Collection<Vector2D>.centre() =
-    Vector2D(
-        map(Vector2D::x).average(),
-        map(Vector2D::y).average()
-    )
+fun Sequence<Vector2D>.sum() =
+    fold(vector2DOfZero()) { sum, v -> sum + v }
+
+fun Sequence<Vector3D>.sum() =
+    fold(vector3DOfZero()) { sum, v -> sum + v }
+
+fun Iterable<Vector>.sum() = asSequence().sum()
+fun Iterable<Vector2D>.sum() = asSequence().sum()
+fun Iterable<Vector3D>.sum() = asSequence().sum()
 
 /** [n]范数 */
 fun Vector.norm(n: Int = 2) =
     when (n) {
-        -1   -> toList().map(::abs).max()
-        1    -> toList().sumByDouble(::abs)
-        2    -> length
-        else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
+        -1, Int.MAX_VALUE -> toList().map(::abs).max()
+        1                 -> toList().sumByDouble(::abs)
+        2                 -> length
+        else              -> toList().sumByDouble { it.pow(n) }.pow(1.0 / n)
     } ?: .0

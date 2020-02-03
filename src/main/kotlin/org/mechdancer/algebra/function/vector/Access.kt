@@ -2,7 +2,7 @@ package org.mechdancer.algebra.function.vector
 
 import org.mechdancer.algebra.core.Vector
 
-//解绑定
+// 解绑定
 
 operator fun Vector.component1() = this[0]
 operator fun Vector.component2() = this[1]

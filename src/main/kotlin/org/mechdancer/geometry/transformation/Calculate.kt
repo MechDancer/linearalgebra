@@ -5,9 +5,9 @@ import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.equation.solve
 import org.mechdancer.algebra.function.matrix.times
 import org.mechdancer.algebra.function.vector.DistanceType
-import org.mechdancer.algebra.function.vector.centre
 import org.mechdancer.algebra.function.vector.div
 import org.mechdancer.algebra.function.vector.minus
+import org.mechdancer.algebra.function.vector.sum
 import org.mechdancer.algebra.implement.equation.builder.EquationSetBuilder
 import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
@@ -48,8 +48,8 @@ fun PointMap.toTransformation(): MatrixTransformation? {
               ?: throw IllegalArgumentException("points not in same dim")
     val temp = DoubleArray(dim * dim)
 
-    val ct = targets.centre()
-    val cs = sources.centre()
+    val ct = targets.sum() / size
+    val cs = sources.sum() / size
 
     return takeIf { size > dim }
         ?.flatMap { (target, source) ->
@@ -80,8 +80,8 @@ private fun Point2DMap.toTransformation(
     buildMatrix: (Vector) -> Matrix
 ): MatrixTransformation? {
     if (size < 2) return null
-    val ct = keys.centre()
-    val cs = values.centre()
+    val ct = keys.sum() / size
+    val cs = values.sum() / size
 
     return EquationSetBuilder()
         .also { builder ->

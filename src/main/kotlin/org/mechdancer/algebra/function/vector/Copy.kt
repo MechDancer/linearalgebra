@@ -2,29 +2,6 @@ package org.mechdancer.algebra.function.vector
 
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.implement.vector.ListVector
-import org.mechdancer.algebra.implement.vector.Vector2D
-import org.mechdancer.algebra.implement.vector.Vector3D
-
-/**
- * Copy a 2-dimension vector
- * 复制一个二维向量
- *
- * @param x the 1st dimension
- * @param y the 2nd dimension
- */
-fun Vector2D.copy(x: Number? = null, y: Number? = null) =
-    Vector2D(x?.toDouble() ?: this.x, y?.toDouble() ?: this.y)
-
-/**
- * Copy a 3-dimension vector
- * 复制一个二维向量
- *
- * @param x the 1st dimension
- * @param y the 2nd dimension
- * @param z the 3rd dimension
- */
-fun Vector3D.copy(x: Number? = null, y: Number? = null, z: Number? = null) =
-    Vector3D(x?.toDouble() ?: this.x, y?.toDouble() ?: this.y, z?.toDouble() ?: this.z)
 
 /**
  * Copy a vector and change value of the first 3 dimension by their name
