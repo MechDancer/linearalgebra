@@ -42,7 +42,7 @@ fun Pose2D.to3D(): Pose3D =
 fun MatrixTransformation.toPose2D(): Pose2D {
     require(dim == 2) { "2d transformation is required" }
     return Pose2D(vector2D(matrix[0, 2], matrix[1, 2]),
-                  atan2(matrix[0, 0], matrix[1, 0]).toRad())
+                  atan2(matrix[1, 0], matrix[0, 0]).toRad())
 }
 
 fun Pose2D.toMatrixTransformation(): MatrixTransformation {

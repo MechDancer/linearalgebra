@@ -5,6 +5,7 @@ import org.mechdancer.algebra.implement.vector.vector2D
 import org.mechdancer.algebra.implement.vector.vector2DOfZero
 import org.mechdancer.geometry.angle.toRad
 import kotlin.math.PI
+import kotlin.test.assertEquals
 
 class TestPose2D {
     /**
@@ -36,5 +37,11 @@ class TestPose2D {
         assert(step4 == delta2) {
             "里程计标记错误：$step4 ≠ $delta2"
         }
+    }
+
+    @Test
+    fun testToMatrix() {
+        val a = pose2D(1, -2, 0)
+        assertEquals(a, a.toMatrixTransformation().toPose2D())
     }
 }
