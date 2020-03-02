@@ -38,8 +38,8 @@ fun Vector.copy(vararg change: Pair<Int, Number>): Vector {
  * Select some dimension of the vector, then copy them to a new vector
  * 从向量选取指定的维度组成新的向量
  */
-fun Vector.select(vararg indexes: Int): Vector =
-    toList().filterIndexed { i, _ -> i in indexes }.let(::ListVector)
+fun Vector.select(vararg indices: Int): Vector =
+    toList().filterIndexed { i, _ -> i in indices }.let(::ListVector)
 
 /**
  * Select a range of index of the dimensions, then copy them to a new vector

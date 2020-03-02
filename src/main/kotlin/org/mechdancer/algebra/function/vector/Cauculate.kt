@@ -97,3 +97,18 @@ fun Vector.norm(n: Int = 2) =
         2                 -> length
         else              -> toList().sumByDouble { it.pow(n) }.pow(1.0 / n)
     } ?: .0
+
+/** 施密特正交化 */
+fun Sequence<Vector>.orthogonalize(): List<Vector> =
+    fold(mutableListOf<Vector>()) { result, v0 ->
+        result += sequence { yield(v0); for (v in result) yield(v * -(v0 dot v)) }.sum().normalize()
+        result
+    }
+
+/** 施密特正交化 */
+fun Iterable<Vector>.orthogonalize() =
+    asSequence().orthogonalize()
+
+/** 施密特正交化 */
+fun Array<Vector>.orthogonalize() =
+    asSequence().orthogonalize()
