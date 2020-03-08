@@ -144,11 +144,7 @@ fun Matrix.norm(n: Int = 2) =
     when (n) {
         -1   -> rows.map { it.norm(1) }.max()
         1    -> columns.map { it.norm(1) }.max()
-        2    -> (transpose() * this)
-            .jacobiLevelUp(1E-3, range(column))
-            ?.firstOrNull()
-            ?.first
-            ?.let(::sqrt)
+        2    -> (transpose() * this).jacobiMethod().firstOrNull()?.first?.let(::sqrt)
         else -> throw UnsupportedOperationException("please invoke length(-1) for infinite length")
     } ?: Double.NaN
 
