@@ -14,23 +14,18 @@ internal val DOUBLE_EQUALS_RANGE = -DOUBLE_PRECISION..DOUBLE_PRECISION
 fun doubleEquals(a: Double, b: Double) = a - b in DOUBLE_EQUALS_RANGE
 
 /**
- * 判断布尔列表全为真
+ * 判断两个浮点列表相同
+ * 最好先判断维数相同
  */
-fun Iterable<Boolean>.alwaysTrue() = all { it }
+infix fun Collection<Double>.contentEquals(other: Collection<Double>) =
+    size == other.size && asSequence().zip(other.asSequence(), ::doubleEquals).all { true }
 
 /**
  * 判断两个浮点列表相同
  * 最好先判断维数相同
  */
-infix fun Iterable<Double>.contentEquals(other: Iterable<Double>) =
-    zip(other, ::doubleEquals).alwaysTrue()
-
-/**
- * 判断两个浮点列表相同
- * 最好先判断维数相同
- */
-infix fun DoubleArray.contentEquals(other: List<Double>) =
-    zip(other, ::doubleEquals).alwaysTrue()
+infix fun DoubleArray.contentEquals(other: Collection<Double>) =
+    size == other.size && asSequence().zip(other.asSequence(), ::doubleEquals).all { true }
 
 /**
  * 计算许多元素的哈希值

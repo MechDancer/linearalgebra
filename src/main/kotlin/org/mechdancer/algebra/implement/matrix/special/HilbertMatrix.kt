@@ -11,33 +11,35 @@ import kotlin.math.min
  */
 class HilbertMatrix
 private constructor(
-	override val row: Int,
-	override val column: Int
+    override val row: Int,
+    override val column: Int
 ) : Matrix {
-	override fun get(r: Int, c: Int) =
-		1.0 / (r + c + 1)
+    init {
+        require(row > 0)
+        require(column > 0)
+    }
 
-	override fun row(r: Int) = getRow(r)
-	override fun column(c: Int) = getColumn(c)
-	override val rows get() = getRows()
-	override val columns get() = getColumns()
+    override fun get(r: Int, c: Int) = 1.0 / (r + c + 1)
+    override fun row(r: Int) = getRow(r)
+    override fun column(c: Int) = getColumn(c)
+    override val rows get() = getRows()
+    override val columns get() = getColumns()
+    override val rank get() = min(row, column)
+    override val det by lazy { determinantValue() }
+    override val trace by lazy { traceValue() }
 
-	override val rank get() = min(row, column)
-	override val det by lazy { determinantValue() }
-	override val trace by lazy { traceValue() }
+    override fun equals(other: Any?) =
+        this === other
+        || (other is Matrix
+            && checkSameSize(this, other)
+            && (other is HilbertMatrix
+                || checkElementsEquals(this, other)))
 
-	override fun equals(other: Any?) =
-		this === other
-			|| (other is Matrix
-			&& checkSameSize(this, other)
-			&& (other is HilbertMatrix
-			|| checkElementsEquals(this, other)))
+    override fun hashCode() = hash(row, column)
+    override fun toString() = matrixView("$row x $column Hilbert matrix")
 
-	override fun hashCode() = hash(row, column)
-	override fun toString() = matrixView("$row x $column Hilbert matrix")
-
-	companion object {
-		operator fun get(m: Int, n: Int) = HilbertMatrix(m, n)
-		operator fun get(d: Int) = HilbertMatrix(d, d)
-	}
+    companion object {
+        operator fun get(m: Int, n: Int) = HilbertMatrix(m, n)
+        operator fun get(d: Int) = HilbertMatrix(d, d)
+    }
 }

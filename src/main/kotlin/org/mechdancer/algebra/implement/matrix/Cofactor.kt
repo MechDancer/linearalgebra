@@ -25,7 +25,6 @@ class Cofactor(
         get() = origin.columns.mapIndexedNotNull { i, v -> if (i == pr) null else v.without(pc) }
 
     override fun row(r: Int) = origin.row(r).without(pr)
-
     override fun column(c: Int) = origin.column(c).without(pc)
 
     override val rank get() = toArrayMatrix().rankDestructive()

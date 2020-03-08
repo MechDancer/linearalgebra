@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.61" apply (true)
+    kotlin("jvm") version "1.3.70" apply (true)
 //    id("org.jetbrains.dokka") version "0.10.0"
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`

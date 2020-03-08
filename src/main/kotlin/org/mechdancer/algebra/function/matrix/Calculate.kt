@@ -9,6 +9,7 @@ import org.mechdancer.algebra.implement.matrix.ListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.*
 import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
 import org.mechdancer.algebra.implement.matrix.special.NumberMatrix
+import org.mechdancer.algebra.implement.matrix.special.SymmetricMatrix
 import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import org.mechdancer.algebra.implement.vector.listVectorOfZero
 import org.mechdancer.algebra.implement.vector.toListVector
@@ -20,17 +21,18 @@ import kotlin.math.sqrt
 
 // scale multiply
 
-private fun timesStub(m: Matrix, k: Double): Matrix =
-    when (m) {
-        is ZeroMatrix     -> m
-        is NumberMatrix   -> NumberMatrix[m.dim, m.value * k]
-        is DiagonalMatrix -> DiagonalMatrix(m.diagonal.map { it * k })
-        else              -> m.toList().map { it * k }.foldToRows(m.row)
+private fun Matrix.internalTimes(k: Double): Matrix =
+    when (this) {
+        is ZeroMatrix      -> this
+        is NumberMatrix    -> NumberMatrix[dim, value * k]
+        is DiagonalMatrix  -> DiagonalMatrix(diagonal.map { it * k })
+        is SymmetricMatrix -> SymmetricMatrix(data.map { it * k })
+        else               -> toList().map { it * k }.foldToRows(row)
     }
 
-operator fun Number.times(m: Matrix) = timesStub(m, this.toDouble())
-operator fun Matrix.times(k: Number) = timesStub(this, k.toDouble())
-operator fun Matrix.div(k: Number) = timesStub(this, 1 / k.toDouble())
+operator fun Number.times(m: Matrix) = m.internalTimes(toDouble())
+operator fun Matrix.times(k: Number) = internalTimes(k.toDouble())
+operator fun Matrix.div(k: Number) = internalTimes(1 / k.toDouble())
 
 // calculate between same size matrix
 
@@ -72,9 +74,9 @@ operator fun Matrix.times(right: Matrix): Matrix {
         this is ZeroMatrix || right is ZeroMatrix ->
             ZeroMatrix[row, right.column]
         this is NumberMatrix                      ->
-            timesStub(right, value)
+            right.internalTimes(value)
         right is NumberMatrix                     ->
-            timesStub(this, right.value)
+            internalTimes(right.value)
         this is DiagonalMatrix                    -> {
             if (right is DiagonalMatrix)
                 DiagonalMatrix(diagonal.zipFast(right.diagonal) { a, b -> a * b })
@@ -120,9 +122,11 @@ infix fun Matrix.power(n: Int): Matrix {
 operator fun Matrix.unaryPlus() = this
 operator fun Matrix.unaryMinus() = ListMatrix(column, toList().map { -it })
 fun Matrix.transpose() =
-    if (isSymmetric())
-        (this as? ValueMutableMatrix)?.clone() ?: this
-    else listMatrixOf(column, row) { r, c -> this[c, r] }
+    when {
+        this is SymmetricMatrix -> this
+        isSymmetric()           -> (this as? ValueMutableMatrix)?.clone() ?: this
+        else                    -> listMatrixOf(column, row) { r, c -> this[c, r] }
+    }
 
 fun Matrix.rowEchelon() = toArrayMatrix().rowEchelonAssign()
 
@@ -183,17 +187,17 @@ fun Matrix.inverse(): Matrix {
 fun Matrix.inverseOrNull() =
     when {
         // 不方，无法求逆
-        isNotSquare()  -> null
+        isNotSquare()          -> null
         // 对角阵上各元素取倒数可得逆对角阵
-        isDiagonal()   ->
+        this is DiagonalMatrix ->
             diagonal
                 .takeIf { list -> list.all { it != .0 } }
                 ?.map { 1 / it }
                 ?.toDiagonalListMatrix()
         // 正交矩阵的转置与逆相等
-        isOrthogonal() -> transpose()
+        isOrthogonal()         -> transpose()
         // 对于值可变矩阵，克隆可能有更高的效率，否则重新构造可变矩阵
-        else           ->
+        else                   ->
             ((this as? ValueMutableMatrix)
                  ?.clone()
              ?: toArrayMatrix())

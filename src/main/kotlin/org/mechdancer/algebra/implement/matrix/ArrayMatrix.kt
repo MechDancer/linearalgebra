@@ -36,7 +36,7 @@ class ArrayMatrix(override val column: Int, val data: DoubleArray)
     }
 
     override fun row(r: Int) = data.copyOfRange(r * column, (r + 1) * column).toList().toListVector()
-    override fun column(c: Int) = data.filterIndexed { i, _ -> i % column == c }.toListVector()
+    override fun column(c: Int) = (0 until row).map { get(it, c) }.toListVector()
 
     override val rows get() = (0 until row).map(::row)
     override val columns get() = (0 until column).map(::column)
@@ -108,13 +108,13 @@ class ArrayMatrix(override val column: Int, val data: DoubleArray)
 
     override fun equals(other: Any?) =
         this === other
-            || (other is Matrix
+        || (other is Matrix
             && checkSameSize(this, other)
             && when (other) {
-            is ListMatrix  -> data contentEquals other.data
-            is ArrayMatrix -> data contentEquals other.data
-            else           -> checkElementsEquals(this, other)
-        })
+                is ListMatrix  -> data contentEquals other.data
+                is ArrayMatrix -> data contentEquals other.data
+                else           -> checkElementsEquals(this, other)
+            })
 
     override fun hashCode() = hash(column, data)
     override fun toString() = matrixView("$row x $column Matrix")

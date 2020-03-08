@@ -15,60 +15,56 @@ import kotlin.math.pow
  */
 class NumberMatrix
 private constructor(
-	val dim: Int,
-	val value: Double
-) : Matrix {
-	init {
-		require(row > 0)
-		require(column > 0)
-	}
+    override val dim: Int,
+    val value: Double
+) : SquareMatrix {
+    init {
+        require(dim > 0)
+    }
 
-	override val row get() = dim
-	override val column get() = dim
+    override fun get(r: Int, c: Int) = if (r == c) value else .0
 
-	override fun get(r: Int, c: Int) = if (r == c) value else .0
+    override val rows get() = List(row) { r -> List(column) { c -> get(r, c) }.toListVector() }
+    override val columns get() = List(column) { c -> List(row) { r -> get(r, c) }.toListVector() }
 
-	override val rows get() = List(row) { r -> List(column) { c -> get(r, c) }.toListVector() }
-	override val columns get() = List(column) { c -> List(row) { r -> get(r, c) }.toListVector() }
+    override fun row(r: Int) = List(column) { c -> get(r, c) }.toListVector()
+    override fun column(c: Int) = List(row) { r -> get(r, c) }.toListVector()
 
-	override fun row(r: Int) = List(column) { c -> get(r, c) }.toListVector()
-	override fun column(c: Int) = List(row) { r -> get(r, c) }.toListVector()
+    override val rank = if (value != .0) row else 0
+    override val det = value.pow(dim)
+    override val trace = value * dim
 
-	override val rank = if (value != .0) row else 0
-	override val det = value.pow(dim)
-	override val trace = value * dim
+    override fun equals(other: Any?) =
+        this === other
+        || (other is Matrix
+            && checkSameSize(this, other)
+            && ((other as? NumberMatrix)?.value == value
+                || other.filterIndexed { r, c, it -> it != if (r == c) value else .0 }.isEmpty()
+               ))
 
-	override fun equals(other: Any?) =
-		this === other
-			|| (other is Matrix
-			&& checkSameSize(this, other)
-			&& ((other as? NumberMatrix)?.value == value
-			|| other.filterIndexed { r, c, it -> it != if (r == c) value else .0 }.isEmpty()
-			))
+    override fun hashCode() = hash(row, column, value)
 
-	override fun hashCode() = hash(row, column, value)
+    override fun toString() = matrixView()
 
-	override fun toString() = matrixView()
+    companion object {
+        private val UnitOrder1 = NumberMatrix(1, 1.0)
+        private val UnitOrder2 = NumberMatrix(2, 1.0)
+        private val UnitOrder3 = NumberMatrix(3, 1.0)
 
-	companion object {
-		private val UnitOrder1 = NumberMatrix(1, 1.0)
-		private val UnitOrder2 = NumberMatrix(2, 1.0)
-		private val UnitOrder3 = NumberMatrix(3, 1.0)
-
-		@JvmStatic
-		operator fun get(dim: Int, value: Number) =
-			value.toDouble()
-				.let {
-					when (it) {
-						0.0  -> ZeroMatrix[dim]
-						1.0  -> when (dim) {
-							1    -> UnitOrder1
-							2    -> UnitOrder2
-							3    -> UnitOrder3
-							else -> NumberMatrix(dim, 1.0)
-						}
-						else -> NumberMatrix(dim, it)
-					}
-				}
-	}
+        @JvmStatic
+        operator fun get(dim: Int, value: Number) =
+            value.toDouble()
+                .let {
+                    when (it) {
+                        0.0  -> ZeroMatrix[dim]
+                        1.0  -> when (dim) {
+                            1    -> UnitOrder1
+                            2    -> UnitOrder2
+                            3    -> UnitOrder3
+                            else -> NumberMatrix(dim, 1.0)
+                        }
+                        else -> NumberMatrix(dim, it)
+                    }
+                }
+    }
 }
