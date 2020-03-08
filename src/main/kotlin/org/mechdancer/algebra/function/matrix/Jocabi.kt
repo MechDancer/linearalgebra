@@ -10,13 +10,9 @@ import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
 import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
-import org.mechdancer.algebra.implement.matrix.special.HilbertMatrix
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.Vector3D
-import kotlin.math.abs
-import kotlin.math.atan
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 /**
  * 雅可比方法求实对称矩阵特征值
@@ -76,39 +72,19 @@ fun Matrix.evd(epsilon: Double = 1e-8): Pair<Matrix, DiagonalMatrix>? {
         data[q, p] = .0
     }
 
-    return eigenVectors.foldToRows(dim) to DiagonalMatrix((0 until dim).map { data[it * it] })
+    return eigenVectors.foldToRows(dim) to DiagonalMatrix((0 until dim).map { data[it, it] })
 }
 
-fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, Matrix, Matrix> {
+fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, List<Double>, Matrix> {
     // 检查，如果对称退化到特征值分解
     val eigen = evd(epsilon)
     if (eigen != null) {
         val (q, sigma) = eigen
-        return Triple(q, sigma, q)
+        return Triple(q, sigma.diagonal, q)
     }
     val t = transpose()
     val (u, sigmaU) = (this * t).evd(epsilon)!!
     val (v, sigmaV) = (t * this).evd(epsilon)!!
-    println(this * t)
-    println(t * this)
-    println(sigmaU)
-    println(sigmaV)
-    return Triple(u, sigmaU, v)
-}
-
-fun main() {
-    HilbertMatrix[4].eigen().forEach(::println)
-//    matrix {
-//        row(102, 105, 114)
-//        row(105, 137, 110)
-//        row(114, 110, 123)
-//    }.evd()?.let(::println)
-//    val matrix = matrix {
-//        row(1, 5, 7, 6, 1)
-//        row(2, 1, 10, 4, 4)
-//        row(3, 6, 7, 5, 2)
-//    }
-//    val (u, sigma, v) = matrix.svd()
-//    println(u)
-//    println(v)
+    val square = if (row < column) sigmaU else sigmaV
+    return Triple(u, square.diagonal.map(::sqrt), v)
 }
