@@ -178,7 +178,7 @@ class TestMatrixCalculate {
 			row(-1, 2, -1)
 			row(0, -1, 2)
 		}
-		matrix.jacobiMethod(1E-14)
+		matrix.eigen(1E-14)
 			.also {
 				it.forEach { pair ->
 					val (l, v) = pair
