@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "org.mechdancer"
-version = "0.2.7-dev-4"
+version = "0.2.8-dev-1"
 
 repositories {
     mavenCentral()

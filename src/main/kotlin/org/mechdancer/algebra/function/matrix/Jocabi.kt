@@ -5,10 +5,7 @@ import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.vector.component1
 import org.mechdancer.algebra.function.vector.component2
 import org.mechdancer.algebra.function.vector.dot
-import org.mechdancer.algebra.implement.matrix.builder.I
-import org.mechdancer.algebra.implement.matrix.builder.foldToRows
-import org.mechdancer.algebra.implement.matrix.builder.matrix
-import org.mechdancer.algebra.implement.matrix.builder.toArrayMatrix
+import org.mechdancer.algebra.implement.matrix.builder.*
 import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.Vector3D
@@ -27,6 +24,7 @@ fun Matrix.eigen(epsilon: Double = 1e-8): List<Pair<Double, Vector>> {
         .sortedByDescending { it.first }
 }
 
+/** 特征值分解 */
 fun Matrix.evd(epsilon: Double = 1e-8): Pair<Matrix, DiagonalMatrix>? {
     // 判断对称性
     if (isNotSymmetric()) return null
@@ -72,19 +70,36 @@ fun Matrix.evd(epsilon: Double = 1e-8): Pair<Matrix, DiagonalMatrix>? {
         data[q, p] = .0
     }
 
+    // 排序
+    val values = (0 until dim).asSequence()
+        .map { i -> data[i, i] to i }
+        .sortedByDescending { (value, _) -> value }
     return eigenVectors.foldToRows(dim) to DiagonalMatrix((0 until dim).map { data[it, it] })
 }
 
-fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, List<Double>, Matrix> {
+/** 奇异值分解 */
+fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, Matrix, Matrix> {
     // 检查，如果对称退化到特征值分解
     val eigen = evd(epsilon)
     if (eigen != null) {
         val (q, sigma) = eigen
-        return Triple(q, sigma.diagonal, q)
+        return Triple(q, sigma, q)
     }
     val t = transpose()
-    val (u, sigmaU) = (this * t).evd(epsilon)!!
-    val (v, sigmaV) = (t * this).evd(epsilon)!!
-    val square = if (row < column) sigmaU else sigmaV
-    return Triple(u, square.diagonal.map(::sqrt), v)
+    val u: Matrix
+    val s: List<Double>
+    val v: Matrix
+    if (row > column) {
+        val (m, square) = (t * this).evd(epsilon)!!
+        u = m
+        s = square.diagonal.map(::sqrt)
+        v = listMatrixOf(column, column, (t * m * DiagonalMatrix(s.map { 1 / it }))::get)
+    } else {
+        val (m, square) = (t * this).evd(epsilon)!!
+        v = m
+        s = square.diagonal.map(::sqrt)
+        u = listMatrixOf(row, row, (this * m * DiagonalMatrix(s.map { 1 / it }))::get)
+    }
+    val w = listMatrixOf(row, column) { r, c -> if (r == c) s[r] else .0 }
+    return Triple(u, w, v)
 }

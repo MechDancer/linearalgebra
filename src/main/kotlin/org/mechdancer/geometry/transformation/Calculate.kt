@@ -3,7 +3,10 @@ package org.mechdancer.geometry.transformation
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.equation.solve
+import org.mechdancer.algebra.function.matrix.plus
+import org.mechdancer.algebra.function.matrix.svd
 import org.mechdancer.algebra.function.matrix.times
+import org.mechdancer.algebra.function.matrix.transpose
 import org.mechdancer.algebra.function.vector.DistanceType
 import org.mechdancer.algebra.function.vector.div
 import org.mechdancer.algebra.function.vector.minus
@@ -11,10 +14,12 @@ import org.mechdancer.algebra.function.vector.sum
 import org.mechdancer.algebra.implement.equation.builder.EquationSetBuilder
 import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
+import org.mechdancer.algebra.implement.matrix.builder.toListMatrix
+import org.mechdancer.algebra.implement.matrix.builder.toListMatrixRow
+import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.to2D
 import org.mechdancer.algebra.implement.vector.toListVector
-import org.mechdancer.algebra.uniqueValue
 import org.mechdancer.geometry.angle.toAngle
 import org.mechdancer.geometry.angle.toVector
 import kotlin.collections.component1
@@ -40,16 +45,11 @@ infix fun <T : Transformation<T>> T.minusState(origin: T) =
  * 最小二乘法从点对集推算空间变换子
  * 任意维无约束
  */
-fun PointMap.toTransformation(): MatrixTransformation? {
-    val dim = sources
-                  .map { it.dim }
-                  .union(targets.map { it.dim })
-                  .uniqueValue()
-              ?: throw IllegalArgumentException("points not in same dim")
+fun Collection<Pair<Vector, Vector>>.toTransformation(): MatrixTransformation? {
+    val ct = asSequence().map { (a, _) -> a }.sum() / size
+    val cs = asSequence().map { (_, b) -> b }.sum() / size
+    val dim = ct.dim
     val temp = DoubleArray(dim * dim)
-
-    val ct = targets.sum() / size
-    val cs = sources.sum() / size
 
     return takeIf { size > dim }
         ?.flatMap { (target, source) ->
@@ -128,3 +128,16 @@ fun PointMap.errorBy(transformation: MatrixTransformation, type: DistanceType) =
         .toList()
         .sumByDouble(type::between)
         .div(size)
+
+/** 点云配准 := {(目标，初始)} */
+fun Collection<Pair<Vector, Vector>>.toTransformationWithSVD(epsilon: Double)
+    : MatrixTransformation {
+    val ct = map { (a, _) -> a }.sum() / size
+    val cs = map { (_, b) -> b }.sum() / size
+    val w = fold(ZeroMatrix[cs.dim] as Matrix)
+    { r, (t, s) -> r + (t - ct).toListMatrix() * (s - cs).toListMatrixRow() }
+    val (u, _, v) = w.svd(epsilon)
+    val r = u * v.transpose()
+    val t = ct - r * cs
+    return MatrixTransformation.fromInhomogeneous(r, t)
+}

@@ -36,7 +36,7 @@ private constructor(
                 || checkElementsEquals(this, other)))
 
     override fun hashCode() = hash(row, column)
-    override fun toString() = matrixView("$row x $column Hilbert matrix")
+    override fun toString() = matrixView("$row x $column HilbertMatrix")
 
     companion object {
         operator fun get(m: Int, n: Int) = HilbertMatrix(m, n)
