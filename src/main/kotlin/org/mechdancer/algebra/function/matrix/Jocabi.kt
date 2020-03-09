@@ -71,9 +71,9 @@ fun Matrix.evd(epsilon: Double = 1e-8): Pair<Matrix, DiagonalMatrix>? {
     }
 
     // 排序
-    val values = (0 until dim).asSequence()
-        .map { i -> data[i, i] to i }
-        .sortedByDescending { (value, _) -> value }
+    // val values = (0 until dim).asSequence()
+    //     .map { i -> data[i, i] to i }
+    //     .sortedByDescending { (value, _) -> value }
     return eigenVectors.foldToRows(dim) to DiagonalMatrix((0 until dim).map { data[it, it] })
 }
 
@@ -85,21 +85,19 @@ fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, Matrix, Matrix> {
         val (q, sigma) = eigen
         return Triple(q, sigma, q)
     }
-    val t = transpose()
-    val u: Matrix
-    val s: List<Double>
-    val v: Matrix
-    if (row > column) {
-        val (m, square) = (t * this).evd(epsilon)!!
-        u = m
-        s = square.diagonal.map(::sqrt)
-        v = listMatrixOf(column, column, (t * m * DiagonalMatrix(s.map { 1 / it }))::get)
-    } else {
-        val (m, square) = (t * this).evd(epsilon)!!
-        v = m
-        s = square.diagonal.map(::sqrt)
-        u = listMatrixOf(row, row, (this * m * DiagonalMatrix(s.map { 1 / it }))::get)
+
+    fun partEvd(a: Matrix, at: Matrix): Triple<Matrix, Matrix, Matrix> {
+        val (m, square) = (a * at).evd(epsilon)!!
+        val s = square.diagonal.map(::sqrt)
+        val w = listMatrixOf(row, column) { r, c -> if (r == c) s[r] else .0 }
+        val others = (at * m * DiagonalMatrix(s.map { 1 / it }))
+        return Triple(m, w, others)
     }
-    val w = listMatrixOf(row, column) { r, c -> if (r == c) s[r] else .0 }
-    return Triple(u, w, v)
+
+    return if (row > column)
+        partEvd(this, transpose())
+    else {
+        val (v, w, u) = partEvd(transpose(), this)
+        Triple(u, w, v)
+    }
 }
