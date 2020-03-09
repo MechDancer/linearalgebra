@@ -48,7 +48,7 @@ class DiagonalMatrix(
 
     override fun hashCode() = diagonal.hashCode()
 
-    override fun toString() = matrixView("${diagonal.size}d diagonal matrix")
+    override fun toString() = matrixView("${diagonal.size}d DiagonalMatrix")
 
     companion object {
         operator fun get(vararg elements: Number) =

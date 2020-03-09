@@ -16,18 +16,15 @@ import org.mechdancer.algebra.implement.matrix.builder.foldToRows
 import org.mechdancer.algebra.implement.matrix.builder.matrix
 import org.mechdancer.algebra.implement.matrix.builder.toListMatrix
 import org.mechdancer.algebra.implement.matrix.builder.toListMatrixRow
-import org.mechdancer.algebra.implement.matrix.special.DiagonalMatrix
 import org.mechdancer.algebra.implement.matrix.special.ZeroMatrix
 import org.mechdancer.algebra.implement.vector.Vector2D
 import org.mechdancer.algebra.implement.vector.to2D
 import org.mechdancer.algebra.implement.vector.toListVector
-import org.mechdancer.algebra.implement.vector.vector3D
 import org.mechdancer.geometry.angle.toAngle
 import org.mechdancer.geometry.angle.toVector
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.math.abs
-import kotlin.random.Random
 
 fun MatrixTransformation.transform(pose: Pose2D) =
     Pose2D(invoke(pose.p).to2D(), invokeLinear(pose.d.toVector()).to2D().toAngle())
@@ -133,24 +130,14 @@ fun PointMap.errorBy(transformation: MatrixTransformation, type: DistanceType) =
         .div(size)
 
 /** 点云配准 := {(目标，初始)} */
-fun Collection<Pair<Vector, Vector>>.toTransformationWithSVD(): MatrixTransformation {
+fun Collection<Pair<Vector, Vector>>.toTransformationWithSVD(epsilon: Double)
+    : MatrixTransformation {
     val ct = map { (a, _) -> a }.sum() / size
     val cs = map { (_, b) -> b }.sum() / size
     val w = fold(ZeroMatrix[cs.dim] as Matrix)
     { r, (t, s) -> r + (t - ct).toListMatrix() * (s - cs).toListMatrixRow() }
-    val (u, sigma, v) = w.svd()
-    require(u * DiagonalMatrix(sigma) * v.transpose() == w) // FIXME 奇异值分解没错，结果为什么不对？
+    val (u, _, v) = w.svd(epsilon)
     val r = u * v.transpose()
     val t = ct - r * cs
     return MatrixTransformation.fromInhomogeneous(r, t)
-}
-
-fun main() {
-    val pose = Pose3D(vector3D(Random.nextDouble(), Random.nextDouble(), Random.nextDouble()),
-                      vector3D(Random.nextDouble(), Random.nextDouble(), Random.nextDouble()))
-    val list = List(20) { vector3D(Random.nextDouble(), Random.nextDouble(), Random.nextDouble()) }
-    val map = list.map { pose * it to it }
-    println(pose.toMatrixTransformation())
-    println(map.toTransformation())
-    println(map.toTransformationWithSVD())
 }

@@ -18,14 +18,14 @@ fun doubleEquals(a: Double, b: Double) = a - b in DOUBLE_EQUALS_RANGE
  * 最好先判断维数相同
  */
 infix fun Collection<Double>.contentEquals(other: Collection<Double>) =
-    size == other.size && asSequence().zip(other.asSequence(), ::doubleEquals).all { true }
+    size == other.size && asSequence().zip(other.asSequence(), ::doubleEquals).all { it }
 
 /**
  * 判断两个浮点列表相同
  * 最好先判断维数相同
  */
 infix fun DoubleArray.contentEquals(other: Collection<Double>) =
-    size == other.size && asSequence().zip(other.asSequence(), ::doubleEquals).all { true }
+    size == other.size && asSequence().zip(other.asSequence(), ::doubleEquals).all { it }
 
 /**
  * 计算许多元素的哈希值

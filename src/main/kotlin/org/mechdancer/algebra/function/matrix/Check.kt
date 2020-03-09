@@ -1,6 +1,7 @@
 package org.mechdancer.algebra.function.matrix
 
 import org.mechdancer.algebra.core.Matrix
+import org.mechdancer.algebra.doubleEquals
 import org.mechdancer.algebra.implement.matrix.builder.I
 import org.mechdancer.algebra.implement.matrix.special.*
 
@@ -16,7 +17,7 @@ fun DiagonalMatrix.isSymmetric() = true
 fun SymmetricMatrix.isSymmetric() = true
 fun HilbertMatrix.isSymmetric() = row == column
 fun Matrix.isSymmetric() =
-    row == column && (0 until row - 1).all { r -> (0 until r).all { c -> get(r, c) == get(c, r) } }
+    row == column && (1 until row).all { r -> (0 until r).all { c -> doubleEquals(get(r, c), get(c, r)) } }
 
 fun Matrix.isNotSymmetric() = !isSymmetric()
 
