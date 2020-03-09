@@ -9,7 +9,7 @@ import org.mechdancer.algebra.implement.vector.vector2D
 class TestBuildTransformation {
     @Test
     fun testTransformation1() {
-        val transformation = mapOf(
+        val transformation = listOf(
             listVectorOf(0, 0) to listVectorOf(+0, +0),
             listVectorOf(4, 2) to listVectorOf(+4, -2),
             listVectorOf(1, 1) to listVectorOf(+1, -1)
@@ -33,7 +33,7 @@ class TestBuildTransformation {
 
     @Test
     fun testTransformation3() {
-        val t0 = mapOf(
+        val t0 = listOf(
             vector2D(0, 0) to vector2D(0, 0),
             vector2D(1, 0) to vector2D(+0, +1),
             vector2D(0, 1) to vector2D(-1, +0)
@@ -48,7 +48,7 @@ class TestBuildTransformation {
         println(t1)
         Assert.assertEquals(t0, t1)
 
-        val t2 = mapOf(
+        val t2 = listOf(
             vector2D(0, 0) to vector2D(0, 0),
             vector2D(1, 0) to vector2D(1, 0),
             vector2D(0, 1) to vector2D(0, -1)

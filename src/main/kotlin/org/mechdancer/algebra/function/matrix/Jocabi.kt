@@ -27,6 +27,7 @@ fun Matrix.eigen(epsilon: Double = 1e-8): List<Pair<Double, Vector>> {
         .sortedByDescending { it.first }
 }
 
+/** 特征值分解 */
 fun Matrix.evd(epsilon: Double = 1e-8): Pair<Matrix, DiagonalMatrix>? {
     // 判断对称性
     if (isNotSymmetric()) return null
@@ -75,6 +76,7 @@ fun Matrix.evd(epsilon: Double = 1e-8): Pair<Matrix, DiagonalMatrix>? {
     return eigenVectors.foldToRows(dim) to DiagonalMatrix((0 until dim).map { data[it, it] })
 }
 
+/** 奇异值分解 */
 fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, List<Double>, Matrix> {
     // 检查，如果对称退化到特征值分解
     val eigen = evd(epsilon)
