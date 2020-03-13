@@ -1,5 +1,6 @@
 package org.mechdancer.algebra.function.matrix
 
+import org.mechdancer.algebra.DOUBLE_PRECISION
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
 import org.mechdancer.algebra.function.vector.component1
@@ -88,7 +89,7 @@ fun Matrix.svd(epsilon: Double = 1e-8): Triple<Matrix, Matrix, Matrix> {
 
     fun partEvd(a: Matrix, at: Matrix): Triple<Matrix, Matrix, Matrix> {
         val (m, square) = (a * at).evd(epsilon)!!
-        val s = square.diagonal.map(::sqrt)
+        val s = square.diagonal.map { if (it < DOUBLE_PRECISION) .0 else sqrt(it) }
         val w = listMatrixOf(row, column) { r, c -> if (r == c) s[r] else .0 }
         val others = (at * m * DiagonalMatrix(s.map { 1 / it }))
         return Triple(m, w, others)
