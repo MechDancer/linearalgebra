@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.70" apply (true)
-//    id("org.jetbrains.dokka") version "0.10.0"
+    id("org.jetbrains.dokka") version "0.10.1"
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
 }
@@ -11,8 +11,7 @@ group = "org.mechdancer"
 version = "0.2.8-snapshot-3"
 
 repositories {
-    mavenCentral()
-    jcenter()
+    maven("https://maven.aliyun.com/repository/jcenter")
 }
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
@@ -27,16 +26,16 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-//tasks.dokka {
-//    outputFormat = "javadoc"
-//    outputDirectory = "$buildDir/javadoc"
-//}
+tasks.dokka {
+    outputFormat = "javadoc"
+    outputDirectory = "$buildDir/javadoc"
+}
 
 val doc = tasks.register<Jar>("javadocJar") {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
     archiveClassifier.set("javadoc")
-//    from(tasks.dokka)
+    from(tasks.dokka)
 }
 
 val sources = tasks.register<Jar>("sourcesJar") {
