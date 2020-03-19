@@ -2,6 +2,7 @@ package org.mechdancer.geometry.transformation
 
 import org.mechdancer.algebra.core.Matrix
 import org.mechdancer.algebra.core.Vector
+import org.mechdancer.algebra.function.matrix.cofactorOf
 import org.mechdancer.algebra.function.matrix.dim
 import org.mechdancer.algebra.function.matrix.inverse
 import org.mechdancer.algebra.function.matrix.times
@@ -45,10 +46,15 @@ data class MatrixTransformation(val matrix: Matrix) : Transformation<MatrixTrans
     }
 
     /**
+     * 其次变换成分的行列式值，与一系列性质有关
+     */
+    val homogeneousDet by lazy { matrix.cofactorOf(dim, dim).det!! }
+
+    /**
      * 判断变换是不是手性的
      * 左手系到右手系的变换或右手系到左手系的变换定义为“手性的”
      */
-    val isChiral by lazy { this.matrix.det ?: .0 < 0 }
+    fun isChiral() = homogeneousDet < 0
 
     companion object {
         /**

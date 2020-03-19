@@ -14,7 +14,7 @@ class TestBuildTransformation {
             listVectorOf(4, 2) to listVectorOf(+4, -2),
             listVectorOf(1, 1) to listVectorOf(+1, -1)
         ).toTransformation().also(::println)!!
-        Assert.assertTrue(transformation.isChiral)
+        Assert.assertTrue(transformation.isChiral())
         Assert.assertEquals(vector2D(4, -2), transformation(vector2D(4, 2)).to2D())
         Assert.assertEquals(vector2D(4, +2), (transformation.inverse())(vector2D(4, -2)))
     }
@@ -25,10 +25,8 @@ class TestBuildTransformation {
             vector2D(0, 0) to vector2D(0, 0),
             vector2D(1, 0) to vector2D(+0, +1),
             vector2D(0, 1) to vector2D(-1, +0)
-        )
-            .toTransformationOrthotropic(false)
-            .also(::println)!!
-        Assert.assertTrue(!transformation.isChiral)
+        ).toTransformationOrthotropic(false).also(::println)!!
+        Assert.assertFalse(transformation.isChiral())
     }
 
     @Test
